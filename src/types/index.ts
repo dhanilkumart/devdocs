@@ -33,6 +33,9 @@ export interface DocTopic {
   related_questions: RelatedQuestionRef[];
 }
 
+/** Separates language/core Q&A from browser/DOM–oriented Q&A; optional on legacy rows (treated as fundamentals). */
+export type InterviewSegment = "fundamentals" | "runtime";
+
 export interface InterviewQuestion {
   id: string;
   technology: TechCategory;
@@ -41,6 +44,8 @@ export interface InterviewQuestion {
   answer: string;
   explanation: string;
   example: string;
+  /** Core language & patterns vs web platform (DOM, events in the page). Omitted = fundamentals. */
+  segment?: InterviewSegment;
 }
 
 export interface RecentSearch {

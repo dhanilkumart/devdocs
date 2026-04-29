@@ -1,0 +1,230 @@
+[
+  {
+    "id": "js-ex-001",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is JavaScript and why is it important?",
+    "answer": "JavaScript is a high-level, interpreted language used mainly for interactive, dynamic web apps. It runs in browsers and on servers (e.g. Node.js), supports functional, object-oriented, and event-driven styles. It matters because it powers responsive UIs, real-time updates, and full-stack apps—with a huge ecosystem and strong demand.",
+    "explanation": "Interviewers expect recognition that JS is no longer “just scripts”: runtimes, tooling, and frameworks sit on this foundation.",
+    "example": "// Runs everywhere JS engines exist\nconsole.log(\"Hello\", typeof fetch !== \"undefined\" ? \"browser\" : \"maybe Node\");"
+  },
+  {
+    "id": "js-ex-002",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What are the different data types in JavaScript?",
+    "answer": "Primitives: string, number, boolean, undefined, null, symbol, bigint—they hold immutable simple values. Non-primitives include objects, arrays, and functions (reference types). JS is dynamically typed: variables can hold different types over time.",
+    "explanation": "Know typeof quirks (`typeof null === 'object'`) and that primitives are copied by value while objects are copied by reference.",
+    "example": "typeof 42; // \"number\"\ntypeof {}; // \"object\"\ntypeof function () {}; // \"function\""
+  },
+  {
+    "id": "js-ex-003",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is the difference between var, let, and const?",
+    "answer": "`var` is function-scoped and hoisted with `undefined`; `let` and `const` are block-scoped and live in the temporal dead zone until declared. `const` cannot be reassigned (object properties may still change). Prefer `let`/`const` for clearer, safer code.",
+    "explanation": "Mention that `let` in loops fixes classic `var` + closure bugs.",
+    "example": "for (let i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 0);\n}"
+  },
+  {
+    "id": "js-ex-004",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is hoisting in JavaScript?",
+    "answer": "During compilation, declarations are processed before execution: `function` declarations and `var` bindings float to the top of their scope (`var` initializes as `undefined`). `let`/`const` hoist but stay in the temporal dead zone until the declaration line.",
+    "explanation": "Hoisting explains why function declarations can appear “below” calls but `let` cannot be touched early.",
+    "example": "console.log(x); // undefined\nvar x = 1;\nconsole.log(y); // ReferenceError\nlet y = 2;"
+  },
+  {
+    "id": "js-ex-005",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is a closure in JavaScript?",
+    "answer": "A closure is when an inner function retains access to variables from its outer scope after the outer function returns—preserving state and enabling patterns like factories and private fields.",
+    "explanation": "Common interview depth: memory (closures hold outer vars alive), loops + `var`, and hook/event callbacks.",
+    "example": "function makeCounter() {\n  let n = 0;\n  return () => ++n;\n}"
+  },
+  {
+    "id": "js-ex-006",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is the difference between == and ===?",
+    "answer": "`==` compares with coercion (can surprise). `===` compares value and type without coercion—preferred for predictable logic.",
+    "explanation": "Examples like `0 == \"0\"` vs `0 === \"0\"` illustrate why strict equality is default style.",
+    "example": "5 == \"5\"; // true\n5 === \"5\"; // false"
+  },
+  {
+    "id": "js-ex-007",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is an arrow function in JavaScript?",
+    "answer": "Concise syntax using `=>`; inherits lexical `this` from enclosing scope—great for callbacks. Not constructors: no `prototype`, no own `arguments`, cannot use `new`.",
+    "explanation": "Contrast with regular functions when `this` must be dynamic (methods, DOM handlers sometimes need `.bind`).",
+    "example": "const sum = (a, b) => a + b;\nconst nums = [1, 2].map((n) => n * 2);"
+  },
+  {
+    "id": "js-ex-008",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is the `this` keyword in JavaScript?",
+    "answer": "`this` is determined by how the function is called: method call → receiver; plain call → global/window or `undefined` in strict mode; `bind/call/apply` fix context; arrow functions close over lexical `this`.",
+    "explanation": "Misunderstood `this` is a top source of bugs—explicit binding vs lexical arrows.",
+    "example": "const obj = {\n  name: \"Ada\",\n  greet() {\n    return this.name;\n  },\n};"
+  },
+  {
+    "id": "js-ex-009",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "segment": "runtime",
+    "question": "What is event bubbling in JavaScript?",
+    "answer": "After an event fires on the target, it propagates upward through ancestors (bubble phase), unless stopped—so parent handlers can observe child events.",
+    "explanation": "Pairs with capture phase (outer→inner); `stopPropagation()` stops further bubbling.",
+    "example": "btn.addEventListener(\"click\", (e) => {\n  console.log(e.target, e.currentTarget);\n});"
+  },
+  {
+    "id": "js-ex-010",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "segment": "runtime",
+    "question": "What is event delegation?",
+    "answer": "Attach one listener on a parent and use `event.target` (often with `closest`) to handle many children—works for dynamic lists and saves listeners.",
+    "explanation": "Relies on bubbling; improves perf and simplifies DOM-heavy apps.",
+    "example": "list.addEventListener(\"click\", (e) => {\n  const row = e.target.closest(\"li[data-id]\");\n  if (!row || !list.contains(row)) return;\n});"
+  },
+  {
+    "id": "js-ex-011",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What are Promises in JavaScript?",
+    "answer": "A Promise represents async completion: pending → fulfilled or rejected. Chain with `.then`/`.catch`; avoids nested callback pyramids for many flows.",
+    "explanation": "Connect to microtasks, `Promise.all`/`allSettled`, and error propagation.",
+    "example": "fetch(\"/api\")\n  .then((r) => r.json())\n  .then(console.log)\n  .catch(console.error);"
+  },
+  {
+    "id": "js-ex-012",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is async/await in JavaScript?",
+    "answer": "`async` functions return Promises; `await` pauses the async function until a Promise settles—use try/catch for errors like synchronous code.",
+    "explanation": "Still async—does not block the main thread globally; parallel work needs `Promise.all`.",
+    "example": "async function load() {\n  const res = await fetch(\"/user\");\n  if (!res.ok) throw new Error(res.statusText);\n  return res.json();\n}"
+  },
+  {
+    "id": "js-ex-013",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is the difference between null and undefined?",
+    "answer": "`undefined` means declared but not assigned, or a missing property. `null` is an intentional “no value” assignment. Both are falsy; `typeof null === 'object'` is a historical quirk.",
+    "explanation": "Use `null` for intentional empty; check `x == null` to match both if needed (loose).",
+    "example": "let a;\nconsole.log(a); // undefined\nconst cleared = null;"
+  },
+  {
+    "id": "js-ex-014",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "segment": "runtime",
+    "question": "What is the DOM in JavaScript?",
+    "answer": "The Document Object Model is the browser’s tree representation of HTML—JS can query and mutate nodes to change content, structure, and styles without full reloads.",
+    "explanation": "Distinguish DOM API (browser) from ECMAScript language spec itself.",
+    "example": "document.querySelector(\"#app\").textContent = \"Hi\";"
+  },
+  {
+    "id": "js-ex-015",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is scope in JavaScript?",
+    "answer": "Scope controls visibility: global, function (`var`), and block (`let`/`const`). Lexical scoping means inner functions see outer variables (closure).",
+    "explanation": "Module and `let` block scope reduce accidental globals vs `var`.",
+    "example": "{\n  const x = 1;\n}\n// x not visible here"
+  },
+  {
+    "id": "js-ex-016",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is a callback function?",
+    "answer": "A function passed to another to be invoked later—used for events, async completion, and array methods. Enables non-blocking work but deep nesting becomes “callback hell.”",
+    "explanation": "Foundation before Promises; still used in many APIs (`setTimeout`, `addEventListener`).",
+    "example": "setTimeout(() => console.log(\"later\"), 0);"
+  },
+  {
+    "id": "js-ex-017",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is callback hell?",
+    "answer": "Deeply nested callbacks that obscure control flow and error handling—hard to read and test. Mitigate with named functions, Promises, or async/await.",
+    "explanation": "Interviewers want to hear structured async patterns, not more nesting.",
+    "example": "getA((a) =>\n  getB(a, (b) =>\n    getC(b, (c) => done(c)))); // avoid"
+  },
+  {
+    "id": "js-ex-018",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is JSON and how is it used in JavaScript?",
+    "answer": "JSON is a text format for data exchange—key/value arrays/objects. `JSON.parse` and `JSON.stringify` convert between strings and JS values; APIs almost always speak JSON today.",
+    "explanation": "JSON is not identical to JS object literal (keys quoted; no functions).",
+    "example": "const data = JSON.parse('{\"x\":1}');\nJSON.stringify({ ok: true });"
+  },
+  {
+    "id": "js-ex-019",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is the difference between synchronous and asynchronous JavaScript?",
+    "answer": "Synchronous code runs line-by-line blocking the stack until done. Async work (timers, network, I/O) schedules callbacks/Promises so the main thread can stay responsive.",
+    "explanation": "Tie to event loop: sync blocks UI; async patterns prevent freezing.",
+    "example": "// sync: blocks until loop ends\n// async: fetch().then(...) returns immediately to caller"
+  },
+  {
+    "id": "js-ex-020",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is a higher-order function?",
+    "answer": "A function that takes functions as args or returns functions—`map`, `filter`, `reduce` are built-in HOFs enabling functional composition.",
+    "explanation": "Shows functional style and testability (pure mappers vs side-effect `forEach`).",
+    "example": "const doubled = [1, 2, 3].map((n) => n * 2);"
+  },
+  {
+    "id": "js-ex-021",
+    "technology": "JavaScript",
+    "level": "Advanced",
+    "question": "What is currying in JavaScript?",
+    "answer": "Transforming a function of multiple args into a sequence of functions each taking one argument—enables partial application and reuse.",
+    "explanation": "Common in FP libraries; not built-in syntax like some languages.",
+    "example": "const add = (a) => (b) => a + b;\nadd(2)(3); // 5"
+  },
+  {
+    "id": "js-ex-022",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is debouncing in JavaScript?",
+    "answer": "Wait until activity pauses before running a function—great for search-as-you-type or resize finalization; reduces wasted calls.",
+    "explanation": "Contrast with throttling (steady rate).",
+    "example": "function debounce(fn, ms) {\n  let t;\n  return (...a) => {\n    clearTimeout(t);\n    t = setTimeout(() => fn(...a), ms);\n  };\n}"
+  },
+  {
+    "id": "js-ex-023",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is throttling in JavaScript?",
+    "answer": "Cap execution to at most once per interval—good for scroll/mousemove where you need periodic samples, not only the final pause.",
+    "explanation": "Choose debounce vs throttle by UX: trailing edge vs steady sampling.",
+    "example": "let last = 0;\nwindow.onscroll = () => {\n  const now = Date.now();\n  if (now - last < 100) return;\n  last = now;\n  onScroll();\n};"
+  },
+  {
+    "id": "js-ex-024",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is the difference between map and forEach?",
+    "answer": "`forEach` runs side effects and returns `undefined`. `map` returns a **new array** of transformed values—use `map` when building data, `forEach` for imperative iteration.",
+    "explanation": "`map` enables chaining; neither short-circuits like `for` loops.",
+    "example": "const sq = [1, 2].map((n) => n * n);\n[1, 2].forEach((n) => console.log(n));"
+  },
+  {
+    "id": "js-ex-025",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What are JavaScript frameworks and libraries?",
+    "answer": "Libraries (e.g. React as a UI library) focus on a slice of problems; frameworks (e.g. Angular, meta-frameworks like Next) give structure and conventions. Both boost productivity when matched to team and product constraints.",
+    "explanation": "Blurry line today—interviewers care that you know trade-offs, not buzzwords.",
+    "example": "// React component vs Angular module — pick per requirements"
+  }
+]

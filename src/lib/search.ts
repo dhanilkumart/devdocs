@@ -11,11 +11,12 @@ const docSearchKeys: IFuseOptions<DocTopic>["keys"] = [
 ];
 
 const interviewSearchKeys: IFuseOptions<InterviewQuestion>["keys"] = [
-  { name: "question", weight: 0.45 },
-  { name: "technology", weight: 0.15 },
-  { name: "answer", weight: 0.15 },
-  { name: "explanation", weight: 0.15 },
+  { name: "question", weight: 0.43 },
+  { name: "technology", weight: 0.14 },
+  { name: "answer", weight: 0.14 },
+  { name: "explanation", weight: 0.14 },
   { name: "example", weight: 0.1 },
+  { name: "segment", weight: 0.05 },
 ];
 
 const fuseDocOptions: IFuseOptions<DocTopic> = {

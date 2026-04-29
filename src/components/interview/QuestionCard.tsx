@@ -1,6 +1,17 @@
 import type { InterviewQuestion } from "@/types";
 
+const SEGMENT_LABEL = {
+  fundamentals: "Core",
+  runtime: "Web / DOM",
+} as const;
+
+function segmentKey(q: InterviewQuestion): keyof typeof SEGMENT_LABEL {
+  return q.segment ?? "fundamentals";
+}
+
 export function QuestionCard({ q }: { q: InterviewQuestion }) {
+  const seg = segmentKey(q);
+
   return (
     <article
       id={q.id}
@@ -9,6 +20,9 @@ export function QuestionCard({ q }: { q: InterviewQuestion }) {
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <span className="rounded-full bg-violet-100 px-2.5 py-0.5 text-xs font-medium text-violet-800 dark:bg-violet-950 dark:text-violet-200">
           {q.technology}
+        </span>
+        <span className="rounded-full bg-sky-100 px-2.5 py-0.5 text-xs font-medium text-sky-900 dark:bg-sky-950 dark:text-sky-200">
+          {SEGMENT_LABEL[seg]}
         </span>
         <span className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
           {q.level}

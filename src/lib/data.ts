@@ -1,4 +1,4 @@
-import type { DocTopic, InterviewQuestion, TechCategory } from "@/types";
+import type { DocTopic, InterviewQuestion, InterviewSegment, TechCategory } from "@/types";
 import css from "@/data/docs/css3.json";
 import graphql from "@/data/docs/graphql.json";
 import html from "@/data/docs/html5.json";
@@ -14,6 +14,7 @@ import fe100c from "@/data/interviews-fe100-c.json";
 import fe100d from "@/data/interviews-fe100-d.json";
 import interviewsAdvanced from "@/data/interviews-advanced-scenarios.json";
 import interviewsCssMaster from "@/data/interviews-css-master.json";
+import interviewsJsExtracted from "@/data/interviews-js-extracted.json";
 
 export const allDocs: DocTopic[] = [
   ...(javascript as DocTopic[]),
@@ -34,6 +35,7 @@ export const allInterviews: InterviewQuestion[] = [
   ...(fe100d as InterviewQuestion[]),
   ...(interviewsAdvanced as InterviewQuestion[]),
   ...(interviewsCssMaster as InterviewQuestion[]),
+  ...(interviewsJsExtracted as InterviewQuestion[]),
 ];
 
 const docById = new Map(allDocs.map((d) => [d.id, d]));
@@ -68,4 +70,18 @@ export function docsByCategory(category: TechCategory): DocTopic[] {
 export function interviewsByTechnology(tech: TechCategory | "All"): InterviewQuestion[] {
   if (tech === "All") return allInterviews;
   return allInterviews.filter((q) => q.technology === tech);
+}
+
+/** Segment omitted on legacy questions counts as fundamentals. */
+export function normalizeInterviewSegment(q: InterviewQuestion): InterviewSegment {
+  return q.segment ?? "fundamentals";
+}
+
+export function interviewsFiltered(
+  tech: TechCategory | "All",
+  segment: InterviewSegment | "All",
+): InterviewQuestion[] {
+  const base = interviewsByTechnology(tech);
+  if (segment === "All") return base;
+  return base.filter((q) => normalizeInterviewSegment(q) === segment);
 }
