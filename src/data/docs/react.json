@@ -1,0 +1,353 @@
+[
+  {
+    "id": "react-built-in-hooks-index",
+    "title": "Built-in React hooks (overview)",
+    "category": "React",
+    "tags": ["hooks", "index", "reference", "react-18", "react-19"],
+    "summary": "React ships built-in hooks for state, effects, context, performance, concurrent features, and (in React 19) forms and reading promises/context with use().",
+    "content": "## Categories\n\n- **State:** `useState`, `useReducer`, `useActionState` (19), `useOptimistic` (19)\n- **Context:** `useContext`, `use` (19) for context\n- **Ref:** `useRef`, `useImperativeHandle`\n- **Effects:** `useEffect`, `useLayoutEffect`, `useInsertionEffect`\n- **Performance:** `useMemo`, `useCallback`, `useDeferredValue`, `useTransition`, `use` (19)\n- **External stores / SSR:** `useSyncExternalStore`, `useId`\n- **Forms (19):** `useFormStatus`\n- **Debug:** `useDebugValue`\n\n## Custom hooks\n\nName any function `useX` that calls other hooks to share stateful logic.\n\n## Server vs client\n\nMost hooks run in Client Components. `use` can run in Server Components to await promises in React 19—follow your framework rules.",
+    "code_examples": [
+      {
+        "title": "Import from 'react'",
+        "language": "tsx",
+        "code": "import {\n  useState,\n  useEffect,\n  useContext,\n  useReducer,\n  useCallback,\n  useMemo,\n  useRef,\n  useImperativeHandle,\n  useLayoutEffect,\n  useDebugValue,\n  useDeferredValue,\n  useTransition,\n  useId,\n  useSyncExternalStore,\n  useInsertionEffect,\n} from 'react';\n// React 19: use, useActionState, useFormStatus, useOptimistic"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-react-2", "preview": "Rules of Hooks" },
+      { "id": "int-react-5", "preview": "useMemo vs useCallback" }
+    ]
+  },
+  {
+    "id": "react-use-state",
+    "title": "useState",
+    "category": "React",
+    "tags": ["hooks", "state", "useState"],
+    "summary": "useState adds local state to function components. Calling the setter schedules a re-render with the next state value.",
+    "content": "## Signature\n\n`const [state, setState] = useState(initial)`\n\n## Functional updates\n\nWhen the next state depends on the previous one, pass an updater: `setCount((c) => c + 1)` to avoid stale closures in rapid updates.\n\n## Batching\n\nReact batches state updates in event handlers. Multiple `setState` calls may coalesce into one render.",
+    "code_examples": [
+      {
+        "title": "Counter",
+        "language": "tsx",
+        "code": "\"use client\";\n\nimport { useState } from \"react\";\n\nexport function Counter() {\n  const [count, setCount] = useState(0);\n  return (\n    <button type=\"button\" onClick={() => setCount((c) => c + 1)}>\n      Count: {count}\n    </button>\n  );\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-react-1", "preview": "useState vs useReducer" },
+      { "id": "int-react-2", "preview": "Rules of Hooks" }
+    ]
+  },
+  {
+    "id": "react-use-effect",
+    "title": "useEffect",
+    "category": "React",
+    "tags": ["hooks", "side-effects", "useEffect"],
+    "summary": "useEffect runs side effects after paint. The dependency array controls when the effect re-runs.",
+    "content": "## Dependencies\n\n- **[]** — run once after mount (and cleanup on unmount).\n- **[a, b]** — run when `a` or `b` change.\n- **omit array** — run after every render (usually avoid).\n\n## Cleanup\n\nReturn a function from the effect to unsubscribe timers, listeners, or abort fetches.",
+    "code_examples": [
+      {
+        "title": "Subscribe with cleanup",
+        "language": "tsx",
+        "code": "import { useEffect, useState } from \"react\";\n\nexport function WindowWidth() {\n  const [w, setW] = useState(0);\n  useEffect(() => {\n    const onResize = () => setW(window.innerWidth);\n    onResize();\n    window.addEventListener(\"resize\", onResize);\n    return () => window.removeEventListener(\"resize\", onResize);\n  }, []);\n  return <span>{w}px</span>;\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-react-3", "preview": "useEffect vs useLayoutEffect" },
+      { "id": "int-react-4", "preview": "Stale closures in effects" }
+    ]
+  },
+  {
+    "id": "react-use-context",
+    "title": "useContext",
+    "category": "React",
+    "tags": ["hooks", "context", "useContext", "providers"],
+    "summary": "useContext reads the nearest matching Context.Provider value. Use for dependency injection, themes, and rarely-changing shared data—not as a full Redux replacement for huge trees.",
+    "content": "## Pattern\n\nCreate context with `createContext(default)`. Wrap subtree with `<Provider value={...}>`. Children call `useContext(MyContext)`.\n\n## Re-renders\n\nWhen `value` identity changes, every consumer re-renders. Split contexts or memoize values to avoid churn.\n\n## vs Redux\n\nContext triggers broad updates without selectors; Redux adds predictable updates, middleware, DevTools, and normalized patterns.",
+    "code_examples": [
+      {
+        "language": "tsx",
+        "code": "import { createContext, useContext, useState } from 'react';\n\nconst ThemeCtx = createContext<'light' | 'dark'>('light');\n\nexport function App() {\n  const [theme, setTheme] = useState<'light' | 'dark'>('light');\n  return (\n    <ThemeCtx.Provider value={theme}>\n      <Toolbar setTheme={setTheme} />\n    </ThemeCtx.Provider>\n  );\n}\n\nfunction Toolbar({ setTheme }: { setTheme: (t: 'light' | 'dark') => void }) {\n  const theme = useContext(ThemeCtx);\n  return <button type=\"button\" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>toggle</button>;\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-redux-1", "preview": "Redux vs Context" },
+      { "id": "int-react-2", "preview": "Rules of Hooks" }
+    ]
+  },
+  {
+    "id": "react-use-reducer",
+    "title": "useReducer",
+    "category": "React",
+    "tags": ["hooks", "state", "useReducer", "dispatch"],
+    "summary": "useReducer is like useState but updates go through a reducer `(state, action) => newState`—ideal for multi-step flows and predictable transitions.",
+    "content": "## Signature\n\n`const [state, dispatch] = useReducer(reducer, initialArg, init?)`\n\n## Lazy init\n\nPass `init` as third argument with factory `(initialArg) => state` for expensive initial state.\n\n## When to prefer over useState\n\nMultiple related sub-values, undo/redo, or updates that are easier to express as actions.",
+    "code_examples": [
+      {
+        "language": "tsx",
+        "code": "type S = { step: number };\ntype A = { type: 'next' } | { type: 'back' };\n\nfunction reducer(s: S, a: A): S {\n  switch (a.type) {\n    case 'next': return { step: s.step + 1 };\n    case 'back': return { step: Math.max(0, s.step - 1) };\n  }\n}\n\nconst [state, dispatch] = useReducer(reducer, { step: 0 });"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-react-1", "preview": "useState vs useReducer" },
+      { "id": "int-redux-1", "preview": "Reducer pattern vs Redux store" }
+    ]
+  },
+  {
+    "id": "react-use-callback",
+    "title": "useCallback",
+    "category": "React",
+    "tags": ["hooks", "performance", "useCallback", "memoization"],
+    "summary": "useCallback returns a memoized function reference. Use it to stabilize callbacks passed to memoized children or as effect dependencies.",
+    "content": "## Signature\n\n`const fn = useCallback(fn, deps)`\n\n## Mind the deps\n\nIf dependencies change, you get a new function—same as inline handlers.\n\n## When it helps\n\nIf `Child` is wrapped in `React.memo`, passing stable callbacks avoids useless child renders.",
+    "code_examples": [
+      {
+        "language": "tsx",
+        "code": "const onSave = useCallback(() => {\n  api.save(form);\n}, [form]); // stable until form identity changes\n\nreturn <MemoChild onSave={onSave} />;"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-react-5", "preview": "useMemo vs useCallback" },
+      { "id": "int-react-6", "preview": "When memoization is wasted" }
+    ]
+  },
+  {
+    "id": "react-use-memo",
+    "title": "useMemo",
+    "category": "React",
+    "tags": ["hooks", "performance", "useMemo", "memoization"],
+    "summary": "useMemo caches a computed value until dependencies change—use for expensive pure calculations, not for every render.",
+    "content": "## Signature\n\n`const value = useMemo(() => compute(a, b), [a, b])`\n\n## Pitfalls\n\nReference equality: returning new objects/arrays each time defeats memoization downstream.\n\n## Rule of thumb\n\nMeasure first; avoid premature optimization.",
+    "code_examples": [
+      {
+        "language": "tsx",
+        "code": "const sorted = useMemo(() => items.slice().sort((x, y) => x.date - y.date), [items]);"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-react-5", "preview": "useMemo vs useCallback" },
+      { "id": "int-react-6", "preview": "Premature optimization" }
+    ]
+  },
+  {
+    "id": "react-use-ref",
+    "title": "useRef",
+    "category": "React",
+    "tags": ["hooks", "refs", "useRef", "DOM"],
+    "summary": "useRef holds a mutable `.current` box that persists across renders without triggering re-renders when updated.",
+    "content": "## DOM refs\n\n`<div ref={ref} />` assigns the element to `ref.current`.\n\n## Instance fields\n\nStore timers, latest props, or any mutable value that shouldn’t cause re-render on write.\n\n## vs useState\n\nUpdating `ref.current` does not schedule a render.",
+    "code_examples": [
+      {
+        "language": "tsx",
+        "code": "const ref = useRef<HTMLInputElement>(null);\n\nuseEffect(() => {\n  ref.current?.focus();\n}, []);\n\nreturn <input ref={ref} />;"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-react-6", "preview": "useRef vs useState" },
+      { "id": "int-react-7", "preview": "Forwarding refs" }
+    ]
+  },
+  {
+    "id": "react-use-imperative-handle",
+    "title": "useImperativeHandle",
+    "category": "React",
+    "tags": ["hooks", "refs", "useImperativeHandle", "forwardRef"],
+    "summary": "useImperativeHandle customizes the instance value exposed when parent uses ref—prefer declarative props when possible.",
+    "content": "## Usage\n\nPair with `forwardRef`. Factory builds the object parents see on `ref.current`.\n\n## Style\n\nReact encourages data flowing down; imperative handles are for rare cases (focus, animation controllers, maps).",
+    "code_examples": [
+      {
+        "language": "tsx",
+        "code": "useImperativeHandle(ref, () => ({\n  focusInput: () => inner.current?.focus(),\n}), []);"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-react-7", "preview": "forwardRef + imperative APIs" }
+    ]
+  },
+  {
+    "id": "react-use-layout-effect",
+    "title": "useLayoutEffect",
+    "category": "React",
+    "tags": ["hooks", "layout", "useLayoutEffect", "DOM"],
+    "summary": "Fires synchronously after DOM mutations but before paint—use for measuring layout or applying DOM writes that must happen before the user sees a frame.",
+    "content": "## vs useEffect\n\nuseEffect defers to after paint; useLayoutEffect blocks paint until complete—keep work tiny.\n\n## SSR note\n\nWarnings if DOM assumptions don’t match server; sometimes split logic.",
+    "code_examples": [
+      {
+        "language": "tsx",
+        "code": "useLayoutEffect(() => {\n  const rect = node.getBoundingClientRect();\n  setTooltipPosition(rect);\n}, [node]);"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-react-3", "preview": "useEffect vs useLayoutEffect" }
+    ]
+  },
+  {
+    "id": "react-use-debug-value",
+    "title": "useDebugValue",
+    "category": "React",
+    "tags": ["hooks", "debugging", "useDebugValue", "devtools"],
+    "summary": "useDebugValue adds labels for custom hooks in React DevTools—does nothing in production builds.",
+    "content": "## Signature\n\n`useDebugValue(value, format?)`\n\n## Usage\n\nInside custom hooks to show concise state snapshots while debugging.",
+    "code_examples": [
+      {
+        "language": "tsx",
+        "code": "function useFriendStatus(id: string) {\n  const online = ...;\n  useDebugValue(online ? 'Online' : 'Offline');\n  return online;\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-react-2", "preview": "Custom hooks" }
+    ]
+  },
+  {
+    "id": "react-use-deferred-value",
+    "title": "useDeferredValue",
+    "category": "React",
+    "tags": ["hooks", "concurrent", "useDeferredValue", "react-18"],
+    "summary": "Returns a deferred version of a value that may lag behind—for keeping inputs responsive while expensive UI catches up.",
+    "content": "## Pattern\n\nPass fast-updating state as input; render heavy subtree from deferred copy so React can interrupt lower priority work.\n\n## vs startTransition\n\n`useTransition` marks updates as transitions explicitly; `useDeferredValue` derives a lagging copy of some prop/state.",
+    "code_examples": [
+      {
+        "language": "tsx",
+        "code": "const deferredQuery = useDeferredValue(query);\nconst results = useMemo(() => search(deferredQuery), [deferredQuery]);"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-react-8", "preview": "Concurrent rendering & useDeferredValue" }
+    ]
+  },
+  {
+    "id": "react-use-transition",
+    "title": "useTransition",
+    "category": "React",
+    "tags": ["hooks", "concurrent", "useTransition", "react-18"],
+    "summary": "Marks state updates as non-urgent transitions and exposes `isPending` while the transition is in flight.",
+    "content": "## Signature\n\n`const [isPending, startTransition] = useTransition()`\n\n## Usage\n\nWrap `setState` calls that should not block urgent UI (typing, clicking).",
+    "code_examples": [
+      {
+        "language": "tsx",
+        "code": "const [isPending, startTransition] = useTransition();\n\nfunction onChange(e: React.ChangeEvent<HTMLInputElement>) {\n  setInput(e.target.value); // urgent\n  startTransition(() => setSearchQuery(e.target.value));\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-react-8", "preview": "useTransition vs useDeferredValue" }
+    ]
+  },
+  {
+    "id": "react-use-id",
+    "title": "useId",
+    "category": "React",
+    "tags": ["hooks", "accessibility", "useId", "SSR"],
+    "summary": "Generates unique stable IDs across SSR and client—use for linking labels, aria attributes, and SVG defs.",
+    "content": "## vs incremental counters\n\nAvoid `useRef(++id)`—hydration mismatch risk.\n\n## Prefix\n\n`const id = useId();` returns colon-containing strings safe for HTML.",
+    "code_examples": [
+      {
+        "language": "tsx",
+        "code": "const id = useId();\nreturn (\n  <>\n    <label htmlFor={id}>Email</label>\n    <input id={id} type=\"email\" />\n  </>\n);"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-html-1", "preview": "Accessibility & ids" }
+    ]
+  },
+  {
+    "id": "react-use-sync-external-store",
+    "title": "useSyncExternalStore",
+    "category": "React",
+    "tags": ["hooks", "stores", "useSyncExternalStore", "concurrent"],
+    "summary": "Subscribe to an external data source safely under concurrent rendering—foundation for state libraries and bridging non-React stores.",
+    "content": "## API\n\n`useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot?)`\n\n## Rules\n\n`getSnapshot` must be cached per store state version; server snapshot avoids hydration mismatch.",
+    "code_examples": [
+      {
+        "language": "tsx",
+        "code": "const width = useSyncExternalStore(\n  (onStoreChange) => {\n    window.addEventListener('resize', onStoreChange);\n    return () => window.removeEventListener('resize', onStoreChange);\n  },\n  () => window.innerWidth,\n  () => 0,\n);"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-react-9", "preview": "useSyncExternalStore vs useEffect+useState" }
+    ]
+  },
+  {
+    "id": "react-use-insertion-effect",
+    "title": "useInsertionEffect",
+    "category": "React",
+    "tags": ["hooks", "css-in-js", "useInsertionEffect"],
+    "summary": "Fires before layout effects, meant for injecting styles into the DOM—primarily used by CSS-in-JS libraries.",
+    "content": "## Timing\n\nBefore `useLayoutEffect`, after DOM mutation—avoid general app logic here unless building a styling runtime.",
+    "code_examples": [
+      {
+        "language": "tsx",
+        "code": "useInsertionEffect(() => {\n  // insert keyframes or rules before paint\n}, []);"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-react-3", "preview": "Effect ordering" }
+    ]
+  },
+  {
+    "id": "react-use-hook",
+    "title": "use() — read Context & Promises (React 19)",
+    "category": "React",
+    "tags": ["hooks", "react-19", "use", "promises", "suspense"],
+    "summary": "The `use` hook lets you read a Promise or Context during render—integrates with Suspense for async data.",
+    "content": "## Promises\n\n`const data = use(promise)` suspends until resolved (needs Suspense boundary).\n\n## Context\n\n`const theme = use(ThemeContext)`—can be called conditionally unlike `useContext`.\n\n## Caveats\n\nFollow your bundler/framework rules for Server vs Client usage.",
+    "code_examples": [
+      {
+        "language": "tsx",
+        "code": "import { use } from 'react';\n\nfunction Comments({ commentsPromise }: { commentsPromise: Promise<Comment[]> }) {\n  const comments = use(commentsPromise);\n  return <ul>{comments.map((c) => <li key={c.id}>{c.text}</li>)}</ul>;\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-react-10", "preview": "use() vs useContext / async patterns" }
+    ]
+  },
+  {
+    "id": "react-use-action-state",
+    "title": "useActionState (React 19)",
+    "category": "React",
+    "tags": ["hooks", "forms", "react-19", "useActionState", "server-actions"],
+    "summary": "Wraps async actions for forms: gives pending state and last returned value—pairs well with Server Actions.",
+    "content": "## Pattern\n\n`const [state, submitAction, isPending] = useActionState(fn, initialState)`\n\n## Forms\n\n`<form action={submitAction}>` progressive enhancement story.",
+    "code_examples": [
+      {
+        "language": "tsx",
+        "code": "const [error, submit, isPending] = useActionState(\n  async (_prev: string | null, formData: FormData) => {\n    const err = await login(formData);\n    return err;\n  },\n  null,\n);"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-next-3", "preview": "Actions & forms" }
+    ]
+  },
+  {
+    "id": "react-use-form-status",
+    "title": "useFormStatus (React 19)",
+    "category": "React",
+    "tags": ["hooks", "forms", "react-19", "useFormStatus"],
+    "summary": "Must be called from a component rendered inside a `<form>`—exposes pending state of the parent form submission.",
+    "content": "## Constraint\n\nOnly works under a form subtree so React can associate status with the right form.\n\n## UX\n\nDisable buttons or show spinners during submission.",
+    "code_examples": [
+      {
+        "language": "tsx",
+        "code": "function SubmitButton() {\n  const { pending } = useFormStatus();\n  return (\n    <button type=\"submit\" disabled={pending}>\n      {pending ? 'Saving…' : 'Save'}\n    </button>\n  );\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-react-11", "preview": "useFormStatus vs local pending state" }
+    ]
+  },
+  {
+    "id": "react-use-optimistic",
+    "title": "useOptimistic (React 19)",
+    "category": "React",
+    "tags": ["hooks", "optimistic-ui", "react-19", "useOptimistic"],
+    "summary": "Shows an optimistic UI layer while an async action completes; reverts when the real state lands.",
+    "content": "## Signature\n\n`const [optimistic, addOptimistic] = useOptimistic(state, reducer)`\n\n## Use cases\n\nLikes, messages, toggles—pair with transitions or server reconciliation.",
+    "code_examples": [
+      {
+        "language": "tsx",
+        "code": "const [optimisticLikes, addOptimistic] = useOptimistic(\n  likes,\n  (current, delta: number) => current + delta,\n);\n\nasync function like() {\n  addOptimistic(1);\n  await serverLike();\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-react-12", "preview": "Optimistic UI trade-offs" }
+    ]
+  }
+]

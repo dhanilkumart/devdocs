@@ -1,0 +1,406 @@
+[
+  {
+    "id": "html-semantic",
+    "title": "Semantic HTML5",
+    "category": "HTML5",
+    "tags": ["accessibility", "semantic", "SEO", "structure"],
+    "summary": "Semantic elements (`header`, `nav`, `main`, `article`, `section`, `footer`) communicate structure to assistive tech and search engines.",
+    "content": "## Landmarks\n\nUse **one** `main` per page. Headings should outline content (`h1` → `h2`…) without skipping levels carelessly.\n\n## When to use article vs section\n\n- **article** — self-contained piece (post, card with permalink).\n- **section** — thematic grouping inside a document.",
+    "code_examples": [
+      {
+        "language": "html",
+        "code": "<body>\n  <header>\n    <nav aria-label=\"Primary\">…</nav>\n  </header>\n  <main>\n    <article>\n      <h1>Guide</h1>\n      <section aria-labelledby=\"tips\">\n        <h2 id=\"tips\">Tips</h2>\n        <p>…</p>\n      </section>\n    </article>\n  </main>\n  <footer>© DevDocs</footer>\n</body>"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-html-1", "preview": "Why semantic HTML matters for a11y" },
+      { "id": "int-html-2", "preview": "Landmark roles vs native elements" }
+    ]
+  },
+  {
+    "id": "html-forms",
+    "title": "Forms and validation",
+    "category": "HTML5",
+    "tags": ["forms", "validation", "inputs", "accessibility"],
+    "summary": "HTML5 adds input types, built-in validation attributes, and associations between labels and controls for accessibility.",
+    "content": "## Labels\n\nEvery control should have an accessible name via `<label for>` or `aria-label` / `aria-labelledby`.\n\n## Validation\n\nUse `required`, `pattern`, `min`/`max`, and server-side validation—never rely on client validation alone.",
+    "code_examples": [
+      {
+        "language": "html",
+        "code": "<form>\n  <label for=\"email\">Email</label>\n  <input\n    id=\"email\"\n    name=\"email\"\n    type=\"email\"\n    required\n    autocomplete=\"email\"\n  />\n  <button type=\"submit\">Subscribe</button>\n</form>"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-html-3", "preview": "Client vs server validation" },
+      { "id": "int-html-4", "preview": "Custom validity messages" }
+    ]
+  },
+  {
+    "id": "html-web-storage",
+    "title": "Web Storage API (localStorage & sessionStorage)",
+    "category": "HTML5",
+    "tags": ["storage", "localStorage", "sessionStorage", "browser"],
+    "summary": "Persist key–value strings in the browser—`localStorage` survives tabs/restarts; `sessionStorage` is scoped to the tab session.",
+    "content": "## Limits\n\nSame-origin only; ~5MB typical quota (engine-dependent); **strings only**—`JSON.stringify` for objects.\n\n## Security\n\nNot secret storage—any script on the origin can read it; avoid tokens unless hardened.\n\n## Pattern\n\nFeature-detect `window.localStorage` and wrap `try/catch` for private mode/quota errors.",
+    "code_examples": [
+      {
+        "language": "javascript",
+        "code": "localStorage.setItem(\"name\", \"Dhanil\");\nconst name = localStorage.getItem(\"name\");\nlocalStorage.removeItem(\"name\");\n\nsessionStorage.setItem(\"step\", \"2\");"
+      }
+    ],
+    "related_questions": [
+      { "id": "fe-q067", "preview": "Loading & client state" },
+      { "id": "int-js-2", "preview": "Browser APIs" }
+    ]
+  },
+  {
+    "id": "html-input-types",
+    "title": "HTML input types & built-in validation",
+    "category": "HTML5",
+    "tags": ["input", "email", "date", "range", "validation"],
+    "summary": "Specialized `type` values give native UX—keyboard hints, pickers, and constraint validation without plugins.",
+    "content": "## Common types\n\n`email`, `url`, `tel`, `number`, `date`, `time`, `datetime-local`, `range`, `color`, `search`, `file`.\n\n## Behavior\n\nBrowsers show suitable controls and lightweight validation on submit; **always validate on the server**.\n\n## Era\n\nCentral to the **better forms** story (~2012 onward), refined through ~2020.",
+    "code_examples": [
+      {
+        "language": "html",
+        "code": "<label for=\"e\">Email</label>\n<input id=\"e\" type=\"email\" name=\"email\" required />\n\n<label for=\"d\">Start date</label>\n<input id=\"d\" type=\"date\" name=\"start\" />\n\n<label for=\"v\">Volume</label>\n<input id=\"v\" type=\"range\" min=\"0\" max=\"100\" value=\"50\" />"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-html-3", "preview": "Client vs server validation" },
+      { "id": "fe-q066", "preview": "Form handling in React" }
+    ]
+  },
+  {
+    "id": "html-native-validation",
+    "title": "Native form validation attributes",
+    "category": "HTML5",
+    "tags": ["validation", "required", "pattern", "forms", "2016"],
+    "summary": "`required`, `min`/`max`, `pattern`, `step`, `maxlength`, and form-level `novalidate` integrate with the Constraint Validation API—often no JS for basic UX.",
+    "content": "## JS hooks\n\n`element.checkValidity()`, `reportValidity()`, `setCustomValidity()` for messages.\n\n## Limits\n\nAccessibility still needs errors tied with **`aria-invalid`** and descriptions—don’t rely on browser chrome alone.\n\n## Timeline\n\nPart of the **2016–2020** push for richer native forms.",
+    "code_examples": [
+      {
+        "language": "html",
+        "code": "<form>\n  <input type=\"text\" name=\"code\" required pattern=\"[A-Z]{3}-[0-9]{4}\" />\n  <input type=\"number\" name=\"age\" min=\"18\" max=\"120\" />\n  <button type=\"submit\">Send</button>\n</form>"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-html-4", "preview": "Custom validity messages" },
+      { "id": "adv-q014", "preview": "Accessible forms" }
+    ]
+  },
+  {
+    "id": "html-placeholder-autofocus",
+    "title": "placeholder & autofocus",
+    "category": "HTML5",
+    "tags": ["forms", "UX", "accessibility"],
+    "summary": "`placeholder` hints at expected input but is **not** a label replacement. `autofocus` moves keyboard focus on load—use sparingly.",
+    "content": "## A11y\n\nScreen readers may skip placeholder text when the field is filled—always provide a visible **label**.\n\n## autofocus\n\nAvoid on pages where users expect to scroll first or when it steals focus from skip links.\n\n## Mobile\n\nPlaceholder contrast must still meet WCAG.",
+    "code_examples": [
+      {
+        "language": "html",
+        "code": "<label for=\"name\">Name</label>\n<input\n  id=\"name\"\n  name=\"name\"\n  placeholder=\"Enter name\"\n  autocomplete=\"name\"\n  autofocus\n/>"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-html-3", "preview": "Validation & labels" },
+      { "id": "adv-q013", "preview": "Keyboard users" }
+    ]
+  },
+  {
+    "id": "html-drag-and-drop",
+    "title": "Drag and Drop API",
+    "category": "HTML5",
+    "tags": ["dnd", "drag", "drop", "events"],
+    "summary": "`draggable=\"true\"` plus event handlers (`dragstart`, `dragover`, `drop`) enable file lists and board UIs—often paired with file APIs.",
+    "content": "## Defaults\n\nLinks/images may drag natively; call **`preventDefault`** on `dragover` to allow drop.\n\n## A11y\n\nProvide **keyboard** alternatives—DnD alone is not sufficient.\n\n## Mobile\n\nTouch behavior differs; test or offer alternate flows.",
+    "code_examples": [
+      {
+        "language": "html",
+        "code": "<div draggable=\"true\" id=\"card\">Drag me</div>\n<div id=\"zone\">Drop here</div>\n<script>\n  zone.addEventListener(\"dragover\", (e) => e.preventDefault());\n  zone.addEventListener(\"drop\", (e) => { e.preventDefault(); /* handle */ });\n</script>"
+      }
+    ],
+    "related_questions": [
+      { "id": "fe-q069", "preview": "Modal & interaction patterns" },
+      { "id": "int-html-3", "preview": "Progressive enhancement" }
+    ]
+  },
+  {
+    "id": "html-geolocation",
+    "title": "Geolocation API",
+    "category": "HTML5",
+    "tags": ["geolocation", "privacy", "permissions"],
+    "summary": "`navigator.geolocation.getCurrentPosition` reads device location after user permission—HTTPS required in production browsers.",
+    "content": "## Privacy\n\nAlways explain **why** you need location; handle denial and timeouts.\n\n## Accuracy\n\nHigh accuracy costs battery—tune `enableHighAccuracy`.\n\n## Note\n\nThis is a **JavaScript Web API**, used alongside HTML pages—not an HTML tag.",
+    "code_examples": [
+      {
+        "language": "javascript",
+        "code": "navigator.geolocation.getCurrentPosition(\n  (pos) => console.log(pos.coords.latitude, pos.coords.longitude),\n  (err) => console.error(err),\n  { enableHighAccuracy: true, timeout: 10_000 }\n);"
+      }
+    ],
+    "related_questions": [
+      { "id": "fe-q076", "preview": "Performance & privacy" },
+      { "id": "int-js-4", "preview": "Error handling" }
+    ]
+  },
+  {
+    "id": "html-contenteditable",
+    "title": "contenteditable",
+    "category": "HTML5",
+    "tags": ["editing", "rich-text", "execCommand"],
+    "summary": "`contenteditable=\"true\"` makes regions user-editable—quick prototypes; production rich text usually needs a proper editor and sanitization.",
+    "content": "## Risks\n\nPasting HTML can inject unsafe markup—**sanitize** before saving.\n\n## A11y\n\nExpose role/name and toolbar patterns if mimicking an editor.\n\n## Alternative\n\nHide complex WYSIWYG behind components with tested behavior.",
+    "code_examples": [
+      {
+        "language": "html",
+        "code": "<section contenteditable=\"true\" aria-label=\"Notes\">\n  Edit this text inline.\n</section>"
+      }
+    ],
+    "related_questions": [
+      { "id": "adv-q014", "preview": "Div as button vs semantic controls" },
+      { "id": "fe-q066", "preview": "Controlled inputs" }
+    ]
+  },
+  {
+    "id": "html-lazy-loading",
+    "title": "Lazy loading with loading=\"lazy\"",
+    "category": "HTML5",
+    "tags": ["performance", "images", "iframe", "2021"],
+    "summary": "Defer offscreen `<img>` and `<iframe>` loads until needed—major **LCP** and bandwidth win when used correctly.",
+    "content": "## Rules\n\nGreat for below-the-fold media; **avoid** `lazy` on hero/LCP images—use **`fetchpriority`** instead.\n\n## Timeline\n\nLandmark **performance & UX** feature in the **2021–2023** era alongside responsive images.",
+    "code_examples": [
+      {
+        "language": "html",
+        "code": "<img src=\"/photos/article-hero.jpg\" alt=\"…\" width=\"1200\" height=\"630\" />\n<img src=\"/photos/gallery-1.jpg\" alt=\"…\" loading=\"lazy\" decoding=\"async\" />"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q046", "preview": "Responsive images CSS" },
+      { "id": "fe-q079", "preview": "Slow APIs & skeletons" }
+    ]
+  },
+  {
+    "id": "html-picture-responsive",
+    "title": "<picture> & responsive images",
+    "category": "HTML5",
+    "tags": ["picture", "srcset", "sizes", "responsive"],
+    "summary": "`<picture>` chooses sources by media/type; combine with `srcset`/`sizes` on `<img>` for resolution switching.",
+    "content": "## Use cases\n\nArt direction (crop differs), **WebP/AVIF** with JPEG fallback, dark/light assets.\n\n## Performance\n\nGive explicit **`width`/`height`** or CSS **`aspect-ratio`** to reduce CLS.",
+    "code_examples": [
+      {
+        "language": "html",
+        "code": "<picture>\n  <source media=\"(max-width: 600px)\" srcset=\"small.jpg\" />\n  <img src=\"large.jpg\" alt=\"Team\" width=\"800\" height=\"450\" />\n</picture>"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q046", "preview": "max-width images" },
+      { "id": "fe-q056", "preview": "Optimize React perf" }
+    ]
+  },
+  {
+    "id": "html-details-summary",
+    "title": "<details> & <summary>",
+    "category": "HTML5",
+    "tags": ["accordion", "disclosure", "native"],
+    "summary": "Built-in disclosure widget—expand/collapse without JS for FAQs and filters.",
+    "content": "## A11y\n\nNative disclosure semantics in supporting browsers; enhance keyboard tests.\n\n## Styling\n\n`::marker` / shadow DOM quirks vary—polyfills rarely needed for basics.",
+    "code_examples": [
+      {
+        "language": "html",
+        "code": "<details>\n  <summary>More info</summary>\n  <p>Extra content revealed when open.</p>\n</details>"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-html-1", "preview": "Semantic HTML" },
+      { "id": "adv-q013", "preview": "Keyboard accessibility" }
+    ]
+  },
+  {
+    "id": "html-template-element",
+    "title": "<template>",
+    "category": "HTML5",
+    "tags": ["template", "clone", "DOM"],
+    "summary": "Inert fragment holder—clone its `.content` into the document when rendering lists or widgets.",
+    "content": "## Why\n\nMarkup stays off-screen without display hacks; safe staging before attach.\n\n## Usage\n\n`document.importNode(template.content, true)` then append.",
+    "code_examples": [
+      {
+        "language": "html",
+        "code": "<template id=\"row\">\n  <tr><td></td><td></td></tr>\n</template>"
+      },
+      {
+        "language": "javascript",
+        "code": "const t = document.querySelector(\"#row\");\nconst row = t.content.cloneNode(true);\nt.parentElement.append(row);"
+      }
+    ],
+    "related_questions": [
+      { "id": "fe-q040", "preview": "Lazy loading components" },
+      { "id": "int-html-1", "preview": "Semantic HTML" }
+    ]
+  },
+  {
+    "id": "html-intersection-observer",
+    "title": "Intersection Observer (with HTML elements)",
+    "category": "HTML5",
+    "tags": ["intersection", "visibility", "lazy", "performance"],
+    "summary": "Efficiently observe when elements enter/exit the viewport—pairs with HTML for infinite scroll, lazy mounts, and analytics. Implemented in JavaScript, driven by DOM nodes.",
+    "content": "## vs scroll listeners\n\nAvoid main-thread scroll thrash—observer batches callbacks.\n\n## Pattern\n\nObserve sentinel nodes or cards; unobserve after load.\n\n## Note\n\nAPI is **JavaScript**—listed here because scripts target concrete HTML elements.",
+    "code_examples": [
+      {
+        "language": "javascript",
+        "code": "const io = new IntersectionObserver(\n  (entries) => {\n    for (const e of entries) {\n      if (e.isIntersecting) loadMore(e.target);\n    }\n  },\n  { rootMargin: \"200px\" }\n);\nio.observe(document.querySelector(\"#sentinel\"));"
+      }
+    ],
+    "related_questions": [
+      { "id": "adv-q017", "preview": "Stale updates & observers" },
+      { "id": "css-q052", "preview": "CSS performance" }
+    ]
+  },
+  {
+    "id": "html-dialog-element",
+    "title": "<dialog> — native modal",
+    "category": "HTML5",
+    "tags": ["dialog", "modal", "a11y", "2024"],
+    "summary": "The `<dialog>` element plus `.showModal()` provides focus trapping, backdrop, and ESC close in supporting browsers—often replaces lightweight modal libraries.",
+    "content": "## Methods\n\n`showModal()` vs `show()`—modal captures focus and displays ::backdrop.\n\n## Progressive enhancement\n\nFallback dialog patterns for older engines.\n\n## Era\n\nMajor **modern HTML** enhancement for accessible overlays (~2024 Baseline momentum).",
+    "code_examples": [
+      {
+        "language": "html",
+        "code": "<dialog id=\"dlg\">\n  <form method=\"dialog\">\n    <p>Modal content</p>\n    <button value=\"cancel\">Cancel</button>\n    <button value=\"ok\">OK</button>\n  </form>\n</dialog>\n<button type=\"button\" onclick=\"document.querySelector('#dlg').showModal()\">\n  Open\n</button>"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q042", "preview": "Center a modal" },
+      { "id": "fe-q069", "preview": "Modal handling" }
+    ]
+  },
+  {
+    "id": "html-popover-api",
+    "title": "popover & Popover API",
+    "category": "HTML5",
+    "tags": ["popover", "dropdown", "tooltip", "2024"],
+    "summary": "`popover` attribute + `popovertarget` buttons give declarative menus/tooltips—layers above anchor positioning for polished chrome.",
+    "content": "## Behavior\n\nLight-dismiss, focus management basics—verify cross-browser.\n\n## Pairing\n\nWorks with **`dialog`** and CSS anchor positioning where supported.",
+    "code_examples": [
+      {
+        "language": "html",
+        "code": "<button type=\"button\" popovertarget=\"menu\" popovertargetaction=\"toggle\">\n  Open\n</button>\n<div id=\"menu\" popover>Menu content</div>"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q028", "preview": "Anchor positioning" },
+      { "id": "adv-q014", "preview": "Keyboard & roles" }
+    ]
+  },
+  {
+    "id": "html-inert-attribute",
+    "title": "inert attribute",
+    "category": "HTML5",
+    "tags": ["inert", "a11y", "modal", "focus"],
+    "summary": "`inert` removes elements from interaction and tab order—ideal behind modals or during loading states.",
+    "content": "## vs disabled\n\nBroader than disabling inputs—whole subtrees become non-interactive.\n\n## Pairing\n\nUse when **`dialog.showModal`** already traps focus; `inert` helps background content.\n\n## Support\n\nProgressive enhancement—test Safari/Firefox matrices.",
+    "code_examples": [
+      {
+        "language": "html",
+        "code": "<div id=\"app\">\n  <main>...</main>\n</div>\n<div id=\"overlay\" inert aria-hidden=\"true\">\n  Disabled UI behind modal\n</div>"
+      }
+    ],
+    "related_questions": [
+      { "id": "adv-q014", "preview": "Focus management" },
+      { "id": "fe-q077", "preview": "Error boundaries / overlays" }
+    ]
+  },
+  {
+    "id": "html-fetchpriority",
+    "title": "fetchpriority on images & scripts",
+    "category": "HTML5",
+    "tags": ["performance", "LCP", "loading", "2024"],
+    "summary": "`fetchpriority=\"high\"` hints critical hero assets; `low` deprioritizes decorative images—helps schedulers alongside `loading`.",
+    "content": "## Usage\n\nMark **one** likely LCP image high; avoid marking everything.\n\n## Relation\n\nDistinct from **`preload`** link—different mechanism.",
+    "code_examples": [
+      {
+        "language": "html",
+        "code": "<img\n  src=\"/hero.jpg\"\n  alt=\"Hero\"\n  width=\"1600\"\n  height=\"900\"\n  fetchpriority=\"high\"\n  decoding=\"async\"\n/>"
+      }
+    ],
+    "related_questions": [
+      { "id": "fe-q076", "preview": "Performance approach" },
+      { "id": "css-q052", "preview": "CSS perf" }
+    ]
+  },
+  {
+    "id": "html-img-decoding",
+    "title": "decoding on images",
+    "category": "HTML5",
+    "tags": ["images", "performance", "async"],
+    "summary": "`decoding=\"async\"` lets the browser decode images off the main thread path where supported—often paired with `loading` and dimensions.",
+    "content": "## Values\n\n`sync` vs `async` vs `auto`—pick async for below-fold media.\n\n## CLS\n\nStill provide width/height or CSS aspect-ratio.",
+    "code_examples": [
+      {
+        "language": "html",
+        "code": "<img src=\"photo.jpg\" alt=\"…\" width=\"600\" height=\"400\" loading=\"lazy\" decoding=\"async\" />"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q046", "preview": "Responsive images" },
+      { "id": "fe-q079", "preview": "API delays" }
+    ]
+  },
+  {
+    "id": "html-inputmode",
+    "title": "inputmode attribute",
+    "category": "HTML5",
+    "tags": ["mobile", "keyboard", "forms", "UX"],
+    "summary": "Hints which virtual keyboard to show (`numeric`, `decimal`, `tel`, etc.)—especially on mobile—without changing `type=\"text\"` semantics when you need pattern control.",
+    "content": "## Distinction\n\nNot the same as `type=\"number\"`—still validate and sanitize server-side.\n\n## Accessibility\n\nCombine with labels and errors announced to AT.",
+    "code_examples": [
+      {
+        "language": "html",
+        "code": "<label for=\"otp\">Code</label>\n<input\n  id=\"otp\"\n  type=\"text\"\n  inputmode=\"numeric\"\n  pattern=\"[0-9]*\"\n  maxlength=\"6\"\n  autocomplete=\"one-time-code\"\n/>"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-html-4", "preview": "Validation messages" },
+      { "id": "adv-q014", "preview": "Accessible inputs" }
+    ]
+  },
+  {
+    "id": "html-autocomplete-tokens",
+    "title": "autocomplete tokens",
+    "category": "HTML5",
+    "tags": ["autocomplete", "forms", "OTP", "passwordless"],
+    "summary": "Rich `autocomplete` values (`email`, `current-password`, `one-time-code`, section prefixes) help password managers and SMS OTP autofill.",
+    "content": "## Security\n\nNever autocomplete secrets you don’t intend stored—pair policies with product.\n\n## OTP\n\n`one-time-code` assists SMS/WebOTP flows on supporting devices.",
+    "code_examples": [
+      {
+        "language": "html",
+        "code": "<input type=\"email\" name=\"email\" autocomplete=\"email\" />\n<input type=\"password\" name=\"password\" autocomplete=\"current-password\" />\n<input type=\"text\" inputmode=\"numeric\" autocomplete=\"one-time-code\" />"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-html-3", "preview": "Client validation" },
+      { "id": "fe-q066", "preview": "Forms in React" }
+    ]
+  },
+  {
+    "id": "html-web-components",
+    "title": "Web Components (custom elements)",
+    "category": "HTML5",
+    "tags": ["web-components", "custom-elements", "shadow-dom"],
+    "summary": "Define reusable `<my-component>` tags with Custom Elements, Shadow DOM, and `<slot>`—framework-agnostic UI capsules.",
+    "content": "## Fit\n\nDesign systems embedded in legacy pages or micro-frontends.\n\n## Trade-offs\n\nSSR/hydration story differs from React—plan serialization.\n\n## Basics\n\n`customElements.define('my-card', class extends HTMLElement { … })`.",
+    "code_examples": [
+      {
+        "language": "javascript",
+        "code": "class MyBadge extends HTMLElement {\n  connectedCallback() {\n    this.attachShadow({ mode: \"open\" }).innerHTML = `<slot></slot>`;\n  }\n}\ncustomElements.define(\"my-badge\", MyBadge);"
+      },
+      {
+        "language": "html",
+        "code": "<my-badge>New</my-badge>"
+      }
+    ],
+    "related_questions": [
+      { "id": "fe-q058", "preview": "Component architecture" },
+      { "id": "int-react-2", "preview": "Hooks vs CE lifecycle" }
+    ]
+  }
+]

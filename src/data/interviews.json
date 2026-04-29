@@ -1,0 +1,371 @@
+[
+  {
+    "id": "int-js-1",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "Explain closures in JavaScript and give a practical use case.",
+    "answer": "A closure is an inner function that retains access to variables from its outer lexical scope after the outer function has returned. Practical uses include factories (private state), partial application, and memoization.",
+    "explanation": "Interviewers look for lexical scope + persistence of environment. Mention memory implications and avoiding stale loop variables with var.",
+    "example": "function once(fn) { let called = false; return (...args) => { if (called) return; called = true; return fn(...args); }; }"
+  },
+  {
+    "id": "int-js-2",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is the difference between let, const, and var?",
+    "answer": "`var` is function-scoped and hoisted with `undefined` initialization. `let` and `const` are block-scoped, in the temporal dead zone until declared, and `const` cannot be reassigned (though object properties may still change).",
+    "explanation": "Demonstrate understanding of hoisting, TDZ, and why `let`/`const` reduce accidental globals.",
+    "example": "for (let i = 0; i < 3; i++) { setTimeout(() => console.log(i), 10); } // 0,1,2 — with var you'd see 3,3,3."
+  },
+  {
+    "id": "int-js-3",
+    "technology": "JavaScript",
+    "level": "Advanced",
+    "question": "How does the JavaScript event loop interact with microtasks and macrotasks?",
+    "answer": "The event loop processes one macrotask (e.g., script, timeout), then drains the microtask queue (promises, queueMicrotask) before rendering and picking the next macrotask.",
+    "explanation": "Shows depth for async debugging—order of promise.then vs setTimeout, and starvation risks from infinite microtasks.",
+    "example": "console.log('A'); setTimeout(() => console.log('B'), 0); Promise.resolve().then(() => console.log('C')); // A, C, B"
+  },
+  {
+    "id": "int-js-4",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "How do you handle errors with async/await?",
+    "answer": "Wrap awaited calls in try/catch/finally, or attach .catch() on the promise. For parallel work, use Promise.all with care—one rejection fails all unless using allSettled.",
+    "explanation": "Mention unhandled promise rejections and returning errors vs throwing in Server Actions/API handlers.",
+    "example": "async function safe() { try { return await fetch('/x'); } catch (e) { console.error(e); return null; } }"
+  },
+  {
+    "id": "int-react-1",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "When would you choose useReducer instead of useState?",
+    "answer": "When next state depends on complex logic, multiple sub-values update together, or you want a reducers-style transition table that is easier to test.",
+    "explanation": "Contrast boilerplate vs clarity for wizard flows, undo/redo, or state machines.",
+    "example": "const [state, dispatch] = useReducer(reducer, initial); dispatch({ type: 'increment' });"
+  },
+  {
+    "id": "int-react-2",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What are the Rules of Hooks?",
+    "answer": "Only call hooks at the top level of React functions—not inside loops, conditions, or nested functions. Only call them from React function components or custom hooks.",
+    "explanation": "Hooks rely on call order to associate state—breaking order breaks state mapping.",
+    "example": "function Bad({ show }) { if (show) useEffect(() => {}, []); } // violates rules"
+  },
+  {
+    "id": "int-react-3",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "Compare useEffect and useLayoutEffect.",
+    "answer": "useEffect runs asynchronously after paint. useLayoutEffect runs synchronously after DOM mutations but before paint—use for measuring layout or preventing flicker.",
+    "explanation": "Mention blocking paint if layout effect is slow; prefer useEffect by default.",
+    "example": "useLayoutEffect(() => { const h = ref.current?.getBoundingClientRect().height; }, []);"
+  },
+  {
+    "id": "int-react-4",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "What causes stale closures in effects and how do you fix them?",
+    "answer": "Effects capture values from the render they were created in. If dependencies omit changing values, handlers see old state. Fix with correct dependency arrays, functional updates, or refs for stable callbacks.",
+    "explanation": "eslint-plugin-react-hooks catches many cases; discuss callbacks stored in refs for intervals.",
+    "example": "useEffect(() => { const id = setInterval(() => setCount((c) => c + 1), 1000); return () => clearInterval(id); }, []);"
+  },
+  {
+    "id": "int-ts-1",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "When do you use interface vs type for object shapes?",
+    "answer": "Interfaces support declaration merging and are often used for public contracts. Types excel at unions, intersections, and advanced mapped types. Teams usually standardize on one for plain objects.",
+    "explanation": "Discuss consistency over dogma; mention performance is negligible for typical apps.",
+    "example": "type Result<T> = { ok: true; value: T } | { ok: false; error: string };"
+  },
+  {
+    "id": "int-ts-2",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "Explain structural typing in TypeScript.",
+    "answer": "TypeScript checks whether values have the required members (duck typing)—not nominal names. Two interfaces with the same shape are assignable to each other.",
+    "explanation": "Contrast with nominal languages; mention branding technique for opaque types when needed.",
+    "example": "type Point = { x: number; y: number }; const p = { x: 1, y: 2, z: 3 }; const q: Point = p; // excess ok with structural rules unless strict checks"
+  },
+  {
+    "id": "int-ts-3",
+    "technology": "TypeScript",
+    "level": "Advanced",
+    "question": "How would you type a function that picks keys from an object?",
+    "answer": "Use generics with `keyof` and constraints: `function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K>`.",
+    "explanation": "Shows knowledge of utility types like Pick, keyof, and mapped types.",
+    "example": "const nameOnly = pick(user, ['name'] as const);"
+  },
+  {
+    "id": "int-ts-4",
+    "technology": "TypeScript",
+    "level": "Advanced",
+    "question": "What are conditional types and when are they useful?",
+    "answer": "Conditional types select one type or another based on a condition (`T extends U ? X : Y`). Useful for overload-like APIs, inference with infer, and utility libraries.",
+    "explanation": "Mention distributive conditional types and cautions with complex inference.",
+    "example": "type IsString<T> = T extends string ? true : false;"
+  },
+  {
+    "id": "int-next-1",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "When should a component be a Client Component in the App Router?",
+    "answer": "When it uses React hooks, browser APIs, event handlers, or state that must live in the browser. Otherwise prefer Server Components to reduce bundle size.",
+    "explanation": "Discuss boundaries—small client leaf nodes inside server trees.",
+    "example": "\"use client\"; export function LikeButton() { const [n, setN] = useState(0); ... }"
+  },
+  {
+    "id": "int-next-2",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "How do streaming and Suspense improve UX in the App Router?",
+    "answer": "Server can stream HTML as segments resolve. Suspense boundaries show fallbacks for slow parts without blocking the entire page.",
+    "explanation": "Connect to loading.tsx and selective hydration concepts.",
+    "example": "<Suspense fallback={<Skeleton />}><Slow /></Suspense>"
+  },
+  {
+    "id": "int-next-3",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "Compare Server Actions to a traditional REST API.",
+    "answer": "Server Actions colocate mutations with components and reduce boilerplate for forms. REST APIs remain better for public third-party consumers, versioning, and strict HTTP semantics.",
+    "explanation": "Security: validate and authorize in actions as you would in API routes.",
+    "example": "async function save(formData: FormData) { 'use server'; ... }"
+  },
+  {
+    "id": "int-next-4",
+    "technology": "Next.js",
+    "level": "Advanced",
+    "question": "Explain caching and revalidation strategies you would use.",
+    "answer": "Use fetch cache options, `revalidatePath`/`revalidateTag` after mutations, ISR for semi-static pages, and opt out with `no-store` when data must be fresh.",
+    "explanation": "Shows operational maturity—stale data vs load.",
+    "example": "export const revalidate = 3600; // ISR hourly"
+  },
+  {
+    "id": "int-html-1",
+    "technology": "HTML5",
+    "level": "Beginner",
+    "question": "Why does semantic HTML matter for accessibility?",
+    "answer": "Semantic elements expose roles and structure to assistive technologies, improving navigation with landmarks and heading outlines.",
+    "explanation": "Contrast with div soup; mention screen reader rotor/landmarks.",
+    "example": "<main><h1>Article</h1><article>...</article></main>"
+  },
+  {
+    "id": "int-html-2",
+    "technology": "HTML5",
+    "level": "Intermediate",
+    "question": "How do native landmark elements relate to ARIA roles?",
+    "answer": "Prefer native elements—they imply roles by default. Use ARIA when no native equivalent exists or to repair incorrect patterns sparingly.",
+    "explanation": "First rule of ARIA: don't use ARIA if native HTML suffices.",
+    "example": "<nav aria-label=\"breadcrumb\">…</nav>"
+  },
+  {
+    "id": "int-html-3",
+    "technology": "HTML5",
+    "level": "Intermediate",
+    "question": "What validation belongs on the client vs server?",
+    "answer": "Client validation improves UX and catches mistakes early. Server validation is authoritative for security and data integrity—never trust the client alone.",
+    "explanation": "Discuss rate limits, auth, and business rules server-side only.",
+    "example": "required + pattern in HTML + Zod on server"
+  },
+  {
+    "id": "int-html-4",
+    "technology": "HTML5",
+    "level": "Advanced",
+    "question": "How would you surface custom validation messages accessibly?",
+    "answer": "Use `setCustomValidity` or server-rendered error regions linked with `aria-describedby` and `aria-invalid` on controls.",
+    "explanation": "Ensure errors are announced and programmatically associated.",
+    "example": "<input aria-invalid={!!err} aria-describedby=\"email-err\" /><p id=\"email-err\" role=\"alert\">{err}</p>"
+  },
+  {
+    "id": "int-css-1",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "When do you choose Flexbox vs CSS Grid?",
+    "answer": "Flexbox for one-dimensional layouts (rows or columns) and component-level alignment. Grid for two-dimensional layouts (rows and columns together) like page shells and dashboards.",
+    "explanation": "They compose—grid for macro layout, flex inside cells.",
+    "example": ".grid { display: grid; } .cell { display: flex; align-items: center; }"
+  },
+  {
+    "id": "int-css-2",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "What is the gap property in flex layouts?",
+    "answer": "`gap` sets spacing between flex items without margins on children—cleaner than hacks with negative margins on the container.",
+    "explanation": "Works in flex and grid; supports row-gap/column-gap.",
+    "example": ".row { display: flex; gap: 12px; }"
+  },
+  {
+    "id": "int-css-3",
+    "technology": "CSS3",
+    "level": "Advanced",
+    "question": "Explain implicit vs explicit grid tracks.",
+    "answer": "Explicit tracks are defined in template properties; implicit tracks are auto-created when items overflow the explicit grid. Use `grid-auto-rows/columns` to size implicit tracks.",
+    "explanation": "Useful for unknown item counts in responsive galleries.",
+    "example": "grid-template-columns: repeat(3, 1fr); grid-auto-rows: 120px;"
+  },
+  {
+    "id": "int-css-4",
+    "technology": "CSS3",
+    "level": "Advanced",
+    "question": "What is subgrid and when is it useful?",
+    "answer": "Subgrid lets nested grids align to parent tracks for aligned card contents across columns.",
+    "explanation": "Browser support has improved—mention fallbacks for legacy.",
+    "example": ".child { grid-column: span 2; display: grid; grid-template-columns: subgrid; }"
+  },
+  {
+    "id": "int-gql-1",
+    "technology": "GraphQL",
+    "level": "Intermediate",
+    "question": "When is GraphQL a better fit than REST?",
+    "answer": "When clients need flexible field selection, nested graphs with fewer round trips, and strongly typed contracts—but operational complexity (caching, authz per field) rises.",
+    "explanation": "Not a silver bullet; mention persisted queries and tooling.",
+    "example": "Mobile app fetching user + posts + comments in one query"
+  },
+  {
+    "id": "int-gql-2",
+    "technology": "GraphQL",
+    "level": "Advanced",
+    "question": "What is the N+1 problem in GraphQL and how is it solved?",
+    "answer": "Resolvers may query the database once per child item. DataLoader batches and caches per request to collapse queries.",
+    "explanation": "Mention dataloader pattern and query complexity limits.",
+    "example": "user.posts resolver batches post IDs: SELECT * FROM posts WHERE id IN (...)"
+  },
+  {
+    "id": "int-gql-3",
+    "technology": "GraphQL",
+    "level": "Intermediate",
+    "question": "How do you handle authentication in GraphQL?",
+    "answer": "Establish identity via headers (e.g., bearer tokens) in context. Authorize in resolvers or centralized wrappers based on roles/scopes.",
+    "explanation": "Per-field authz vs REST route-level; depth/complexity limits for abuse.",
+    "example": "const ctx = { user: await verify(req.headers.authorization) };"
+  },
+  {
+    "id": "int-gql-4",
+    "technology": "GraphQL",
+    "level": "Advanced",
+    "question": "Give an overview of GraphQL subscriptions.",
+    "answer": "Subscriptions stream events to clients over WebSockets or SSE, defined in schema with async iterators or pub/sub backends.",
+    "explanation": "Discuss scaling (Redis pub/sub), auth on connection, and filtering payloads.",
+    "example": "subscription { commentAdded(postId: \"1\") { id body } }"
+  },
+  {
+    "id": "int-react-5",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "When do you use useMemo vs useCallback?",
+    "answer": "useMemo memoizes a computed value; useCallback memoizes a function reference. Both need correct dependency arrays and are for performance, not correctness.",
+    "explanation": "Mention that inline objects in deps or unstable references defeat memoization; profile before using.",
+    "example": "const v = useMemo(() => heavy(a), [a]); const f = useCallback(() => doThing(b), [b]);"
+  },
+  {
+    "id": "int-react-6",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "When is useRef preferable to useState?",
+    "answer": "When updates should not trigger a re-render—DOM handles, timers, or storing the latest value read by async callbacks. useState schedules renders on change.",
+    "explanation": "Also discuss useRef to hold instance fields without re-subscribing effects.",
+    "example": "const id = useRef<number | null>(null); id.current = requestAnimationFrame(tick);"
+  },
+  {
+    "id": "int-react-7",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "How does forwardRef relate to useImperativeHandle?",
+    "answer": "forwardRef passes the parent's ref into your component. useImperativeHandle shapes what object that ref exposes instead of the raw DOM node.",
+    "explanation": "Prefer exposing minimal imperative APIs; props remain the default integration surface.",
+    "example": "forwardRef((props, ref) => { useImperativeHandle(ref, () => ({ focus: () => inner.current?.focus() })); ... });"
+  },
+  {
+    "id": "int-react-8",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "Explain useTransition and useDeferredValue for concurrent rendering.",
+    "answer": "useTransition wraps updates so urgent interactions stay responsive; useDeferredValue keeps a lagging copy of expensive derived UI. Both cooperate with React's scheduler.",
+    "explanation": "Contrast urgency vs deferring display of stale-but-valid output.",
+    "example": "startTransition(() => setTab('heavy')); const deferred = useDeferredValue(query);"
+  },
+  {
+    "id": "int-react-9",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "Why does useSyncExternalStore exist and how does it relate to concurrent React?",
+    "answer": "External stores need tear-free reads during concurrent rendering; tear occurs when getSnapshot reads inconsistent states across renders. This hook coordinates subscribe/getSnapshot properly.",
+    "explanation": "Foundation for integrating Redux v8+ and custom stores safely.",
+    "example": "useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)"
+  },
+  {
+    "id": "int-react-10",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "How does the React 19 use() hook differ from useContext?",
+    "answer": "use can unwrap promises with Suspense and can read context conditionally; useContext must follow hook rules at top level.",
+    "explanation": "Framework-specific constraints apply for RSC vs client trees.",
+    "example": "const data = use(props.promise);"
+  },
+  {
+    "id": "int-react-11",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What problem does useFormStatus solve?",
+    "answer": "It exposes the parent form's submission pending state to descendants without prop drilling—must run under a form subtree.",
+    "explanation": "Pairs with Server Actions and progressive enhancement.",
+    "example": "const { pending } = useFormStatus();"
+  },
+  {
+    "id": "int-react-12",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "Describe optimistic UI with useOptimistic and its risks.",
+    "answer": "useOptimistic layers temporary state until async work completes; incorrect reconciliation can confuse users if server rejects or conflicts.",
+    "explanation": "Discuss rollback on error and idempotent server operations.",
+    "example": "addOptimistic({ type: 'add', item }); await sync();"
+  },
+  {
+    "id": "int-redux-1",
+    "technology": "Redux",
+    "level": "Intermediate",
+    "question": "When would you pick Redux over React Context?",
+    "answer": "Redux suits large cross-cutting client state with predictable updates, middleware, DevTools, and normalized patterns. Context is fine for stable, modestly-sized shared values without complex update flows.",
+    "explanation": "Context can cause wide re-renders without selectors; Redux adds structure at the cost of boilerplate—often RTK today.",
+    "example": "Many consumers reading derived slices → Redux + selectors vs single ThemeProvider."
+  },
+  {
+    "id": "int-redux-2",
+    "technology": "Redux",
+    "level": "Intermediate",
+    "question": "How does useSelector decide when to re-render?",
+    "answer": "It compares the selected value to the previous using strict equality by default; if you select objects, new references each time force re-renders unless using memoized selectors or shallowEqual.",
+    "explanation": "Mention reselect/createSelector for derived data.",
+    "example": "useSelector((s) => s.users.byId[id]) // stable if primitive; unstable if new object literal."
+  },
+  {
+    "id": "int-redux-3",
+    "technology": "Redux",
+    "level": "Beginner",
+    "question": "What does Redux Toolkit give you over handwritten Redux?",
+    "answer": "Less boilerplate (createSlice), Immer-powered reducers, configureStore defaults, createAsyncThunk, RTK Query module, and official recommended patterns.",
+    "explanation": "It's the official maintainers' blessed approach since ~2019.",
+    "example": "createSlice({ name: 'x', initialState, reducers: { ... } })"
+  },
+  {
+    "id": "int-redux-4",
+    "technology": "Redux",
+    "level": "Intermediate",
+    "question": "Explain createAsyncThunk pending/fulfilled/rejected handling.",
+    "answer": "Thunk dispatches automated actions with types like `myThunk.pending`; extraReducers listen and update loading/error/data fields.",
+    "explanation": "Contrast with RTK Query for cacheable requests.",
+    "example": "extraReducers: (b) => { b.addCase(fetchUser.fulfilled, (s, a) => { s.user = a.payload; }); }"
+  },
+  {
+    "id": "int-redux-5",
+    "technology": "Redux",
+    "level": "Advanced",
+    "question": "Why normalize entity state in Redux apps?",
+    "answer": "Nested structures duplicate entities and make updates error-prone; normalized maps (`byId`, `allIds`) mirror relational data and simplify partial updates.",
+    "explanation": "RTK entity adapters automate common patterns.",
+    "example": "{ users: { byId: { 1: {...} }, allIds: ['1'] } }"
+  }
+]

@@ -1,0 +1,227 @@
+[
+  {
+    "id": "fe-q001",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is JavaScript?",
+    "answer": "JavaScript is a high-level, interpreted (typically JIT-compiled) language that conforms to the ECMAScript standard. In browsers it powers dynamic behavior; with Node.js it also runs on servers.",
+    "explanation": "Mention ECMAScript versions, single-threaded runtime with an event loop, and that it is dynamically typed. Interviewers often probe whether you know where JS runs vs languages compiled ahead of time.",
+    "example": "// Runs in browser or Node.js\nconsole.log([1, 2, 3].map((n) => n * 2));"
+  },
+  {
+    "id": "fe-q002",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "var vs let vs const?",
+    "answer": "`var` is function-scoped and hoisted with `undefined`. `let` and `const` are block-scoped and subject to the temporal dead zone before declaration. `const` bindings cannot be reassigned (object properties may still mutate).",
+    "explanation": "Contrast accidental globals with `var`, loop closure pitfalls with `var` in async callbacks, and why teams default to `const` until mutation is needed.",
+    "example": "for (let i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 0);\n} // 0,1,2\n// with var, you'd print 3,3,3"
+  },
+  {
+    "id": "fe-q003",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is closure?",
+    "answer": "A closure is a function that retains access to variables from its outer lexical environment even after the outer function has finished running.",
+    "explanation": "Tie to practical use: module pattern, event handlers, React hooks conceptually, and memory: outer variables stay alive while the inner function exists.",
+    "example": "function makeCounter() {\n  let n = 0;\n  return () => ++n;\n}\nconst c = makeCounter();\nc(); // 1\nc(); // 2"
+  },
+  {
+    "id": "fe-q004",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is hoisting?",
+    "answer": "During compilation, declarations of `var` and `function` are effectively moved to the top of their scope so they exist before execution reaches that line—`var` initializes as `undefined`; `let`/`const` stay in the temporal dead zone until declared.",
+    "explanation": "Hoisting is about creation phase vs execution phase. Function declarations are fully hoisted; `let`/`const` hoist binding but not initialization.",
+    "example": "console.log(x); // undefined (var)\nvar x = 1;\nconsole.log(y); // ReferenceError\nlet y = 2;"
+  },
+  {
+    "id": "fe-q005",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "== vs ===?",
+    "answer": "`==` performs coercion if types differ; `===` checks value and type without coercion (strict equality).",
+    "explanation": "Prefer `===` in almost all code to avoid surprising truth tables (`'' == 0`, `null == undefined`). `Object.is` handles edge cases like `NaN` and `-0`.",
+    "example": "0 == '0' // true\n0 === '0' // false\nObject.is(NaN, NaN) // true"
+  },
+  {
+    "id": "fe-q006",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is the event loop?",
+    "answer": "The event loop schedules work on a single thread: run JS until the stack clears, then process microtasks (promises), then macrotasks (timers, I/O callbacks), then rendering.",
+    "explanation": "Explain why long synchronous tasks block UI and why `setTimeout(0)` runs after current stack and microtasks.",
+    "example": "console.log('A');\nsetTimeout(() => console.log('B'), 0);\nPromise.resolve().then(() => console.log('C'));\n// A, C, B"
+  },
+  {
+    "id": "fe-q007",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is a Promise?",
+    "answer": "A Promise represents eventual completion of an async operation with states pending, fulfilled, or rejected.",
+    "explanation": "Connect to `.then`/`.catch` chaining and that Promise constructors run synchronously while executor may schedule async work.",
+    "example": "new Promise((resolve) => {\n  setTimeout(() => resolve(42), 100);\n}).then(console.log);"
+  },
+  {
+    "id": "fe-q008",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is async/await?",
+    "answer": "Syntax built on Promises: `async` functions return a Promise; `await` pauses the async function until a Promise settles, readable like synchronous code.",
+    "explanation": "Note try/catch maps to `.catch`; parallel awaits need `Promise.all` intentionally.",
+    "example": "async function load() {\n  const res = await fetch('/api/user');\n  return res.json();\n}"
+  },
+  {
+    "id": "fe-q009",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "map vs filter vs reduce?",
+    "answer": "`map` transforms each element to a new array of same length. `filter` keeps elements matching a predicate. `reduce` folds the array into one accumulated value.",
+    "explanation": "Avoid mutating accumulators immutably unless intentional; `reduce` initial value prevents edge-case bugs on empty arrays.",
+    "example": "[1,2,3].map(n => n*2) // [2,4,6]\n[1,2,3].filter(n => n>1) // [2,3]\n[1,2,3].reduce((a,n)=>a+n,0) // 6"
+  },
+  {
+    "id": "fe-q010",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is debounce?",
+    "answer": "Debounce waits until a pause in events before running the handler—ideal for search-as-you-type or resize finalization.",
+    "explanation": "Contrast with throttle; debounce fires once after idle period; poor fit for tracking scroll unless you only care about stops.",
+    "example": "function debounce(fn, ms) {\n  let t;\n  return (...args) => {\n    clearTimeout(t);\n    t = setTimeout(() => fn(...args), ms);\n  };\n}"
+  },
+  {
+    "id": "fe-q011",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is throttle?",
+    "answer": "Throttle ensures a function runs at most once per interval even if events fire continuously—common for scroll or mousemove.",
+    "explanation": "Leading vs trailing edge options matter for UX; libraries like Lodash provide polished variants.",
+    "example": "function throttle(fn, ms) {\n  let last = 0;\n  return (...args) => {\n    const now = Date.now();\n    if (now - last >= ms) { last = now; fn(...args); }\n  };\n}"
+  },
+  {
+    "id": "fe-q012",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "Shallow vs deep copy?",
+    "answer": "Shallow copy duplicates top-level references; nested objects are shared. Deep copy recursively clones nested structures (with caveats for functions, cycles, Dates).",
+    "explanation": "Spread `{...obj}` and `[...arr]` are shallow. `structuredClone` or libraries help for deep clones; JSON round-trip loses functions and dates.",
+    "example": "const a = { x: { y: 1 } };\nconst b = { ...a };\nb.x.y = 2; // a.x.y is also 2"
+  },
+  {
+    "id": "fe-q013",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is the spread operator?",
+    "answer": "`...` expands iterables into places expecting multiple elements—array literals, object literals (own enumerable props), or function arguments.",
+    "explanation": "Object spread is shallow; order matters when merging objects (later keys override).",
+    "example": "const merged = { ...defaults, ...options };\nconst nums = [1, ...more, 9];"
+  },
+  {
+    "id": "fe-q014",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is destructuring?",
+    "answer": "Unpack values from arrays or properties from objects into distinct variables with concise syntax.",
+    "explanation": "Supports defaults, renaming (`{ foo: bar }`), rest patterns, and nested destructuring.",
+    "example": "const { name, id = 0 } = user;\nconst [first, ...rest] = items;"
+  },
+  {
+    "id": "fe-q015",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is `this`?",
+    "answer": "`this` is determined by how a function is called: implicit binding (obj.method()), explicit (`call`/`apply`/`bind`), `new` binding, lexical `this` in arrow functions (inherits enclosing scope), or global/window in sloppy non-strict loose calls.",
+    "explanation": "Arrow functions never own their own `this`. Class methods often need `.bind` or arrows when passed as callbacks.",
+    "example": "const o = { x: 1, f() { return this.x } };\no.f(); // 1\nconst g = o.f;\ng(); // undefined or global (strict)"
+  },
+  {
+    "id": "fe-q016",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is React?",
+    "answer": "React is a UI library for building interfaces from declarative components; it manages rendering efficiently via a virtual representation and reconciliation.",
+    "explanation": "Differentiate library vs framework; mention ecosystem (React Router, state libs, meta-frameworks like Next.js).",
+    "example": "function Hello({ name }: { name: string }) {\n  return <h1>Hello {name}</h1>;\n}"
+  },
+  {
+    "id": "fe-q017",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is JSX?",
+    "answer": "JSX is syntactic sugar that looks like HTML in JavaScript; it compiles to `React.createElement` (or equivalent) calls.",
+    "explanation": "Rules: className not class, camelCase props, fragments, expressions in `{}`.",
+    "example": "const el = <button type=\"button\" onClick={onSave}>Save</button>;"
+  },
+  {
+    "id": "fe-q018",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What are components?",
+    "answer": "Components are reusable pieces of UI defined as functions (or classes) that accept props and return render output.",
+    "explanation": "Composition over inheritance; keep components small and focused; containers vs presentational split when helpful.",
+    "example": "export function Avatar({ src, alt }: { src: string; alt: string }) {\n  return <img src={src} alt={alt} className=\"rounded-full\" />;\n}"
+  },
+  {
+    "id": "fe-q019",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "Functional vs class components?",
+    "answer": "Functional components use hooks for state and effects; class components use `this.state` and lifecycle methods. New code should prefer functions + hooks.",
+    "explanation": "Legacy codebases may still use classes; Error Boundaries historically required classes (React 18+ patterns evolving).",
+    "example": "// Functional\nfunction A() { const [n,setN]=useState(0); ... }\n// Class\nclass B extends React.Component { ... }"
+  },
+  {
+    "id": "fe-q020",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is the Virtual DOM?",
+    "answer": "An in-memory lightweight tree of React elements React compares (reconciliation) against the previous render to compute minimal DOM updates.",
+    "explanation": "Not a separate DOM implementation—it's React's element tree diffing strategy for predictability and batching.",
+    "example": "// JSX describes the virtual tree; React reconciles <li> keys on list updates."
+  },
+  {
+    "id": "fe-q021",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "Props vs state?",
+    "answer": "Props are inputs from parent (read-only to child). State is internal data owned by the component that triggers re-renders when updated.",
+    "explanation": "Lift state up when siblings need shared data; props drilling vs context/state libraries for deep trees.",
+    "example": "<Row label={title} /> // props\nconst [open, setOpen] = useState(false); // state"
+  },
+  {
+    "id": "fe-q022",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is useState?",
+    "answer": "`useState` returns `[value, setter]` for local component state; calling the setter schedules a re-render.",
+    "explanation": "Functional updates avoid stale state; batching groups updates in events.",
+    "example": "const [count, setCount] = useState(0);\nsetCount((c) => c + 1);"
+  },
+  {
+    "id": "fe-q023",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is useEffect?",
+    "answer": "`useEffect` runs side effects after paint: data fetching, subscriptions, timers. The dependency array controls when it re-runs; return a cleanup function if needed.",
+    "explanation": "Sync effects with props/state via deps; exhaustive-deps lint rule prevents bugs.",
+    "example": "useEffect(() => {\n  const id = setInterval(tick, 1000);\n  return () => clearInterval(id);\n}, []);"
+  },
+  {
+    "id": "fe-q024",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is the dependency array in useEffect?",
+    "answer": "`[]` runs once on mount (plus cleanup on unmount). `[a,b]` re-runs when `a` or `b` change. Omitting the array runs after every render—usually a bug.",
+    "explanation": "Stale closures happen when deps omit changing values; eslint-plugin-react-hooks helps.",
+    "example": "useEffect(() => {\n  load(userId);\n}, [userId]);"
+  },
+  {
+    "id": "fe-q025",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is useRef?",
+    "answer": "`useRef` holds a mutable `.current` value across renders without causing re-renders when updated—used for DOM nodes or storing stable mutable values.",
+    "explanation": "Contrast with `useState`: updating ref does not schedule render; useful for intervals and latest values in callbacks.",
+    "example": "const input = useRef<HTMLInputElement>(null);\ninput.current?.focus();"
+  }
+]

@@ -1,0 +1,71 @@
+import type { DocTopic, InterviewQuestion, TechCategory } from "@/types";
+import css from "@/data/docs/css3.json";
+import graphql from "@/data/docs/graphql.json";
+import html from "@/data/docs/html5.json";
+import javascript from "@/data/docs/javascript.json";
+import nextjs from "@/data/docs/nextjs.json";
+import react from "@/data/docs/react.json";
+import redux from "@/data/docs/redux.json";
+import typescript from "@/data/docs/typescript.json";
+import interviews from "@/data/interviews.json";
+import fe100a from "@/data/interviews-fe100-a.json";
+import fe100b from "@/data/interviews-fe100-b.json";
+import fe100c from "@/data/interviews-fe100-c.json";
+import fe100d from "@/data/interviews-fe100-d.json";
+import interviewsAdvanced from "@/data/interviews-advanced-scenarios.json";
+import interviewsCssMaster from "@/data/interviews-css-master.json";
+
+export const allDocs: DocTopic[] = [
+  ...(javascript as DocTopic[]),
+  ...(react as DocTopic[]),
+  ...(redux as DocTopic[]),
+  ...(typescript as DocTopic[]),
+  ...(nextjs as DocTopic[]),
+  ...(html as DocTopic[]),
+  ...(css as DocTopic[]),
+  ...(graphql as DocTopic[]),
+];
+
+export const allInterviews: InterviewQuestion[] = [
+  ...(interviews as InterviewQuestion[]),
+  ...(fe100a as InterviewQuestion[]),
+  ...(fe100b as InterviewQuestion[]),
+  ...(fe100c as InterviewQuestion[]),
+  ...(fe100d as InterviewQuestion[]),
+  ...(interviewsAdvanced as InterviewQuestion[]),
+  ...(interviewsCssMaster as InterviewQuestion[]),
+];
+
+const docById = new Map(allDocs.map((d) => [d.id, d]));
+const interviewById = new Map(allInterviews.map((q) => [q.id, q]));
+
+export function getDocById(id: string): DocTopic | undefined {
+  return docById.get(id);
+}
+
+export function getInterviewById(id: string): InterviewQuestion | undefined {
+  return interviewById.get(id);
+}
+
+export const CATEGORIES: TechCategory[] = [
+  "JavaScript",
+  "React",
+  "Redux",
+  "TypeScript",
+  "Next.js",
+  "HTML5",
+  "CSS3",
+  "GraphQL",
+];
+
+/** Includes topics like behavioral / Agile that have no doc sidebar section */
+export const INTERVIEW_FILTER_OPTIONS: TechCategory[] = [...CATEGORIES, "General"];
+
+export function docsByCategory(category: TechCategory): DocTopic[] {
+  return allDocs.filter((d) => d.category === category);
+}
+
+export function interviewsByTechnology(tech: TechCategory | "All"): InterviewQuestion[] {
+  if (tech === "All") return allInterviews;
+  return allInterviews.filter((q) => q.technology === tech);
+}

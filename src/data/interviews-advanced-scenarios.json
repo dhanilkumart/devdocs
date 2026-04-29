@@ -1,0 +1,236 @@
+[
+  {
+    "id": "adv-q001",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "How do you prevent race conditions in React API calls?",
+    "answer": "Stale responses win when an older request completes after a newer one. Fix with AbortController (abort previous fetch when deps/url change or on unmount), or a monotonically increasing request id and only call setState if the response still matches the latest id.",
+    "explanation": "Race conditions are timing bugs, not network “errors.” Pair abort with useEffect cleanup; for non-abortable APIs, use id/version checks before setState.",
+    "example": "useEffect(() => {\n  const controller = new AbortController();\n  fetch(url, { signal: controller.signal })\n    .then((r) => r.json())\n    .then(setData)\n    .catch((e) => { if (e.name !== 'AbortError') console.error(e); });\n  return () => controller.abort();\n}, [url]);\n\n// Or: let seq = 0; const id = ++seq; ... if (id === seq) setData(data);"
+  },
+  {
+    "id": "adv-q002",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "What should happen in useEffect cleanup when using AbortController?",
+    "answer": "Call controller.abort() in the cleanup function so pending requests cancel when dependencies change or the component unmounts.",
+    "explanation": "Prevents completing fetches after unmount (no setState on unmounted components), drops useless work, and avoids stale UI when `url` changes quickly.",
+    "example": "useEffect(() => {\n  const controller = new AbortController();\n  fetch(url, { signal: controller.signal });\n  return () => controller.abort();\n}, [url]);"
+  },
+  {
+    "id": "adv-q003",
+    "technology": "JavaScript",
+    "level": "Advanced",
+    "question": "How do you implement fetchWithTimeout using AbortController?",
+    "answer": "Create an AbortController, start a timer that calls abort() after the deadline, pass controller.signal to fetch, and clearTimeout in finally so the timer does not leak.",
+    "explanation": "Same pattern works for any cancellable API; tune timeout vs retry policies for flaky networks.",
+    "example": "function fetchWithTimeout(url: string, ms = 5000) {\n  const c = new AbortController();\n  const t = setTimeout(() => c.abort(), ms);\n  return fetch(url, { signal: c.signal }).finally(() => clearTimeout(t));\n}"
+  },
+  {
+    "id": "adv-q004",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "Difference between `return await fetch()` vs `return fetch()`?",
+    "answer": "`return fetch()` returns the Promise immediately—errors reject that promise for the caller. `return await fetch()` awaits inside an async function so you can wrap in try/catch in that function and normalize errors before they propagate.",
+    "explanation": "Extra microtask with await; use `return await` when you need local catch/finally or transformation; otherwise returning the promise is fine.",
+    "example": "async function safe() {\n  try {\n    const res = await fetch('/x');\n    if (!res.ok) throw new Error(await res.text());\n    return await res.json();\n  } catch (e) {\n    report(e);\n    throw e;\n  }\n}"
+  },
+  {
+    "id": "adv-q005",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "What triggers :focus-visible but not :focus?",
+    "answer": ":focus applies whenever an element receives focus. :focus-visible applies when the UA decides focus should be visibly indicated—typically keyboard (Tab), not mouse click on buttons in supporting browsers.",
+    "explanation": "Reduces ugly outlines for mouse users while preserving rings for keyboard users—still test across browsers.",
+    "example": "button:focus { outline: none; }\nbutton:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }"
+  },
+  {
+    "id": "adv-q006",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "How do you show focus styles for keyboard users but not mouse users?",
+    "answer": "Use :focus-visible for the visible ring and avoid styling generic :focus with a heavy outline when click would show it; reset outline on :focus only if :focus-visible carries the visible indicator.",
+    "explanation": "Pair with semantic buttons/links; do not remove all focus indicators without replacement.",
+    "example": "button:focus:not(:focus-visible) { outline: none; }\nbutton:focus-visible { outline: 2px solid var(--focus); }"
+  },
+  {
+    "id": "adv-q007",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "Difference between :focus and :focus-visible?",
+    "answer": ":focus matches any focused element. :focus-visible matches when the browser would show a focus ring—keyboard-first semantics in modern UAs.",
+    "explanation": "Use :focus-visible in design systems for accessible focus that does not fight pointer UX.",
+    "example": "a:focus-visible { box-shadow: 0 0 0 3px var(--ring); }"
+  },
+  {
+    "id": "adv-q008",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "How do you ensure accessible focus styles in a design system?",
+    "answer": "Never rely on color alone; meet contrast (WCAG); ship tokens for focus ring color/width; use :focus-visible; document “no invisible focus”; test with keyboard only.",
+    "explanation": "Components should expose consistent `--focus-ring` and states for forced-colors / Windows High Contrast where relevant.",
+    "example": ":root { --focus-ring: 0 0 0 3px color-mix(in oklab, AccentColor 60%, transparent); }\n*:focus-visible { outline: none; box-shadow: var(--focus-ring); }"
+  },
+  {
+    "id": "adv-q009",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "How do you implement fluid typography?",
+    "answer": "Use clamp(min, preferred, max)—preferred often mixes vw/rem so type scales smoothly between breakpoints without many media queries.",
+    "explanation": "Clamp keeps readable bounds; pair with `ch` max-width on body text for line length.",
+    "example": "h1 { font-size: clamp(1.25rem, 2vw + 1rem, 2.25rem); }"
+  },
+  {
+    "id": "adv-q010",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "How do you keep fluid design maintainable?",
+    "answer": "Centralize design tokens (CSS variables), spacing scale, type ramp with clamp, utility layers or components—avoid magic numbers scattered in components.",
+    "explanation": "Document tokens in Storybook; lint duplicate arbitrary values where possible.",
+    "example": ":root {\n  --space-1: clamp(0.25rem, 0.5vw, 0.5rem);\n  --font-body: clamp(1rem, 0.5vw + 0.9rem, 1.125rem);\n}"
+  },
+  {
+    "id": "adv-q011",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "When to use CSS Grid vs Flexbox?",
+    "answer": "Flexbox excels at one-dimensional alignment (row OR column): toolbars, stacks, centering. Grid excels at two-dimensional layouts: page shells, card galleries with rows and columns.",
+    "explanation": "Compose them—grid macro layout, flex inside cells.",
+    "example": ".shell { display: grid; grid-template-columns: 240px 1fr; }\n.toolbar { display: flex; gap: 8px; align-items: center; }"
+  },
+  {
+    "id": "adv-q012",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "How do you handle responsive layout without duplicating CSS?",
+    "answer": "Mobile-first base styles, progressive enhancement with min-width media queries, fluid clamp(), container queries where appropriate, and shared variables—not separate desktop-only copies.",
+    "explanation": "Reduce breakpoint count; use intrinsic layouts (flex/grid + minmax) where possible.",
+    "example": ".grid { display: grid; gap: var(--space);\n  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); }"
+  },
+  {
+    "id": "adv-q013",
+    "technology": "HTML5",
+    "level": "Intermediate",
+    "question": "How do you ensure accessibility for keyboard users?",
+    "answer": "Use native interactive elements (button, a, input), preserve visible focus, logical tab order, skip links, keyboard handlers where building custom widgets, and test without a mouse.",
+    "explanation": "aria-* supplements broken UX but does not replace correct roles and keyboard support.",
+    "example": "<button type=\"button\">Save</button> // not <div onClick>"
+  },
+  {
+    "id": "adv-q014",
+    "technology": "HTML5",
+    "level": "Advanced",
+    "question": "If you use a div as a button, what must you add?",
+    "answer": "role=\"button\", tabindex=\"0\", keyboard handlers for Enter and Space, and aria-pressed/disabled as needed—prefer <button> instead.",
+    "explanation": "Screen readers and keyboard users rely on semantics; duplicating button behavior is error-prone.",
+    "example": "<div role=\"button\" tabIndex={0} onClick={go} onKeyDown={(e)=>{\n  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); }\n}}>Next</div>"
+  },
+  {
+    "id": "adv-q015",
+    "technology": "HTML5",
+    "level": "Intermediate",
+    "question": "What ARIA attributes are commonly required for accessibility?",
+    "answer": "Depends on pattern: role when using non-native widgets; aria-label / aria-labelledby for accessible names; aria-expanded for disclose; aria-hidden to hide decorative icons from AT; aria-disabled when disabling without native disabled.",
+    "explanation": "First rule of ARIA: no ARIA is better than bad ARIA—prefer native HTML.",
+    "example": "<button aria-expanded={open} aria-controls=\"panel-id\">Menu</button>"
+  },
+  {
+    "id": "adv-q016",
+    "technology": "HTML5",
+    "level": "Beginner",
+    "question": "Difference between navigation and action elements?",
+    "answer": "Navigation changes location or route—use <a href>. Actions trigger in-page behavior—use <button type=\"button\">. Avoid href=\"#\" for fake buttons.",
+    "explanation": "Correct element gets correct keyboard defaults and screen reader announcements.",
+    "example": "<a href=\"/about\">About</a>\n<button type=\"submit\">Save</button>"
+  },
+  {
+    "id": "adv-q017",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "How do you avoid stale API state updates?",
+    "answer": "Abort in-flight requests, ignore outdated responses with request sequencing, or gate setState with flags/refs; align with React Strict Mode double-mount in dev.",
+    "explanation": "Same root cause as race conditions—always tie async completion to “still valid” conditions.",
+    "example": "useEffect(() => { let cancelled = false;\n  fetch('/x').then(r=>r.json()).then(d => { if (!cancelled) setData(d); });\n  return () => { cancelled = true; };\n}, []);"
+  },
+  {
+    "id": "adv-q018",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "How do you avoid memory leaks in React?",
+    "answer": "Clean up subscriptions, timers, and listeners in useEffect return; abort network; cancel frames; clear intervals; avoid retaining huge closures over DOM nodes.",
+    "explanation": "Detached listeners still fire; retained callbacks keep graphs alive—especially with third-party maps/charts.",
+    "example": "useEffect(() => {\n  const id = window.setInterval(tick, 1000);\n  return () => window.clearInterval(id);\n}, []);"
+  },
+  {
+    "id": "adv-q019",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "Why is AbortController important in React?",
+    "answer": "It cancels fetch when deps change or on unmount—preventing stale UI, wasted bandwidth, and setState-after-unmount warnings.",
+    "explanation": "Works with the platform; pair with TanStack Query which also dedupes and cancels.",
+    "example": "fetch(url, { signal: controller.signal })"
+  },
+  {
+    "id": "adv-q020",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "How should you answer scenario-based frontend interview questions?",
+    "answer": "Structure as: (1) Problem—symptoms and risks; (2) Solution—approach and trade-offs; (3) Code or pseudocode; (4) Why it works—ties to React/browser model.",
+    "explanation": "Senior interviews reward clarity over breadth—signal production experience with cleanup, a11y, and measurement.",
+    "example": "\"Race on fast filter: I'll abort prior GET, show loading, ignore non-latest responses—here's the effect cleanup…\""
+  },
+  {
+    "id": "adv-q021",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "What is a stale closure?",
+    "answer": "A closure over old render values—common when async callbacks or effects read state captured from an earlier render without updating deps or refs.",
+    "explanation": "Hooks rely on fresh closures per render; stale deps in useEffect are the classic bug.",
+    "example": "Broken: useEffect(() => { setInterval(() => console.log(count), 1000); }, []);\n// Fix: functional updates or ref for latest count."
+  },
+  {
+    "id": "adv-q022",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "How do you fix a stale closure?",
+    "answer": "Correct dependency arrays; functional updates `setS(s => …)`; store latest value in useRef; lift logic into the effect with proper deps; useEvent pattern where appropriate.",
+    "explanation": "eslint-plugin-react-hooks flags many cases; for intervals, reset timer when deps change.",
+    "example": "const countRef = useRef(count);\ncountRef.current = count;\nuseEffect(() => {\n  const id = setInterval(() => console.log(countRef.current), 1000);\n  return () => clearInterval(id);\n}, []);"
+  },
+  {
+    "id": "adv-q023",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is a useEffect cleanup function?",
+    "answer": "The function you return from useEffect—runs before the effect re-runs and on unmount—to undo subscriptions, timers, or abort operations.",
+    "explanation": "Mirrors mount/update/unmount lifecycle for effects.",
+    "example": "useEffect(() => {\n  const sub = store.subscribe(fn);\n  return () => sub();\n}, [store]);"
+  },
+  {
+    "id": "adv-q024",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "Why can inline functions in render cause extra re-renders?",
+    "answer": "New function identity each render breaks memoization—React.memo children or useMemo deps see “changed” props unless stabilized with useCallback.",
+    "explanation": "Inline handlers are fine unless downstream is expensive and memoized; measure before optimizing.",
+    "example": "<MemoRow onEdit={() => edit(id)} /> // new fn each time\n// Better: const onEdit = useCallback(() => edit(id), [id]);"
+  },
+  {
+    "id": "adv-q025",
+    "technology": "HTML5",
+    "level": "Beginner",
+    "question": "Why does accessibility matter?",
+    "answer": "Inclusive UX for disabilities, legal/compliance pressure (WCAG), better usability for everyone (keyboard, contrast), and fewer support incidents.",
+    "explanation": "Accessibility is quality bar—semantic HTML first, then ARIA.",
+    "example": "Proper labels, focus order, and announcements benefit mobile and voice users too."
+  },
+  {
+    "id": "adv-q026",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What level are scenario-based CSS and React questions—and how do you stand out?",
+    "answer": "They target mid–senior engineers. You stand out by naming the problem (race, stale closure, focus rings), citing trade-offs, and showing cleanup code—not buzzwords.",
+    "explanation": "Interviewers listen for production scars: AbortController, focus-visible, clamp, Grid/Flex composition.",
+    "example": "\"I'll walk through stale fetch → abort + cleanup, then how I'd verify in Profiler and axe.\""
+  }
+]

@@ -1,0 +1,39 @@
+[
+  {
+    "id": "next-app-router",
+    "title": "App Router fundamentals",
+    "category": "Next.js",
+    "tags": ["app-router", "layouts", "routing", "RSC"],
+    "summary": "The App Router uses React Server Components by default, nested layouts in layout.tsx, and file-based routes in the app directory.",
+    "content": "## Server vs Client\n\nServer Components run on the server and ship minimal JS. Add `\"use client\"` when you need hooks, browser APIs, or event handlers.\n\n## Routing\n\n`page.tsx` defines a route segment. `layout.tsx` wraps nested segments. `loading.tsx` and `error.tsx` add UX boundaries.\n\n## Data\n\nFetch in Server Components or use Route Handlers in `route.ts` for APIs.",
+    "code_examples": [
+      {
+        "title": "layout.tsx sketch",
+        "language": "tsx",
+        "code": "export default function RootLayout({\n  children,\n}: {\n  children: React.ReactNode;\n}) {\n  return (\n    <html lang=\"en\">\n      <body>{children}</body>\n    </html>\n  );\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-next-1", "preview": "When do you mark a component as client?" },
+      { "id": "int-next-2", "preview": "Streaming and Suspense in App Router" }
+    ]
+  },
+  {
+    "id": "next-server-actions",
+    "title": "Server Actions",
+    "category": "Next.js",
+    "tags": ["server-actions", "forms", "mutations"],
+    "summary": "Server Actions are async functions that run on the server and can be invoked from forms or client code—useful for mutations without a separate API route.",
+    "content": "## Security\n\nTreat Server Actions like endpoints: validate input, authorize users, and never trust client-supplied IDs alone.\n\n## Progressive enhancement\n\nForms can post without JavaScript; enhance with client components as needed.",
+    "code_examples": [
+      {
+        "language": "tsx",
+        "code": "async function createItem(formData: FormData) {\n  \"use server\";\n  const name = String(formData.get(\"name\") ?? \"\");\n  // persist name…\n}\n\nexport function Form() {\n  return (\n    <form action={createItem}>\n      <input name=\"name\" />\n      <button type=\"submit\">Save</button>\n    </form>\n  );\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-next-3", "preview": "Server Actions vs REST API" },
+      { "id": "int-next-4", "preview": "Caching and revalidation strategies" }
+    ]
+  }
+]

@@ -1,0 +1,227 @@
+[
+  {
+    "id": "fe-q051",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is a REST API?",
+    "answer": "REST is an architectural style using HTTP resources identified by URLs; clients use verbs like GET/POST/PUT/PATCH/DELETE with standard status codes and often JSON bodies.",
+    "explanation": "Contrast with GraphQL/RPC; discuss idempotency of GET/PUT/DELETE and safety.",
+    "example": "GET /users/42 → 200 + JSON user\nPOST /users → 201 Created"
+  },
+  {
+    "id": "fe-q052",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What are common HTTP methods?",
+    "answer": "GET reads, POST creates or triggers actions, PUT/PATCH replace/update, DELETE removes; HEAD/OPTIONS also exist.",
+    "explanation": "Mention safe/idempotent methods and when POST is appropriate despite updates.",
+    "example": "fetch('/api/items', { method: 'POST', body: JSON.stringify({ name: 'x' }), headers: { 'Content-Type': 'application/json' } });"
+  },
+  {
+    "id": "fe-q053",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "How do you call an API from React?",
+    "answer": "In Client Components use `useEffect` + `fetch`/axios, or data libraries (TanStack Query, SWR). In Next.js App Router, prefer fetching in Server Components when possible.",
+    "explanation": "Handle loading/error states; abort via `AbortController`; avoid waterfalls with parallel `Promise.all`.",
+    "example": "useEffect(() => {\n  let alive = true;\n  fetch('/api/me')\n    .then(r => r.json())\n    .then(d => { if (alive) setUser(d); });\n  return () => { alive = false; };\n}, []);"
+  },
+  {
+    "id": "fe-q054",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "How do you handle errors with fetch/async?",
+    "answer": "Use try/catch around await; check `response.ok`; attach `.catch()` on promises; surface UI errors and optional retry.",
+    "explanation": "fetch does not reject on HTTP error codes—inspect `res.ok` or status.",
+    "example": "const res = await fetch('/api');\nif (!res.ok) throw new Error(await res.text());"
+  },
+  {
+    "id": "fe-q055",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is WebSocket?",
+    "answer": "A persistent bidirectional TCP protocol after upgrade—ideal for chat, live dashboards, gaming—unlike request/response HTTP polling.",
+    "explanation": "Contrast with SSE (server→client one-way); authentication and reconnection strategies matter.",
+    "example": "const ws = new WebSocket('wss://api.example.com/live');\nws.onmessage = (e) => console.log(e.data);"
+  },
+  {
+    "id": "fe-q056",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "How do you optimize React performance?",
+    "answer": "Split bundles (`lazy`), memoize expensive work (`useMemo`, `React.memo`), stabilize callbacks (`useCallback`), virtualize long lists, defer non-urgent updates (`startTransition`), and fix unnecessary parent state churn.",
+    "explanation": "Measure with React Profiler first; premature memo hurts readability.",
+    "example": "const deferredQuery = useDeferredValue(query);\nconst rows = useMemo(() => filterHuge(deferredQuery), [deferredQuery]);"
+  },
+  {
+    "id": "fe-q057",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "Why avoid unnecessary re-renders?",
+    "answer": "Each render runs component bodies and reconciles children—wasted renders burn CPU and can drop frames on low-end devices.",
+    "explanation": "React is fast but large trees or heavy computations amplify cost.",
+    "example": "// Memo child + stable props → fewer subtree renders"
+  },
+  {
+    "id": "fe-q058",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is component architecture?",
+    "answer": "Decompose UI into small reusable components with clear responsibilities—containers fetch/state, presentational components render props.",
+    "explanation": "Storybook and design systems reinforce consistency; avoid god components.",
+    "example": "<Page><Header /><Main><Sidebar /><Content /></Main></Page>"
+  },
+  {
+    "id": "fe-q059",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What makes a UI scalable?",
+    "answer": "Consistent design tokens, reusable primitives, typed contracts, lazy boundaries, accessible patterns, and team conventions for state/data boundaries.",
+    "explanation": "Scalability is org + code: docs, testing, module ownership.",
+    "example": "// Shared <Button variant=\"primary\" /> used across features"
+  },
+  {
+    "id": "fe-q060",
+    "technology": "General",
+    "level": "Beginner",
+    "question": "What is CI/CD?",
+    "answer": "Continuous Integration automatically builds and tests every change; Continuous Delivery/Deployment automates release toward staging/production with gates.",
+    "explanation": "CI catches regressions early; CD reduces manual release error and lead time.",
+    "example": "GitHub Actions: on push → npm ci → test → build → deploy to Vercel"
+  },
+  {
+    "id": "fe-q061",
+    "technology": "General",
+    "level": "Beginner",
+    "question": "Describe a typical CI pipeline flow.",
+    "answer": "Trigger on commit/PR → install deps → lint/test → build artifacts → security scans → publish/deploy or await approval.",
+    "explanation": "Artifacts should be immutable; cache node_modules carefully; matrix across Node versions if needed.",
+    "example": "steps: checkout → setup-node → npm ci → npm run lint && npm test → npm run build"
+  },
+  {
+    "id": "fe-q062",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "How do you reverse a string in JavaScript?",
+    "answer": "Split into characters, reverse array, join—be mindful of Unicode surrogate pairs for international text (`[...str]` or libraries).",
+    "explanation": "Interview baseline; mention grapheme clusters for emoji-heavy strings.",
+    "example": "const rev = (s: string) => [...s].reverse().join('');"
+  },
+  {
+    "id": "fe-q063",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "How do you remove duplicates from an array?",
+    "answer": "Use `Set` for primitives; for objects, key by id or use `filter` with a `Map`/seen set.",
+    "explanation": "Set preserves insertion order in modern engines.",
+    "example": "const uniq = [...new Set(nums)];"
+  },
+  {
+    "id": "fe-q064",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "How do you find the second largest number in an array?",
+    "answer": "Single pass tracking `max` and `second`; handle negatives and duplicates; sort is O(n log n) vs O(n) pass.",
+    "explanation": "Clarify behavior on ties and arrays shorter than two elements.",
+    "example": "let a=-Infinity,b=-Infinity;\nfor (const n of arr) {\n  if (n>a) { b=a; a=n; }\n  else if (n>b && n<a) b=n;\n}"
+  },
+  {
+    "id": "fe-q065",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "How do you compute an average in an array?",
+    "answer": "Sum elements with `reduce` then divide by length; guard empty array.",
+    "explanation": "Watch floating point precision for money—use integer cents.",
+    "example": "const avg = arr.length ? arr.reduce((s,n)=>s+n,0)/arr.length : 0;"
+  },
+  {
+    "id": "fe-q066",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "How do you handle forms in React?",
+    "answer": "Controlled inputs bind `value` + `onChange`; validate on blur/submit; libraries like React Hook Form manage performance and validation schemas.",
+    "explanation": "Accessibility: labels, errors linked with `aria-describedby`, focus management.",
+    "example": "const [email,setEmail]=useState('');\n<input value={email} onChange={e=>setEmail(e.target.value)} />"
+  },
+  {
+    "id": "fe-q067",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "How do you show loading state?",
+    "answer": "Track `isLoading`/`status` in state or query library; render spinner/skeleton; disable submit during pending.",
+    "explanation": "Avoid flicker with minimum display time if requests are instant; cancel stale requests with AbortController.",
+    "example": "const [loading,setLoading]=useState(false);\nsetLoading(true);\ntry { await save(); } finally { setLoading(false); }"
+  },
+  {
+    "id": "fe-q068",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "How do you implement search/filter?",
+    "answer": "Keep query in state; derive filtered list with `useMemo` from source array; debounce network search.",
+    "explanation": "For huge lists use virtualization or server-side filtering.",
+    "example": "const filtered = useMemo(\n  () => items.filter(i => i.name.includes(q)),\n  [items, q]\n);"
+  },
+  {
+    "id": "fe-q069",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "How do you handle a modal?",
+    "answer": "Boolean state controls render; trap focus, escape to close, portal to `document.body`, lock scroll.",
+    "explanation": "Accessibility: `role=\"dialog\"`, `aria-modal`, return focus on close.",
+    "example": "const [open,setOpen]=useState(false);\n{open && <Modal onClose={()=>setOpen(false)} />}"
+  },
+  {
+    "id": "fe-q070",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "Why avoid mutating React state?",
+    "answer": "React relies on immutability to detect changes—mutating objects in place may skip re-renders and break time-travel/debugging.",
+    "explanation": "Spread/copy updates nested structures carefully or use Immer.",
+    "example": "setItems((xs) => [...xs, newItem]); // not xs.push(newItem)"
+  },
+  {
+    "id": "fe-q071",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "Why does sort mutate and how do you fix chained sort bugs?",
+    "answer": "`Array.prototype.sort` sorts in place—copy first (`[...arr].sort`) when you must preserve the original array.",
+    "explanation": "Provide comparator for numbers—default sort is lexicographic.",
+    "example": "const asc = [...nums].sort((a,b)=>a-b);"
+  },
+  {
+    "id": "fe-q072",
+    "technology": "HTML5",
+    "level": "Beginner",
+    "question": "What is the DOM?",
+    "answer": "Document Object Model—tree of nodes representing HTML/XML that scripts can read and mutate; browsers render from this structure.",
+    "explanation": "Shadow DOM encapsulates component trees; virtual DOM in React targets efficient updates.",
+    "example": "document.querySelector('#app'); el.textContent = 'hi';"
+  },
+  {
+    "id": "fe-q073",
+    "technology": "HTML5",
+    "level": "Intermediate",
+    "question": "What is event bubbling?",
+    "answer": "Events propagate from target element upward through ancestors unless stopped—lets parent handlers observe child events.",
+    "explanation": "`stopPropagation` halts bubble; capture phase goes root→target first.",
+    "example": "child click → fires handlers on child, then parents unless event.stopPropagation()"
+  },
+  {
+    "id": "fe-q074",
+    "technology": "HTML5",
+    "level": "Intermediate",
+    "question": "What is event delegation?",
+    "answer": "Attach one listener on a parent and use `event.target` to handle many children—reduces listeners and handles dynamic children.",
+    "explanation": "Common for list rows; match `closest('.row')` for robust handling.",
+    "example": "ul.addEventListener('click', (e) => {\n  const li = (e.target as Element).closest('li');\n  if (li) console.log(li.dataset.id);\n});"
+  },
+  {
+    "id": "fe-q075",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Explain a project you worked on.",
+    "answer": "Use STAR: Situation/Task, Actions you owned, Results with metrics. Highlight architecture, tech stack, trade-offs, and collaboration.",
+    "explanation": "Focus on frontend impact: performance gains, accessibility, reliability; avoid exhaustive file listing.",
+    "example": "\"Built a dashboard with React + TS; cut chart render time 40% via virtualization and memoization.\""
+  }
+]

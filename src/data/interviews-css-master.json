@@ -1,0 +1,497 @@
+[
+  {
+    "id": "css-q001",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "What is the CSS box model?",
+    "answer": "Every element is a box made of content, padding, border, and margin—outer layers surround inner content. `box-sizing: border-box` includes padding and border in the declared width/height.",
+    "explanation": "Margin collapses vertically between siblings; padding is inside the border; dimensions depend on box-sizing.",
+    "example": ".box { width: 200px; padding: 16px; border: 2px solid #ccc; margin: 8px; box-sizing: border-box; }"
+  },
+  {
+    "id": "css-q002",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "Difference between display: none and visibility: hidden?",
+    "answer": "`display: none` removes the element from layout—no box, no interaction. `visibility: hidden` hides rendering but preserves layout space (unless `collapse` on table rows).",
+    "explanation": "Screen readers may still expose hidden visibility in some cases—use `hidden` attribute or `aria-hidden` when appropriate.",
+    "example": ".gone { display: none; }\n.invisible { visibility: hidden; }"
+  },
+  {
+    "id": "css-q003",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "What is Flexbox?",
+    "answer": "A one-dimensional layout model for distributing space and aligning items along a row OR column—flex container + flex items with `justify-content`, `align-items`, `gap`, etc.",
+    "explanation": "Ideal for toolbars, stacks, centering; combine with Grid for page shells.",
+    "example": ".row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }"
+  },
+  {
+    "id": "css-q004",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "What is CSS Grid?",
+    "answer": "A two-dimensional layout system for defining rows and columns simultaneously—`grid-template-columns`, `grid-template-rows`, `gap`, placement APIs.",
+    "explanation": "Use for dashboards, galleries, overall page structure; pair with Flex inside cells.",
+    "example": ".layout { display: grid; grid-template-columns: 240px 1fr; grid-template-rows: auto 1fr auto; min-height: 100vh; }"
+  },
+  {
+    "id": "css-q005",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "Flexbox vs Grid?",
+    "answer": "Flexbox aligns along one axis at a time (main vs cross). Grid controls rows and columns together—pick Flex for components, Grid for 2D layouts.",
+    "explanation": "They compose: Grid macro layout, Flex micro alignment.",
+    "example": ".shell { display: grid; }\n.shell > .cell { display: flex; align-items: center; }"
+  },
+  {
+    "id": "css-q006",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "What is the position property?",
+    "answer": "`static` default; `relative` offsets from normal flow; `absolute` out of flow relative to containing block; `fixed` viewport; `sticky` hybrid stick within scrollport.",
+    "explanation": "Containing block for absolute is nearest positioned ancestor (`relative`/`absolute`/etc.).",
+    "example": ".modal { position: fixed; inset: 0; }\n.card { position: relative; }\n.badge { position: absolute; top: 8px; right: 8px; }"
+  },
+  {
+    "id": "css-q007",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "Difference between position relative and absolute?",
+    "answer": "`relative` keeps space in flow but allows offsets (`top/left`). `absolute` removes from flow and positions against the nearest positioned ancestor’s padding edge.",
+    "explanation": "Without positioned parent, absolute anchors to the initial containing block (often viewport behavior surprises).",
+    "example": ".parent { position: relative; }\n.child { position: absolute; bottom: 0; right: 0; }"
+  },
+  {
+    "id": "css-q008",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "What is z-index?",
+    "answer": "Controls painting order on the z-axis among positioned elements (`position` not static) and flex/grid items—higher values stack above within the same stacking context.",
+    "explanation": "New stacking contexts from opacity, transform, isolation—debug stacking bugs by tracing contexts.",
+    "example": ".overlay { position: fixed; z-index: 50; }\n.dropdown { position: absolute; z-index: 40; }"
+  },
+  {
+    "id": "css-q009",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "What is overflow?",
+    "answer": "`visible` default; `hidden` clips; `scroll` always shows scrollbars; `auto` scrollbars when needed; also `overflow-x`/`overflow-y`.",
+    "explanation": "Hidden overflow creates scroll containment; affects sticky children.",
+    "example": ".panel { max-height: 200px; overflow-y: auto; }"
+  },
+  {
+    "id": "css-q010",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "What is responsive design?",
+    "answer": "UI adapts to viewport and capabilities—fluid layouts, breakpoints, relative units, touch targets, and performance-aware assets.",
+    "explanation": "Mobile-first vs desktop-first are workflow choices; test real devices.",
+    "example": "@media (min-width: 768px) { .grid { grid-template-columns: repeat(3, 1fr); } }"
+  },
+  {
+    "id": "css-q011",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "What are media queries?",
+    "answer": "Conditional CSS blocks `@media (condition)`—width, height, orientation, `prefers-reduced-motion`, `prefers-color-scheme`, etc.",
+    "explanation": "Use `min-width` for mobile-first enhancements; avoid overlapping contradictory breakpoints.",
+    "example": "@media (max-width: 768px) {\n  .nav { flex-direction: column; }\n}"
+  },
+  {
+    "id": "css-q012",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "What is CSS specificity?",
+    "answer": "Higher specificity wins when rules conflict—inline styles beat IDs beat classes/attributes beat elements; universal loses. Specificity is per selector, not source order alone.",
+    "explanation": "`:where()` has zero specificity; `:is()` takes max argument specificity.",
+    "example": "#app .btn {} /* beats */ .btn {}\n/* prefer classes over IDs for maintainability */"
+  },
+  {
+    "id": "css-q013",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "What is !important?",
+    "answer": "Forces a declaration to beat normal specificity—hard to override and debug; reserve for utilities or third-party overrides.",
+    "explanation": "Cascade layers (`@layer`) often replace abuse of !important.",
+    "example": ".hidden { display: none !important; } /* last resort */"
+  },
+  {
+    "id": "css-q014",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "What is a pseudo-class?",
+    "answer": "Selectors targeting element state—`:hover`, `:focus-visible`, `:nth-child`, `:is()`, `:not()`. Single colon historically.",
+    "explanation": "Different from pseudo-elements (`::before`), though legacy `:before` still parses.",
+    "example": "a:hover { text-decoration: underline; }\ninput:focus-visible { outline: 2px solid Highlight; }"
+  },
+  {
+    "id": "css-q015",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "What is a pseudo-element?",
+    "answer": "Creates synthetic boxes—`::before`, `::after`, `::selection`, `::marker`—often require `content` for generated boxes.",
+    "explanation": "Double colon distinguishes from pseudo-classes in CSS3.",
+    "example": "blockquote::before { content: open-quote; }\np::first-line { font-weight: 600; }"
+  },
+  {
+    "id": "css-q016",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "What is rem vs em?",
+    "answer": "`rem` = multiple of root (`html`) font-size—consistent scaling. `em` = multiple of **this element’s** font-size (or parent for font-size on root contexts)—compounds nested.",
+    "explanation": "Use rem for spacing tokens; em useful for typography relative to component font.",
+    "example": "html { font-size: 16px; }\np { margin-bottom: 1rem; }\n.btn { padding: 0.5em 1em; font-size: 14px; }"
+  },
+  {
+    "id": "css-q017",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "What is object-fit?",
+    "answer": "Controls how replaced content (img/video) fills its box—`cover` crops uniformly, `contain` letterboxes, `fill` stretches.",
+    "explanation": "Pair with fixed aspect-ratio containers for cards.",
+    "example": "img.thumb { width: 100%; height: 200px; object-fit: cover; object-position: center; }"
+  },
+  {
+    "id": "css-q018",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "What are CSS variables (custom properties)?",
+    "answer": "`--name` tokens resolved at computed-value time, cascade/inherit—great for themes and tokens via `:root` or scope.",
+    "explanation": "Use `color-mix()` or `calc()` with variables for runtime theming.",
+    "example": ":root { --brand: #0ea5e9; }\n.btn { background: var(--brand); padding: var(--space-2); }"
+  },
+  {
+    "id": "css-q019",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "Inline vs block vs inline-block?",
+    "answer": "`block` breaks lines and fills container width; `inline` flows in text line box (width/height mostly ignored); `inline-block` flows inline but respects box model.",
+    "explanation": "Flex/grid items become blockified for layout calculations.",
+    "example": "span.ib { display: inline-block; width: 120px; vertical-align: middle; }"
+  },
+  {
+    "id": "css-q020",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "What is position sticky?",
+    "answer": "Acts relative until crossing a threshold (e.g. `top: 0`), then sticks like fixed within its scroll ancestor until container ends.",
+    "explanation": "Requires overflow visible on ancestors; sticky fails inside many overflow:hidden parents.",
+    "example": ".sticky-head { position: sticky; top: 0; z-index: 10; background: Canvas; }"
+  },
+  {
+    "id": "css-q021",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "What is native CSS nesting?",
+    "answer": "Selectors can nest inside rules—`&` refers to parent selector—supported in modern browsers and preprocessors historically.",
+    "explanation": "Mind specificity and `@nest` not needed in plain CSS nesting spec.",
+    "example": ".card {\n  padding: 1rem;\n  &:hover { box-shadow: var(--shadow); }\n  & .title { font-weight: 600; }\n}"
+  },
+  {
+    "id": "css-q022",
+    "technology": "CSS3",
+    "level": "Advanced",
+    "question": "What is the :has() selector?",
+    "answer": "Parent selector—matches if an element contains a relative selector match, e.g. `.card:has(img)`.",
+    "explanation": "Powerful for conditional styling without JS; watch performance on huge DOMs.",
+    "example": "nav:has(.menu:focus-within) .backdrop { opacity: 1; }"
+  },
+  {
+    "id": "css-q023",
+    "technology": "CSS3",
+    "level": "Advanced",
+    "question": "What are container queries?",
+    "answer": "`@container` applies styles when a container’s size crosses thresholds—component-responsive vs viewport-only media queries.",
+    "explanation": "Define containment with `container-type: inline-size` on wrapper; name containers for clarity.",
+    "example": ".wrap { container-type: inline-size; }\n@container (min-width: 500px) {\n  .card { flex-direction: row; }\n}"
+  },
+  {
+    "id": "css-q024",
+    "technology": "CSS3",
+    "level": "Advanced",
+    "question": "What is subgrid?",
+    "answer": "`grid-template-columns: subgrid` lets nested grids align to parent tracks for aligned card internals.",
+    "explanation": "Browser support improved—provide fallback grid without subgrid where needed.",
+    "example": ".parent { display: grid; grid-template-columns: repeat(3, 1fr); }\n.child { grid-column: span 2; display: grid; grid-template-columns: subgrid; }"
+  },
+  {
+    "id": "css-q025",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "What is color-mix()?",
+    "answer": "Mixes two colors in a color space—`color-mix(in oklab, var(--c) 70%, white)` for accessible tints.",
+    "explanation": "Prefer oklab/oklch for perceptual uniformity over naive srgb mixes.",
+    "example": "a:hover { color: color-mix(in oklab, var(--link) 85%, black); }"
+  },
+  {
+    "id": "css-q026",
+    "technology": "CSS3",
+    "level": "Advanced",
+    "question": "What are scroll-driven animations?",
+    "answer": "CSS animations tied to scroll progress via `animation-timeline: scroll()` and `scroll()` ranges—animate as element enters view.",
+    "explanation": "Progressive enhancement; check browser support and reduced-motion.",
+    "example": "@keyframes fade-in { from { opacity: 0 } to { opacity: 1 } }\n.reveal { animation: fade-in linear both;\n  animation-timeline: view(); animation-range: entry 0% cover 40%; }"
+  },
+  {
+    "id": "css-q027",
+    "technology": "CSS3",
+    "level": "Advanced",
+    "question": "What are View Transitions?",
+    "answer": "API (`document.startViewTransition`) + CSS `::view-transition-*` for animated handoffs between DOM states or MPA navigations (browser support varies).",
+    "explanation": "Smooth route transitions in frameworks opt-in to the API.",
+    "example": "document.startViewTransition(() => updateDOM());"
+  },
+  {
+    "id": "css-q028",
+    "technology": "CSS3",
+    "level": "Advanced",
+    "question": "What is anchor positioning?",
+    "answer": "`anchor-name` + `position-anchor`/`position-area` (evolving spec) positions popovers/tooltips relative to anchors without JS math.",
+    "explanation": "Pairs with Popover API in modern browsers.",
+    "example": ".tooltip { position-anchor: --btn; position-area: bottom; } /* conceptual */"
+  },
+  {
+    "id": "css-q029",
+    "technology": "CSS3",
+    "level": "Advanced",
+    "question": "What is @scope?",
+    "answer": "`@scope` limits selector reach between boundaries—reduces leakage without shadow DOM.",
+    "explanation": "Still emerging—verify support before relying in production.",
+    "example": "@scope (.card) to (.card footer) {\n  a { color: var(--link); }\n}"
+  },
+  {
+    "id": "css-q030",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "How do you use clamp() for responsive typography?",
+    "answer": "`clamp(min, preferred, max)`—preferred often mixes vw + rem so type scales fluidly between bounds.",
+    "explanation": "Fewer breakpoints; pair `ch` max-width on body copy.",
+    "example": "h1 { font-size: clamp(1.25rem, 2vw + 1rem, 2.25rem); }"
+  },
+  {
+    "id": "css-q031",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "Center a div with Flexbox?",
+    "answer": "Make parent flex container; center on both axes with `justify-content` and `align-items`, or `place-items: center` with grid-like simplicity via flex.",
+    "explanation": "For full viewport centering parent needs defined height.",
+    "example": ".container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n}"
+  },
+  {
+    "id": "css-q032",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "Center content using CSS Grid?",
+    "answer": "`display: grid; place-items: center` on container—or `justify-items`/`align-items` individually.",
+    "explanation": "Single-cell grid centers child without flex wrap quirks.",
+    "example": ".container {\n  display: grid;\n  place-items: center;\n  min-height: 200px;\n}"
+  },
+  {
+    "id": "css-q033",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "Absolute center an element?",
+    "answer": "`position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)` relative to positioned parent—or `inset: 0; margin: auto` with fixed width/height.",
+    "explanation": "`translate` centers by element’s own dimensions.",
+    "example": ".child {\n  position: absolute;\n  top: 50%; left: 50%;\n  transform: translate(-50%, -50%);\n}"
+  },
+  {
+    "id": "css-q034",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "Responsive navbar layout?",
+    "answer": "Flex `space-between` for logo vs links; stack with column direction under media query; hamburger pattern for mobile.",
+    "explanation": "Touch targets ≥44px; test overflow.",
+    "example": ".nav {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  gap: 1rem;\n}"
+  },
+  {
+    "id": "css-q035",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "Basic card styling?",
+    "answer": "Padding, subtle shadow, border-radius, optional border—use design tokens for elevation.",
+    "explanation": "Contrast checks for text on Card backgrounds.",
+    "example": ".card {\n  padding: 1.25rem;\n  border-radius: 12px;\n  box-shadow: 0 2px 10px rgb(0 0 0 / 0.08);\n}"
+  },
+  {
+    "id": "css-q036",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "Responsive grid without fixed columns?",
+    "answer": "`repeat(auto-fit, minmax(200px, 1fr))` fills row with as many tracks ≥200px as fit.",
+    "explanation": "`auto-fill` keeps empty tracks—often prefer auto-fit for catalogs.",
+    "example": ".container {\n  display: grid;\n  gap: 1rem;\n  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));\n}"
+  },
+  {
+    "id": "css-q037",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "Single-line ellipsis?",
+    "answer": "`white-space: nowrap; overflow: hidden; text-overflow: ellipsis`—requires constrained width.",
+    "explanation": "Multi-line uses `-webkit-line-clamp` with `display: -webkit-box`.",
+    "example": ".text {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}"
+  },
+  {
+    "id": "css-q038",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "Fixed header pattern?",
+    "answer": "`position: fixed; top: 0; left: 0; right: 0; z-index`—add padding-top to body/main equal to header height to prevent overlap.",
+    "explanation": "Prefer sticky headers when you want in-flow behavior.",
+    "example": ".header {\n  position: fixed;\n  top: 0;\n  width: 100%;\n  z-index: 40;\n}"
+  },
+  {
+    "id": "css-q039",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "Sticky sidebar pattern?",
+    "answer": "`position: sticky; top: var(--header-h)` inside scroll parent with sufficient height—sidebar column sticks while main scrolls.",
+    "explanation": "Fails if ancestor has overflow hidden—debug containment chain.",
+    "example": ".sidebar { position: sticky; top: 1rem; align-self: start; }"
+  },
+  {
+    "id": "css-q040",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "Image cover in a fixed box?",
+    "answer": "Set width/height on container or img; `object-fit: cover` crops; `object-position` focal point.",
+    "explanation": "Use aspect-ratio on wrapper for CLS stability.",
+    "example": "img {\n  width: 100%;\n  height: 200px;\n  object-fit: cover;\n}"
+  },
+  {
+    "id": "css-q041",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "Button hover styling?",
+    "answer": "Use `:hover` and `:focus-visible` for keyboard parity—respect `prefers-reduced-motion` for transitions.",
+    "explanation": "Hover doesn’t exist on touch—don’t rely on hover-only affordances.",
+    "example": "button:hover { background: var(--btn-hover); }\nbutton:focus-visible { outline: 2px solid var(--ring); }"
+  },
+  {
+    "id": "css-q042",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "Center a modal?",
+    "answer": "Fixed overlay + child centered via transform or flex/grid on overlay; trap focus in dialog.",
+    "explanation": "Use `dialog` element + `::backdrop` for accessible baseline.",
+    "example": ".modal {\n  position: fixed;\n  inset: 0;\n  display: grid;\n  place-items: center;\n}\n.modal__panel { transform: translate(0); }"
+  },
+  {
+    "id": "css-q043",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "Two column layout with Flex?",
+    "answer": "Flex row with two flex children—`flex: 1` for stretch; gap for gutters.",
+    "explanation": "Grid often clearer for equal tracks.",
+    "example": ".container { display: flex; gap: 1rem; }\n.col { flex: 1; min-width: 0; }"
+  },
+  {
+    "id": "css-q044",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "Equal height columns?",
+    "answer": "Flex defaults `align-items: stretch`; ensure columns fill row height. Grid `1fr` tracks naturally equal within row.",
+    "explanation": "Use `min-height: 0` on flex children with overflow scroll.",
+    "example": ".row { display: flex; align-items: stretch; }\n.row > * { flex: 1; }"
+  },
+  {
+    "id": "css-q045",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "Scrollable box?",
+    "answer": "Set height/max-height + `overflow-y: auto`—prefer auto over scroll unless always-on scrollbar desired.",
+    "explanation": "`overscroll-behavior` prevents scroll chaining if needed.",
+    "example": ".box {\n  max-height: 200px;\n  overflow-y: auto;\n}"
+  },
+  {
+    "id": "css-q046",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "Responsive images?",
+    "answer": "`max-width: 100%; height: auto` for intrinsic scaling; `srcset/sizes` for art direction and bandwidth.",
+    "explanation": "Aspect-ratio CSS prevents layout shift.",
+    "example": "img { max-width: 100%; height: auto; display: block; }"
+  },
+  {
+    "id": "css-q047",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "Simple CSS tooltip?",
+    "answer": "Position tooltip absolutely relative to anchor; toggle opacity/visibility on `:hover`—ensure keyboard/focus path or use Popover API.",
+    "explanation": "Pure CSS tooltips have a11y limits—prefer `title` + enhancement.",
+    "example": ".tip { position: relative; }\n.tip__pop {\n  position: absolute; bottom: 100%;\n  opacity: 0; pointer-events: none;\n}\n.tip:hover .tip__pop { opacity: 1; }"
+  },
+  {
+    "id": "css-q048",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "Skeleton loader shimmer?",
+    "answer": "Neutral base + animated gradient background—respect `prefers-reduced-motion`.",
+    "explanation": "Animate `background-position` or opacity pulse.",
+    "example": ".skeleton {\n  border-radius: 8px;\n  background: linear-gradient(90deg, #eee 25%, #f5f5f5 50%, #eee 75%);\n  background-size: 200% 100%;\n  animation: shimmer 1.2s infinite;\n}"
+  },
+  {
+    "id": "css-q049",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "Hide scrollbar but keep scrolling?",
+    "answer": "WebKit `::-webkit-scrollbar { display: none }`; Firefox `scrollbar-width: none`; standard `scrollbar-gutter` considerations.",
+    "explanation": "Hiding scrollbars hurts discoverability—avoid unless intentional.",
+    "example": ".no-bar { scrollbar-width: none; }\n.no-bar::-webkit-scrollbar { display: none; }"
+  },
+  {
+    "id": "css-q050",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "Flex gap?",
+    "answer": "`gap` sets gutters between flex items—replaces many margin hacks.",
+    "explanation": "Works in Grid too; no margin collapse issues.",
+    "example": ".container { display: flex; gap: 10px; flex-wrap: wrap; }"
+  },
+  {
+    "id": "css-q051",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "How do you build responsive UI?",
+    "answer": "Fluid type/spacing (`clamp`, `%`, `fr`), mobile-first media queries, Flex/Grid, container queries for components, test devices and slow networks.",
+    "explanation": "Pair with responsive images and touch-friendly hit targets.",
+    "example": "@media (min-width: 640px) { .grid { columns: 2; } }"
+  },
+  {
+    "id": "css-q052",
+    "technology": "CSS3",
+    "level": "Advanced",
+    "question": "How do you improve CSS performance?",
+    "answer": "Reduce expensive properties per frame (box-shadow, filters), minimize layout thrashing (batch reads/writes), scope styles, avoid universal deep selectors, use `content-visibility` for long lists, lazy-load non-critical CSS.",
+    "explanation": "Measure with Performance panel—selector cost usually minor vs layout/paint.",
+    "example": ".long-list > .item { content-visibility: auto; contain-intrinsic-size: 200px; }"
+  },
+  {
+    "id": "css-q053",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "How do you handle cross-browser CSS issues?",
+    "answer": "Feature queries `@supports`, autoprefixer/postcss, progressive enhancement, polyfills only when necessary, test Safari/Firefox/Chrome, document fallbacks.",
+    "explanation": "Use caniuse and baseline; avoid browser sniffing—detect capabilities.",
+    "example": "@supports (display: grid) {\n  .layout { display: grid; }\n}"
+  },
+  {
+    "id": "css-q054",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "What is mobile-first CSS?",
+    "answer": "Write base styles for smallest screens, then `min-width` media queries to enhance for larger viewports—fewer overrides than desktop-first.",
+    "explanation": "Aligns with progressive enhancement mindset.",
+    "example": ".nav { flex-direction: column; }\n@media (min-width: 768px) {\n  .nav { flex-direction: row; }\n}"
+  },
+  {
+    "id": "css-q055",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "How do you organize CSS at scale?",
+    "answer": "Component-scoped CSS (CSS Modules), utility layers (Tailwind), BEM naming, design tokens, `@layer` for cascade control, co-locate styles with components.",
+    "explanation": "Consistency beats dogma—pick conventions the team enforces.",
+    "example": "/* BEM */ .card__title--muted { opacity: 0.8; }"
+  }
+]

@@ -1,0 +1,501 @@
+[
+  {
+    "id": "css-flexbox",
+    "title": "Flexbox layout",
+    "category": "CSS3",
+    "tags": ["flexbox", "layout", "responsive", "alignment"],
+    "summary": "Flexbox distributes space along one axis (row or column). Ideal for navigation bars, toolbars, and centering. Effectively the default 1D layout system since full browser support.",
+    "content": "## Main concepts\n\n- **flex-direction** — row vs column.\n- **justify-content** — alignment along the main axis.\n- **align-items** — alignment on the cross axis.\n- **flex-grow/shrink/basis** — how items grow or shrink.\n\n## Gotchas\n\nMin-width defaults can prevent shrinking—sometimes `min-width: 0` on flex children fixes overflow.\n\n## Era\n\nPost-2020 projects typically choose **Flex + Grid** instead of float/clearfix layouts.",
+    "code_examples": [
+      {
+        "language": "css",
+        "code": ".toolbar {\n  display: flex;\n  align-items: center;\n  gap: 0.75rem;\n  justify-content: space-between;\n}\n\n.toolbar > .grow {\n  flex: 1 1 auto;\n  min-width: 0;\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-css-1", "preview": "Flexbox vs Grid — when to pick each" },
+      { "id": "int-css-2", "preview": "Gap vs margins in flex layouts" }
+    ]
+  },
+  {
+    "id": "css-grid",
+    "title": "CSS Grid",
+    "category": "CSS3",
+    "tags": ["grid", "layout", "two-dimensional"],
+    "summary": "Grid lays out items in rows and columns simultaneously—great for dashboards, galleries, and page shells. Widely adopted in the ~2020 “modern layout” era alongside Flexbox.",
+    "content": "## Tracks\n\nDefine columns and rows with `grid-template-columns` / `rows`. `fr` distributes **available** space.\n\n## Placement\n\nUse named areas (`grid-template-areas`) for readability, or line-based placement for precision.\n\n## Classic pattern\n\n`repeat(3, 1fr)` builds equal columns—ideal for card grids and app shells.",
+    "code_examples": [
+      {
+        "language": "css",
+        "code": ".shell {\n  display: grid;\n  grid-template-columns: 240px 1fr;\n  grid-template-rows: auto 1fr auto;\n  min-height: 100vh;\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-css-3", "preview": "Implicit vs explicit grid tracks" },
+      { "id": "int-css-4", "preview": "Subgrid use cases" }
+    ]
+  },
+  {
+    "id": "css-if-function",
+    "title": "The if() function (conditional values)",
+    "category": "CSS3",
+    "tags": ["if()", "conditional", "css-values", "2025", "experimental"],
+    "summary": "Emerging CSS lets you pick computed values from a condition—reducing duplicate rules for themes and preferences. Syntax and support are still stabilizing; treat as progressive enhancement.",
+    "content": "## Idea\n\nInstead of repeating `@media (prefers-color-scheme: dark)` blocks for every property, **conditional value functions** can inline the branch where the spec allows.\n\n## Mindset\n\nCSS already had “logic” via cascade, media queries, and `:has()`—`if()` makes some branches **explicit at value level**. Check **current** browser docs before shipping.\n\n## Further reading\n\nOverview of fast-moving CSS features (popular write-up): [CSS in 2025–2026 on DEV](https://dev.to/pixelperfect_pro/css-in-2025-2026-its-getting-too-powerful-and-im-scared-2ej8).",
+    "code_examples": [
+      {
+        "title": "Conceptual (verify syntax in MDN / spec)",
+        "language": "css",
+        "code": "/* Illustrative only — verify engine support */\n.card {\n  color: if(\n    prefers-color-scheme: dark;\n    white;\n    black\n  );\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q012", "preview": "CSS specificity & cascade" },
+      { "id": "css-q013", "preview": "!important and layers" }
+    ]
+  },
+  {
+    "id": "css-masonry-layout",
+    "title": "Native masonry layout (Grid)",
+    "category": "CSS3",
+    "tags": ["masonry", "grid", "layout", "pinterest"],
+    "summary": "Browser-native masonry-style layouts reduce reliance on JS libraries for uneven-height columns. Availability differs by engine—feature-detect or provide a dense Grid fallback.",
+    "content": "## Why it matters\n\nClassic Pinterest-like columns often needed **Masonry.js** or fragile scripts. Native masonry aims for **paint-stable**, scrollable columns tied to Grid.\n\n## Practical note\n\nProperty names and availability evolve—test **Chrome Canary / Firefox Nightly** flags vs stable. Fallback: multi-column layout or JS until baseline widens.\n\n## Reference\n\nDiscussed among **2025–2026 CSS** roundups such as [this DEV article](https://dev.to/pixelperfect_pro/css-in-2025-2026-its-getting-too-powerful-and-im-scared-2ej8).",
+    "code_examples": [
+      {
+        "title": "Illustrative Grid masonry (verify current keywords)",
+        "language": "css",
+        "code": ".container {\n  display: grid;\n  gap: 1rem;\n  grid-template-columns: repeat(3, 1fr);\n  /* masonry-related keywords vary by implementation */\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q036", "preview": "Responsive auto-fit grid" },
+      { "id": "int-css-4", "preview": "Subgrid vs masonry" }
+    ]
+  },
+  {
+    "id": "css-anchor-positioning",
+    "title": "Anchor positioning",
+    "category": "CSS3",
+    "tags": ["anchor", "tooltips", "popover", "layout"],
+    "summary": "Anchor positioning ties floating UI (tooltips, menus) to anchor elements with less manual JS measuring—pairs well with Popover and semantic buttons.",
+    "content": "## Problem\n\nAbsolutely positioning tooltips relative to triggers usually needs **resize/scroll listeners** or libraries.\n\n## Direction\n\nDeclare **anchors** and **positioned** elements that reference them so the browser keeps alignment when layout shifts.\n\n## Support\n\nCutting-edge—verify Baseline and ship fallbacks. Same topic area as popular **2025–2026 CSS** summaries ([DEV overview](https://dev.to/pixelperfect_pro/css-in-2025-2026-its-getting-too-powerful-and-im-scared-2ej8)).",
+    "code_examples": [
+      {
+        "title": "Conceptual pattern (names vary by spec level)",
+        "language": "css",
+        "code": "/* Pseudocode shape — check MDN for shipping syntax */\n.anchor { anchor-name: --trigger; }\n.tooltip {\n  position: absolute;\n  position-anchor: --trigger;\n  inset-area: bottom;\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q028", "preview": "Anchor positioning interview notes" },
+      { "id": "adv-q005", "preview": ":focus-visible vs tooltips" }
+    ]
+  },
+  {
+    "id": "css-text-box-trim",
+    "title": "text-box-trim & box metrics",
+    "category": "CSS3",
+    "tags": ["typography", "leading", "text-box", "fonts"],
+    "summary": "Fine-grained control over extra vertical space around glyph boxes—helps align mixed fonts and icons without optical clipping hacks.",
+    "content": "## Why\n\nLine boxes include **half-leading** and font metrics that make “perfect” vertical alignment with icons frustrating.\n\n## Direction\n\nProperties like **`text-box-trim`** (alongside related metrics work) aim to trim or align to **cap height / alphabetic baseline** more predictably.\n\n## Support\n\nEmerging—pair with progressive enhancement. Mentioned in forward-looking CSS roundups ([example](https://dev.to/pixelperfect_pro/css-in-2025-2026-its-getting-too-powerful-and-im-scared-2ej8)).",
+    "code_examples": [
+      {
+        "language": "css",
+        "code": ".title {\n  /* Illustrative — verify property availability */\n  text-box-trim: trim-both;\n  text-box-edge: cap alphabetic;\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q030", "preview": "clamp() for responsive type" },
+      { "id": "css-q016", "preview": "rem vs em" }
+    ]
+  },
+  {
+    "id": "css-scroll-driven-animations",
+    "title": "Scroll-driven animations",
+    "category": "CSS3",
+    "tags": ["scroll", "animation", "timeline", "performance"],
+    "summary": "Drive animations from scroll position or element visibility without imperative scroll listeners—lighter bundles when baseline matches your targets.",
+    "content": "## Building blocks\n\n**Scroll timelines** and **view timelines** connect `@keyframes` to scroll progress—fade/slide as sections enter. Older discussions referenced **`@scroll-timeline`**; modern APIs center on **`animation-timeline`** + named scroll/view timelines.\n\n## A11y\n\nRespect **`prefers-reduced-motion`**—disable or shorten motion.\n\n## Era\n\nOften grouped with **2024+** “smarter CSS” features—animate from scroll without JS when baseline allows.\n\n## Further reading\n\nFeatured in “CSS getting too powerful” style articles ([DEV](https://dev.to/pixelperfect_pro/css-in-2025-2026-its-getting-too-powerful-and-im-scared-2ej8)).",
+    "code_examples": [
+      {
+        "language": "css",
+        "code": "@keyframes fade-in {\n  from { opacity: 0 }\n  to { opacity: 1 }\n}\n.reveal {\n  animation: fade-in linear both;\n  animation-timeline: view();\n  animation-range: entry 0% cover 40%;\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q026", "preview": "Scroll-driven animations Q&A" },
+      { "id": "adv-q005", "preview": "Focus-visible & motion" }
+    ]
+  },
+  {
+    "id": "css-native-mixins",
+    "title": "Native CSS mixins & functions (roadmap)",
+    "category": "CSS3",
+    "tags": ["mixins", "functions", "sass", "future-css"],
+    "summary": "The ecosystem is exploring native reuse patterns beyond custom properties—reducing preprocessor dependency for simple repeated declarations. Shipping shape TBD; verify specs.",
+    "content": "## Context\n\nPreprocessors (Sass `@mixin`) historically filled reuse gaps. **Standard CSS** continues to add **functions**, `@apply`-style discussions, and mixin-like proposals—exact syntax lands in CSS WG drafts.\n\n## Advice\n\nUse **design tokens** (`--token`) + `@layer` today; migrate to native mixins when Baseline fits your audience.\n\n## Casual overview\n\n[CSS in 2025–2026 discussion](https://dev.to/pixelperfect_pro/css-in-2025-2026-its-getting-too-powerful-and-im-scared-2ej8) highlights Sass-level ergonomics coming closer to the platform.",
+    "code_examples": [
+      {
+        "title": "Preprocessor analogy (not native syntax)",
+        "language": "css",
+        "code": "/* Sass-style illustration — not valid vanilla CSS */\n/* @mixin button($bg) { background: $bg; } */\n\n:root {\n  --btn-bg: oklch(0.55 0.15 250);\n}\n.btn {\n  background: var(--btn-bg);\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q018", "preview": "CSS variables" },
+      { "id": "css-q055", "preview": "Organizing CSS at scale" }
+    ]
+  },
+  {
+    "id": "css-margin-trim",
+    "title": "margin-trim",
+    "category": "CSS3",
+    "tags": ["margin", "collapse", "layout", "spacing"],
+    "summary": "Trim sibling margins at container edges so first/last blocks don’t double up with parent padding—cleaner vertical rhythm without spacer divs.",
+    "content": "## Problem\n\n**Margin collapse** surprises spacing at section boundaries.\n\n## Direction\n\n`margin-trim` (values like **block / inline / all**) tells the container to absorb or trim margins at specified sides—fewer “mystery gaps.”\n\n## Support\n\nCheck Baseline before relying site-wide. Mentioned alongside other layout QoL features in [this 2025–2026 CSS article](https://dev.to/pixelperfect_pro/css-in-2025-2026-its-getting-too-powerful-and-im-scared-2ej8).",
+    "code_examples": [
+      {
+        "language": "css",
+        "code": "section {\n  margin-trim: block;\n  /* Illustrative — confirm engine support */\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q001", "preview": "Box model" },
+      { "id": "css-q050", "preview": "Flex gap vs margins" }
+    ]
+  },
+  {
+    "id": "css-contrast-color",
+    "title": "contrast-color()",
+    "category": "CSS3",
+    "tags": ["accessibility", "contrast", "color", "wcag"],
+    "summary": "Compute accessible foreground colors against a background automatically—fewer manual contrast checks for themed surfaces.",
+    "content": "## Goal\n\nWCAG contrast math belongs in the engine so **tokens + surfaces** stay readable when users pick accent colors.\n\n## Usage mindset\n\nPair with **`color-mix()`**, **`light-dark()`**, and system colors for resilient themes.\n\n## Support\n\nEmerging—verify Safari/Chrome/Firefox tables. Discussed in accessibility-forward CSS summaries ([DEV piece](https://dev.to/pixelperfect_pro/css-in-2025-2026-its-getting-too-powerful-and-im-scared-2ej8)).",
+    "code_examples": [
+      {
+        "language": "css",
+        "code": ".cta {\n  background: var(--brand);\n  /* Conceptual API — check shipping name/syntax */\n  color: contrast-color(var(--brand));\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q025", "preview": "color-mix()" },
+      { "id": "adv-q008", "preview": "Focus rings & contrast" }
+    ]
+  },
+  {
+    "id": "css-progress-function",
+    "title": "progress() & scroll-linked values",
+    "category": "CSS3",
+    "tags": ["progress", "scroll", "animation", "interpolation"],
+    "summary": "Bridge scroll ranges into interpolations—think opacity tied to scroll segment without reading `scrollY` in JS when supported.",
+    "content": "## Idea\n\nExpose **progress along an axis** (scroll, timelines) to functions that output lengths or numbers for butter-smooth transitions.\n\n## Practical pairing\n\nWorks conceptually with **scroll-driven animations** and reduced-motion policies.\n\n## Reference\n\nHighlighted among futuristic CSS APIs in [CSS 2025–2026 commentary](https://dev.to/pixelperfect_pro/css-in-2025-2026-its-getting-too-powerful-and-im-scared-2ej8)—always verify syntax in spec snapshots.",
+    "code_examples": [
+      {
+        "title": "Illustrative (verify function signature)",
+        "language": "css",
+        "code": ".hero {\n  /* Pseudocode — engines may use different names */\n  opacity: progress(scroll(root block), 0px, 200px);\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q026", "preview": "Scroll-driven animations" },
+      { "id": "css-q052", "preview": "CSS performance" }
+    ]
+  },
+  {
+    "id": "css-view-transitions",
+    "title": "View Transitions API",
+    "category": "CSS3",
+    "tags": ["view-transition", "spa", "mpa", "animation"],
+    "summary": "Animate between DOM states or navigations with browser-managed snapshots—shared-element morphing without framework-specific routers.",
+    "content": "## Flow\n\n`document.startViewTransition(() => updateDOM())` captures old/new views; CSS **`::view-transition-*`** pseudo-elements style the transition.\n\n## Scope\n\nWorks for **MPA** navigations in supporting browsers plus SPA state changes—still progressive enhancement.\n\n## Further reading\n\nPopularized as “Pixar-smooth” page changes in articles like [this DEV overview](https://dev.to/pixelperfect_pro/css-in-2025-2026-its-getting-too-powerful-and-im-scared-2ej8).",
+    "code_examples": [
+      {
+        "language": "javascript",
+        "code": "document.startViewTransition(() => {\n  document.body.classList.toggle('theme-dark');\n});"
+      },
+      {
+        "language": "css",
+        "code": "::view-transition-old(root),\n::view-transition-new(root) {\n  animation-duration: 300ms;\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q027", "preview": "View Transitions Q&A" },
+      { "id": "fe-q041", "preview": "Suspense & transitions (React)" }
+    ]
+  },
+  {
+    "id": "css-custom-properties",
+    "title": "CSS variables (custom properties)",
+    "category": "CSS3",
+    "tags": ["variables", "tokens", "theme", "2020"],
+    "summary": "Custom properties (`--name`) cascade and inherit—foundation for design tokens, themes, and runtime theming without preprocessor builds.",
+    "content": "## Basics\n\nDeclare on `:root` or any selector; read with **`var(--name, fallback)`**. Values resolve at computed-value time.\n\n## Why teams adopted them (~2020+)\n\nOne stylesheet can swap entire palettes via a class on `<html>` or `[data-theme]`.\n\n## Pairs with\n\n`color-mix()`, **`light-dark()`**, container queries, and `@layer` for maintainable systems.",
+    "code_examples": [
+      {
+        "language": "css",
+        "code": ":root {\n  --primary: oklch(0.55 0.2 250);\n  --radius: 12px;\n}\n.button {\n  background: var(--primary);\n  border-radius: var(--radius);\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q018", "preview": "Variables in interviews" },
+      { "id": "css-q055", "preview": "CSS organization" }
+    ]
+  },
+  {
+    "id": "css-clamp",
+    "title": "clamp() — fluid values",
+    "category": "CSS3",
+    "tags": ["clamp", "responsive", "typography", "2020"],
+    "summary": "`clamp(min, preferred, max)` keeps typography and spacing between bounds—fewer breakpoints for fluid UIs.",
+    "content": "## Pattern\n\nPreferred often mixes **vw + rem** so text scales smoothly.\n\n## Use cases\n\nFont sizes, gaps, icon boxes, anything that should breathe between mobile and desktop.\n\n## Timeline\n\nLanding page CSS talks (~2020 onward) popularized clamp-heavy **fluid design**.",
+    "code_examples": [
+      {
+        "language": "css",
+        "code": "body {\n  font-size: clamp(1rem, 0.25vw + 0.9rem, 1.125rem);\n}\nh1 {\n  font-size: clamp(1.25rem, 2vw + 1rem, 2.25rem);\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q030", "preview": "clamp interview" },
+      { "id": "css-q009", "preview": "Fluid tokens" }
+    ]
+  },
+  {
+    "id": "css-container-queries",
+    "title": "Container queries",
+    "category": "CSS3",
+    "tags": ["container", "responsive", "components", "2022"],
+    "summary": "Style by **container size**, not viewport—components adapt inside sidebars, modals, and dashboards.",
+    "content": "## Setup\n\nMark a wrapper with **`container-type`** (often `inline-size`). Query with **`@container (min-width: …)`**.\n\n## Shift\n\n**Component-responsive** design vs media-query-only layouts—a major ~2022–2023 workflow change.\n\n## Fallback\n\nMobile-first `@media` still helps when containers aren’t supported everywhere you ship.",
+    "code_examples": [
+      {
+        "language": "css",
+        "code": ".card-wrap {\n  container-type: inline-size;\n  container-name: card;\n}\n@container card (min-width: 500px) {\n  .card {\n    flex-direction: row;\n    gap: 1.5rem;\n  }\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q023", "preview": "Container queries Q&A" },
+      { "id": "int-css-4", "preview": "Subgrid & layout" }
+    ]
+  },
+  {
+    "id": "css-has-selector",
+    "title": ":has() parent selector",
+    "category": "CSS3",
+    "tags": [":has()", "selectors", "2022", "relational"],
+    "summary": "Match an element when it contains another—style the parent from child state without extra JS classes.",
+    "content": "## Power\n\nPreviously awkward patterns (empty states, focus-within menus) become declarative.\n\n## Performance\n\nAvoid overly broad `:has()` on huge trees; test interaction with **forgiving selector lists**.\n\n## Era\n\nOften cited as a **game changer** alongside container queries in the component-CSS wave.",
+    "code_examples": [
+      {
+        "language": "css",
+        "code": ".card:has(img) {\n  border: 2px solid var(--brand);\n}\n.form-field:has(:user-invalid) {\n  border-color: var(--danger);\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q022", "preview": ":has() advanced Q&A" },
+      { "id": "css-q012", "preview": "Specificity" }
+    ]
+  },
+  {
+    "id": "css-cascade-layers",
+    "title": "@layer — cascade layers",
+    "category": "CSS3",
+    "tags": ["@layer", "cascade", "architecture", "2022"],
+    "summary": "Explicit layer order (`base`, `components`, `utilities`) replaces fighting specificity wars—better CSS architecture without endless `!important`.",
+    "content": "## Usage\n\nDeclare order once: `@layer base, components, utilities;` then wrap rules in `@layer utilities { … }`.\n\n## Wins\n\nPredictable overrides for design systems and CSS reset vs component styles.\n\n## Pairing\n\nWorks with **custom properties**, `@scope`, and preprocessors less often needed for ordering hacks.",
+    "code_examples": [
+      {
+        "language": "css",
+        "code": "@layer reset, tokens, components, utilities;\n\n@layer reset {\n  *, *::before, *::after { box-sizing: border-box; }\n}\n\n@layer utilities {\n  .hidden { display: none !important; }\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q013", "preview": "!important vs layers" },
+      { "id": "css-q055", "preview": "Organizing CSS" }
+    ]
+  },
+  {
+    "id": "css-viewport-units-dynamic",
+    "title": "Dynamic viewport units (dvh, svh, lvh)",
+    "category": "CSS3",
+    "tags": ["viewport", "mobile", "100vh", "2022"],
+    "summary": "**svh / lvh / dvh** describe small/large/dynamic viewport height as mobile UI chrome shows and hides—fixing classic `100vh` bugs on phones.",
+    "content": "## Problem\n\nLegacy **`vh`** ignored URL bars and notches—layouts jumped or clipped.\n\n## Which unit\n\n- **svh** — smallest viewport (safe minimum).\n- **lvh** — largest.\n- **dvh** — dynamic; tracks live chrome movement.\n\n## Practical\n\nUse **`min-height: 100dvh`** for full-screen sections when baseline targets allow; pair **`safe-area-inset-*`** for notches.",
+    "code_examples": [
+      {
+        "language": "css",
+        "code": ".hero {\n  min-height: 100dvh;\n  min-height: 100svh; /* fallback chain */\n}\n.modal {\n  max-height: 90dvh;\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q010", "preview": "Responsive design" },
+      { "id": "adv-q012", "preview": "Fluid UI" }
+    ]
+  },
+  {
+    "id": "css-nesting-native",
+    "title": "Native CSS nesting",
+    "category": "CSS3",
+    "tags": ["nesting", "&", "2024", "syntax"],
+    "summary": "Nest rules inside selectors with **`&`**—same mental model as Sass/Less, now valid CSS in supporting browsers.",
+    "content": "## Syntax\n\n`&` repeats the parent compound selector; pseudo-classes nest naturally.\n\n## Why it landed ~2024\n\nLess preprocessor plumbing for teams that still want readable component blocks.\n\n## Caveats\n\nVerify **Baseline**; PostCSS can downlevel for older engines.",
+    "code_examples": [
+      {
+        "language": "css",
+        "code": ".card {\n  padding: 1rem;\n  border-radius: 12px;\n\n  &:hover {\n    box-shadow: var(--shadow-lg);\n  }\n\n  & .title {\n    font-weight: 600;\n  }\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q021", "preview": "CSS nesting Q&A" },
+      { "id": "css-q052", "preview": "CSS performance" }
+    ]
+  },
+  {
+    "id": "css-light-dark",
+    "title": "light-dark() color keyword",
+    "category": "CSS3",
+    "tags": ["theme", "dark-mode", "color", "2024"],
+    "summary": "Pick two colors for light vs dark **color schemes** without manual media queries—pairs with `color-scheme` on `:root`.",
+    "content": "## Usage\n\nSet **`color-scheme: light dark`** so form controls pick native styling; use **`light-dark(#111, #eee)`** for author colors that flip with scheme.\n\n## Relation\n\nComplements **`prefers-color-scheme`**, custom properties, and **`color-mix()`**.",
+    "code_examples": [
+      {
+        "language": "css",
+        "code": ":root {\n  color-scheme: light dark;\n}\nbody {\n  background: light-dark(white, #0a0a0a);\n  color: light-dark(#171717, #fafafa);\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q018", "preview": "Variables & themes" },
+      { "id": "adv-q006", "preview": "Focus-visible & themes" }
+    ]
+  },
+  {
+    "id": "css-starting-style",
+    "title": "@starting-style — entry animations",
+    "category": "CSS3",
+    "tags": ["animation", "transition", "mount", "2024"],
+    "summary": "Define **starting styles** before an element’s first paint so transitions run when nodes appear—dialogs, popovers, route segments.",
+    "content": "## Problem\n\nNew DOM nodes often appear **without** a “from” state for `transition`.\n\n## Pattern\n\nPair **`@starting-style`** with final states so the UA interpolates on insertion.\n\n## Accessibly\n\nHonor **`prefers-reduced-motion`**.",
+    "code_examples": [
+      {
+        "language": "css",
+        "code": ".popover {\n  opacity: 1;\n  transform: scale(1);\n  transition: opacity 200ms, transform 200ms;\n}\n\n@starting-style {\n  .popover {\n    opacity: 0;\n    transform: scale(0.96);\n  }\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q027", "preview": "View Transitions" },
+      { "id": "fe-q041", "preview": "Suspense / entering UI" }
+    ]
+  },
+  {
+    "id": "css-subgrid",
+    "title": "Subgrid",
+    "category": "CSS3",
+    "tags": ["grid", "subgrid", "alignment", "2025"],
+    "summary": "Nested grids inherit parent track sizing so cards and rows align across columns—native alternative to brittle margin hacks.",
+    "content": "## Usage\n\nParent defines columns; child **`display: grid; grid-template-columns: subgrid`** participates in parent tracks.\n\n## Support\n\nConfirm **Baseline** before relying in marketing grids.\n\n## Relation\n\nDifferent goal than **masonry**—subgrid is about **track alignment**, not packed columns.",
+    "code_examples": [
+      {
+        "language": "css",
+        "code": ".grid {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 1rem;\n}\n.grid > .tile {\n  display: grid;\n  grid-template-columns: subgrid;\n  grid-column: span 2;\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-css-4", "preview": "Subgrid interview" },
+      { "id": "css-q024", "preview": "Subgrid Q&A" }
+    ]
+  },
+  {
+    "id": "css-color-mix",
+    "title": "color-mix()",
+    "category": "CSS3",
+    "tags": ["color", "color-mix", "themes", "2025"],
+    "summary": "Mix two colors in a chosen color space—tints, hover states, and accessible variants without hard-coding hex ladders.",
+    "content": "## Syntax\n\n`color-mix(in oklab, var(--brand) 85%, white)`—prefer **perceptual spaces** (oklab/oklch) over naive sRGB when possible.\n\n## Uses\n\nHover overlays, pressed buttons, alpha tricks without `rgba()` everywhere.",
+    "code_examples": [
+      {
+        "language": "css",
+        "code": ".btn:hover {\n  background: color-mix(in oklab, var(--brand) 70%, white);\n}\n.badge {\n  color: color-mix(in srgb, red 50%, white);\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q025", "preview": "color-mix interview" },
+      { "id": "adv-q008", "preview": "Accessible focus & contrast" }
+    ]
+  },
+  {
+    "id": "css-scroll-state-queries",
+    "title": "Scroll-state container queries",
+    "category": "CSS3",
+    "tags": ["scroll", "container", "stuck", "2026"],
+    "summary": "Emerging pattern: query whether a **scroll container** or sticky child is in states like **stuck**—style headers without scroll listeners when supported.",
+    "content": "## Idea\n\nExtend container queries with **scroll-state** conditions (e.g. sticky at top) so CSS reacts to scroll mechanics declaratively.\n\n## Mindset\n\nSpec + syntax **still evolving**—treat as progressive enhancement next to **Intersection Observer** fallbacks.\n\n## Timeline\n\nOften grouped with **2026 “CSS logic”** narratives alongside `if()` and advanced scroll APIs.",
+    "code_examples": [
+      {
+        "title": "Illustrative (verify shipping syntax)",
+        "language": "css",
+        "code": "/* Conceptual — check Baseline / MDN */\n@container scroll-state(stuck: top) {\n  .bar {\n    box-shadow: var(--shadow);\n  }\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q023", "preview": "Container queries" },
+      { "id": "css-q026", "preview": "Scroll-driven animations" }
+    ]
+  },
+  {
+    "id": "css-select-styling",
+    "title": "Custom `<select>` styling (appearance / base)",
+    "category": "CSS3",
+    "tags": ["forms", "select", "appearance", "2026"],
+    "summary": "Standards work toward fully styleable selects—beyond trimming native chrome with border hacks. Availability varies; pair with accessible markup.",
+    "content": "## Direction\n\nNew **`appearance`** values and **parts-based** styling aim to let designers match selects to design systems while preserving semantics.\n\n## A11y\n\nKeep **labels**, keyboard operation, and announced roles—don’t replace with non-focusable divs.\n\n## Support\n\nFeature-detect; ship plain `<select>` fallback styling everywhere.",
+    "code_examples": [
+      {
+        "title": "Illustrative only — verify engine keywords",
+        "language": "css",
+        "code": "select {\n  /* appearance: base-select; — when supported */\n  font: inherit;\n  border-radius: 8px;\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "fe-q030", "preview": "Controlled vs uncontrolled" },
+      { "id": "int-html-3", "preview": "Forms & validation" }
+    ]
+  },
+  {
+    "id": "css-custom-functions",
+    "title": "Custom CSS functions (@function)",
+    "category": "CSS3",
+    "tags": ["@function", "variables", "logic", "2026"],
+    "summary": "Spec work explores **author-defined functions** that return computed values—reusable math/transforms at stylesheet level. Still landing; syntax follows CSS WG drafts.",
+    "content": "## Distinction\n\nUnlike Sass mixins, native functions integrate with the **CSS value engine** and cascade.\n\n## Today\n\nUse **custom properties + `calc()` / `color-mix()`** until Baseline covers your audience.\n\n## Illustration\n\nArticles often show `@function`-style blocks—verify against **current** spec snapshots before pasting into prod CSS.",
+    "code_examples": [
+      {
+        "title": "Conceptual sketch (not broadly supported yet)",
+        "language": "css",
+        "code": "/* Illustrative — NOT portable CSS today */\n/* @function --half(--v) { result: calc(var(--v) / 2); } */\n\n:root {\n  --space: 16px;\n}\n.gap-half {\n  gap: calc(var(--space) / 2);\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q018", "preview": "Custom properties" },
+      { "id": "css-q055", "preview": "Organizing CSS at scale" }
+    ]
+  },
+  {
+    "id": "css-sibling-index",
+    "title": "sibling-index()",
+    "category": "CSS3",
+    "tags": ["selectors", "animation", "lists", "2026"],
+    "summary": "Numeric index of an element among siblings—useful for staggered delays (`transition-delay`) without inline styles or nth-child hacks.",
+    "content": "## Idea\n\n`calc(0.05s * sibling-index())` staggers list reveals.\n\n## Support\n\nEmerging—verify engines; fallback to **`nth-child` delays** or **JS data-index**.\n\n## Relation\n\nComplements **scroll-driven** and **view transition** choreography.",
+    "code_examples": [
+      {
+        "title": "Conceptual (verify function name in target browsers)",
+        "language": "css",
+        "code": ".list > li {\n  animation: rise 400ms ease both;\n  animation-delay: calc(60ms * sibling-index());\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "css-q048", "preview": "Skeleton / stagger" },
+      { "id": "css-q026", "preview": "Scroll animations" }
+    ]
+  }
+]

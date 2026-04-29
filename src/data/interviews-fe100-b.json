@@ -1,0 +1,227 @@
+[
+  {
+    "id": "fe-q026",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is useContext?",
+    "answer": "`useContext` reads the current value from the nearest `Context.Provider` above—avoids prop drilling for cross-cutting data like theme or auth context.",
+    "explanation": "Value identity changes re-render all consumers; split contexts or memoize provider value to limit churn.",
+    "example": "const theme = useContext(ThemeContext);"
+  },
+  {
+    "id": "fe-q027",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is useMemo?",
+    "answer": "`useMemo` memoizes a computed value, recomputing only when dependencies change—use for expensive pure calculations, not as a default on every line.",
+    "explanation": "Reference stability matters for child memoization; returning new object literals every time defeats downstream `React.memo`.",
+    "example": "const sorted = useMemo(\n  () => items.slice().sort((a, b) => a.date - b.date),\n  [items]\n);"
+  },
+  {
+    "id": "fe-q028",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is useCallback?",
+    "answer": "`useCallback` returns a stable function reference when dependencies are unchanged—pairs with `React.memo` children to skip re-renders.",
+    "explanation": "Overusing adds complexity; profile first; inline handlers are fine unless children are expensive and memoized.",
+    "example": "const onSave = useCallback(() => submit(form), [form]);"
+  },
+  {
+    "id": "fe-q029",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is React.memo?",
+    "answer": "`React.memo` wraps a component to skip re-rendering if props are shallow-equal to previous props.",
+    "explanation": "Does not help if props include unstable inline objects/functions unless stabilized with useMemo/useCallback.",
+    "example": "export const Row = React.memo(function Row({ title }: { title: string }) {\n  return <div>{title}</div>;\n});"
+  },
+  {
+    "id": "fe-q030",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "Controlled vs uncontrolled components?",
+    "answer": "Controlled: React state is source of truth for inputs (`value` + `onChange`). Uncontrolled: DOM holds value (`defaultValue`, refs)—React reads occasionally.",
+    "explanation": "Controlled enables validation and instant UI sync; uncontrolled can be simpler for file inputs or migrating legacy forms.",
+    "example": "const [v,setV]=useState('');\n<input value={v} onChange={e=>setV(e.target.value)} />"
+  },
+  {
+    "id": "fe-q031",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "Why do lists need keys in React?",
+    "answer": "Keys identify stable identity of items across renders so React can reconcile efficiently—especially insert/reorder/delete.",
+    "explanation": "Avoid array index as key when order changes; prefer stable IDs from data.",
+    "example": "{users.map(u => <li key={u.id}>{u.name}</li>)}"
+  },
+  {
+    "id": "fe-q032",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is lifting state up?",
+    "answer": "Moving shared state to the nearest common ancestor so multiple children can read/update via props or callbacks.",
+    "explanation": "When lifting hurts (deep trees), consider context or dedicated state libraries.",
+    "example": "const [filter, setFilter] = useState('');\nreturn (<>\n  <SearchBar filter={filter} onChange={setFilter} />\n  <Table filter={filter} />\n</>);"
+  },
+  {
+    "id": "fe-q033",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is prop drilling?",
+    "answer": "Passing props through many intermediate components that do not use them, only to reach a deep child.",
+    "explanation": "Mitigate with context, composition (children/render props), or state management.",
+    "example": "<App user={u}><Layout user={u}><Header user={u} /></Layout></App> // drill"
+  },
+  {
+    "id": "fe-q034",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is reconciliation?",
+    "answer": "React's diffing of the element tree to compute minimal DOM updates—same type updates in place; different type replaces subtree.",
+    "explanation": "Keys influence list reconciliation; concurrent features may interrupt work.",
+    "example": "// Changing key forces remount: <Modal key={id} />"
+  },
+  {
+    "id": "fe-q035",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is a Fragment?",
+    "answer": "`<>...</>` or `<Fragment>` groups multiple nodes without adding an extra DOM element.",
+    "explanation": "Use keyed fragments when mapping lists needing stable identity at fragment level.",
+    "example": "return (\n  <>\n    <th>Name</th>\n    <th>Score</th>\n  </>\n);"
+  },
+  {
+    "id": "fe-q036",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is the Context API?",
+    "answer": "React Context lets you pass data through the tree without drilling—`createContext`, `Provider`, `useContext`.",
+    "explanation": "Not a full Redux replacement for high-frequency updates; split contexts to reduce re-renders.",
+    "example": "const LocaleContext = createContext('en');\n// <LocaleContext.Provider value={locale}>"
+  },
+  {
+    "id": "fe-q037",
+    "technology": "Redux",
+    "level": "Intermediate",
+    "question": "What is Redux?",
+    "answer": "Predictable state container: single store, actions describe events, pure reducers compute next state. Often used with Redux Toolkit today.",
+    "explanation": "Time-travel debugging, middleware, DevTools; overhead vs local state—use when cross-cutting client state is complex.",
+    "example": "dispatch({ type: 'todos/add', payload: text });"
+  },
+  {
+    "id": "fe-q038",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is a higher-order component (HOC)?",
+    "answer": "A function that takes a component and returns a new component with extra props or behavior—legacy pattern before hooks.",
+    "explanation": "Hooks often replace HOCs; HOCs still appear in older libraries (e.g., `connect` historically).",
+    "example": "const withAuth = (C: typeof Page) => (props: any) =>\n  user ? <C {...props} /> : <Login />;"
+  },
+  {
+    "id": "fe-q039",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is a custom hook?",
+    "answer": "A function named `use*` that calls other hooks—extracts reusable stateful logic across components.",
+    "explanation": "Follow Rules of Hooks; return API as tuple or object; colocate with domain.",
+    "example": "function useToggle(initial = false) {\n  const [v, set] = useState(initial);\n  return [v, () => set((x) => !x)] as const;\n}"
+  },
+  {
+    "id": "fe-q040",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is lazy loading in React?",
+    "answer": "`React.lazy` + dynamic `import()` splits code so components load on demand, shrinking initial bundle.",
+    "explanation": "Wrap with `<Suspense fallback=...>`; error boundaries catch failed chunks if configured.",
+    "example": "const Dashboard = lazy(() => import('./Dashboard'));\n<Suspense fallback={<Spinner />}><Dashboard /></Suspense>"
+  },
+  {
+    "id": "fe-q041",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is Suspense?",
+    "answer": "A boundary that shows fallback UI while lazy children or async boundaries suspend—foundation for streaming and data fetching patterns.",
+    "explanation": "In frameworks like Next.js, Suspense integrates with streaming SSR.",
+    "example": "<Suspense fallback={<Skeleton />}>\n  <Comments />\n</Suspense>"
+  },
+  {
+    "id": "fe-q042",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is SSR (server-side rendering)?",
+    "answer": "Rendering React to HTML on the server so users see content sooner and SEO improves; client hydrates interactivity.",
+    "explanation": "Trade-offs: TTFB vs CSR; Next.js App Router supports RSC + selective client JS.",
+    "example": "// Framework handles renderToString/stream; pages ship HTML then hydrate."
+  },
+  {
+    "id": "fe-q043",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is hydration?",
+    "answer": "Attaching React event listeners and state to server-rendered HTML so the UI becomes interactive without full re-render.",
+    "explanation": "Mismatch warnings mean server HTML ≠ client first render—check random IDs, dates, or incorrect markup.",
+    "example": "// hydrateRoot(container, <App />) matches SSR markup"
+  },
+  {
+    "id": "fe-q044",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is an error boundary?",
+    "answer": "A class component (or framework wrapper) implementing `getDerivedStateFromError` / `componentDidCatch` to render fallback UI when descendants throw.",
+    "explanation": "Does not catch event handler errors async without rethrow; use try/catch locally too.",
+    "example": "class EB extends React.Component {\n  state = { e: null };\n  static getDerivedStateFromError(e: Error) { return { e }; }\n  render() { return this.state.e ? <p>Error</p> : this.props.children; }\n}"
+  },
+  {
+    "id": "fe-q045",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is Strict Mode?",
+    "answer": "Development-only wrapper that double-invokes certain lifecycles/effects to surface side effects and warns about unsafe APIs.",
+    "explanation": "Helps prepare for concurrent features; no production performance hit.",
+    "example": "<StrictMode><App /></StrictMode>"
+  },
+  {
+    "id": "fe-q046",
+    "technology": "Next.js",
+    "level": "Beginner",
+    "question": "What is Next.js?",
+    "answer": "A React framework providing routing, SSR/SSG, API routes, image optimization, and conventions like `app/` or `pages/` routing.",
+    "explanation": "Choose App Router for React Server Components by default; client components opt-in with `'use client'`.",
+    "example": "// app/page.tsx exports page component for '/' route"
+  },
+  {
+    "id": "fe-q047",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "SSR vs CSR vs SSG?",
+    "answer": "SSR renders per request on server; CSR renders in browser after JS loads; SSG pre-renders at build time (optionally revalidated).",
+    "explanation": "Next lets you mix per route—static for marketing, dynamic for dashboards.",
+    "example": "// ISR: export const revalidate = 3600;"
+  },
+  {
+    "id": "fe-q048",
+    "technology": "Next.js",
+    "level": "Beginner",
+    "question": "What is file-based routing?",
+    "answer": "Routes derived from folder/file structure—`app/dashboard/page.tsx` → `/dashboard`.",
+    "explanation": "Layouts nest via `layout.tsx`; dynamic segments `[id]` and route groups `(marketing)` organize without URL segments.",
+    "example": "app/blog/[slug]/page.tsx // /blog/:slug"
+  },
+  {
+    "id": "fe-q049",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "What is TypeScript?",
+    "answer": "A superset of JavaScript that adds static types, tooling-time checks, and rich editor support—compiles to plain JS.",
+    "explanation": "Structural typing; gradual adoption via `any`/`unknown` but aim to eliminate implicit any.",
+    "example": "function add(a: number, b: number): number { return a + b; }"
+  },
+  {
+    "id": "fe-q050",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "Why use TypeScript?",
+    "answer": "Catches bugs early, improves refactors, documents contracts via types, and enhances autocomplete—especially valuable in large teams.",
+    "explanation": "Balance strictness (`strict`, `noImplicitAny`) with delivery velocity.",
+    "example": "type User = { id: string; role: 'admin' | 'user' };"
+  }
+]

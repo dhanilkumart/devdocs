@@ -1,0 +1,44 @@
+[
+  {
+    "id": "graphql-queries-mutations",
+    "title": "Queries and mutations",
+    "category": "GraphQL",
+    "tags": ["graphql", "queries", "mutations", "schema"],
+    "summary": "Queries read data; mutations change data. Both are sent to a single endpoint with a typed schema.",
+    "content": "## Queries\n\nAsk for exactly the fields you need—no under or over-fetching by field selection.\n\n## Mutations\n\nConventionally one mutation root field per operation. Return updated objects so clients can update caches.\n\n## Errors\n\nPartial success can include both `data` and `errors` per the GraphQL spec.",
+    "code_examples": [
+      {
+        "title": "Query",
+        "language": "graphql",
+        "code": "query UserCard($id: ID!) {\n  user(id: $id) {\n    id\n    name\n    posts(first: 3) {\n      title\n    }\n  }\n}"
+      },
+      {
+        "title": "Mutation",
+        "language": "graphql",
+        "code": "mutation RenameUser($id: ID!, $name: String!) {\n  updateUser(id: $id, name: $name) {\n    id\n    name\n  }\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-gql-1", "preview": "When GraphQL fits vs REST" },
+      { "id": "int-gql-2", "preview": "N+1 problem and DataLoader" }
+    ]
+  },
+  {
+    "id": "graphql-schema-resolvers",
+    "title": "Schema and resolvers",
+    "category": "GraphQL",
+    "tags": ["schema", "resolvers", "types", "API"],
+    "summary": "The schema declares types and fields. Resolvers fetch or compute each field—often backed by databases or REST services.",
+    "content": "## Type system\n\nObjects, interfaces, unions, enums, inputs, and custom scalars compose your API contract.\n\n## Resolver chain\n\nEach field can have its own resolver; parent object flows down the tree.",
+    "code_examples": [
+      {
+        "language": "graphql",
+        "code": "type User {\n  id: ID!\n  email: String!\n  posts: [Post!]!\n}\n\ntype Post {\n  id: ID!\n  title: String!\n  author: User!\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-gql-3", "preview": "Authentication in GraphQL" },
+      { "id": "int-gql-4", "preview": "Subscriptions overview" }
+    ]
+  }
+]

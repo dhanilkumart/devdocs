@@ -1,0 +1,39 @@
+[
+  {
+    "id": "ts-interface-vs-type",
+    "title": "interface vs type",
+    "category": "TypeScript",
+    "tags": ["types", "interfaces", "aliases"],
+    "summary": "Both describe object shapes. Interfaces merge via declaration merging; type aliases are closed unions or intersections.",
+    "content": "## When to use interface\n\n- Public APIs you may extend.\n- When you want **declaration merging** (multiple declarations combine).\n\n## When to use type\n\n- Union and intersection types (`A | B`).\n- Mapped types, conditional types, template literals.\n\nFor many teams, **pick one style for objects** and stay consistent.",
+    "code_examples": [
+      {
+        "language": "typescript",
+        "code": "interface User {\n  id: string;\n}\ninterface User {\n  name: string;\n}\n// User is { id: string; name: string }\n\ntype Status = \"idle\" | \"loading\" | \"error\";"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-ts-1", "preview": "interface vs type in production codebases" },
+      { "id": "int-ts-2", "preview": "Structural typing in TypeScript" }
+    ]
+  },
+  {
+    "id": "ts-generics",
+    "title": "Generics",
+    "category": "TypeScript",
+    "tags": ["generics", "reuse", "type-parameters"],
+    "summary": "Generics parameterize types so functions and data structures stay type-safe while working with many concrete types.",
+    "content": "## Basics\n\n`function identity<T>(x: T): T { return x; }`\n\n## Constraints\n\nUse `extends` to require shape: `function keys<T extends object>(obj: T)`.\n\n## Defaults\n\n`interface Box<T = string>` supplies a default type argument.",
+    "code_examples": [
+      {
+        "title": "Generic API wrapper",
+        "language": "typescript",
+        "code": "async function api<T>(path: string): Promise<T> {\n  const res = await fetch(path);\n  if (!res.ok) throw new Error(res.statusText);\n  return res.json() as Promise<T>;\n}\n\ntype User = { id: string };\nconst user = await api<User>(\"/user\");"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-ts-3", "preview": "Generic constraints with keyof" },
+      { "id": "int-ts-4", "preview": "Conditional types overview" }
+    ]
+  }
+]

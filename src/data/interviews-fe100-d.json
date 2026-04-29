@@ -1,0 +1,227 @@
+[
+  {
+    "id": "fe-q076",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How do you approach performance in an app?",
+    "answer": "Measure first (Lighthouse, Profiler, Web Vitals), fix bottlenecks—bundle size, expensive renders, network waterfalls, caching—and verify with metrics.",
+    "explanation": "Show awareness of Core Web Vitals (LCP, INP, CLS) and regression testing.",
+    "example": "Reduced INP by debouncing input and splitting a 400KB chart chunk with React.lazy."
+  },
+  {
+    "id": "fe-q077",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "How do you handle errors in the UI?",
+    "answer": "Local try/catch for sync code; error boundaries for render errors; query libraries expose error states; never swallow errors silently—log and show actionable fallback.",
+    "explanation": "Retry strategies, correlation IDs for support, accessible error messages.",
+    "example": "{error && <Alert role=\"alert\">{error.message}</Alert>}"
+  },
+  {
+    "id": "fe-q078",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "How do you manage client state?",
+    "answer": "Local UI with `useState`/`useReducer`; shared trees with Context; cross-cutting or cacheable server state with TanStack Query/RTK Query; complex global app state with Redux.",
+    "explanation": "Match tool to scope—avoid Redux for every toggle.",
+    "example": "Server data: useQuery(['user'], fetchUser); UI toggles: useState."
+  },
+  {
+    "id": "fe-q079",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What do you do when an API is slow?",
+    "answer": "Show skeletons/spinners, optimistic updates where safe, request cancellation, caching, and backend collaboration for pagination or field slimming.",
+    "explanation": "Perceived performance: instant feedback beats raw latency sometimes.",
+    "example": "<Suspense fallback={<TableSkeleton />}><Data /></Suspense>"
+  },
+  {
+    "id": "fe-q080",
+    "technology": "General",
+    "level": "Beginner",
+    "question": "What is your strength as a developer?",
+    "answer": "Give one or two concrete strengths (e.g., systematic debugging, accessibility, design-code handoff) backed by evidence.",
+    "explanation": "Tie to team outcomes; avoid generic superlatives without proof.",
+    "example": "\"I focus on testable component APIs—led adoption of testing-library and cut UI regressions in QA by ~30%.\""
+  },
+  {
+    "id": "fe-q081",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What was your biggest technical challenge?",
+    "answer": "Choose a real incident: unknown root cause, constraints, options considered, what you implemented, and measurable outcome.",
+    "explanation": "Shows ownership and learning; safe to discuss partial failures with lessons.",
+    "example": "Race in double-submit on slow 3G—added idempotency keys + disabled button + request deduping."
+  },
+  {
+    "id": "fe-q082",
+    "technology": "General",
+    "level": "Beginner",
+    "question": "Why React?",
+    "answer": "Large ecosystem, component model, employability, strong community, works from SPAs to Next.js full-stack; matches how design systems scale.",
+    "explanation": "Mention when you would pick something else (static sites, heavy real-time) to show nuance.",
+    "example": "Our team ships faster with shared component libraries and hook-based logic reuse."
+  },
+  {
+    "id": "fe-q083",
+    "technology": "General",
+    "level": "Beginner",
+    "question": "Why should we hire you?",
+    "answer": "Map your skills to their stack and problems; highlight ownership, communication, and learning speed with a concrete win.",
+    "explanation": "Research the product/values; be specific not generic flattery.",
+    "example": "You are migrating to the App Router—I have shipped RSC boundaries and can mentor the team on client/server split."
+  },
+  {
+    "id": "fe-q084",
+    "technology": "General",
+    "level": "Beginner",
+    "question": "What is Agile?",
+    "answer": "Iterative delivery emphasizing collaboration, feedback, and small releasable increments—often implemented with Scrum or Kanban.",
+    "explanation": "Not excuse for no documentation; includes ceremonies and continuous improvement.",
+    "example": "Sprint planning, daily standups, retro, working software each iteration."
+  },
+  {
+    "id": "fe-q085",
+    "technology": "General",
+    "level": "Beginner",
+    "question": "What is a sprint?",
+    "answer": "A fixed time-box (often 1–2 weeks) where a team commits to a slice of backlog work and ends with a review/retro.",
+    "explanation": "Velocity is a planning aid, not a performance whip.",
+    "example": "Two-week sprint: plan → build → demo to stakeholders."
+  },
+  {
+    "id": "fe-q086",
+    "technology": "General",
+    "level": "Beginner",
+    "question": "What is a backlog?",
+    "answer": "Prioritized list of work items (features, bugs, tech debt) maintained by product/engineering—source for sprint planning.",
+    "explanation": "Refinement sessions break epics into estimable stories.",
+    "example": "Jira Product backlog ordered by ROI and risk."
+  },
+  {
+    "id": "fe-q087",
+    "technology": "General",
+    "level": "Beginner",
+    "question": "What is Continuous Integration (CI)?",
+    "answer": "Automatically integrating and verifying each change—build, test, lint—so mainline stays healthy.",
+    "explanation": "Fast feedback loops; trunk-based development pairs well.",
+    "example": "Every PR runs tests before merge."
+  },
+  {
+    "id": "fe-q088",
+    "technology": "General",
+    "level": "Beginner",
+    "question": "What is Continuous Deployment/Delivery (CD)?",
+    "answer": "Delivery: always releasable; Deployment: automatically ship to prod when CI passes (with safeguards).",
+    "explanation": "Feature flags decouple deploy from release.",
+    "example": "Merge to main triggers canary deploy to 5% traffic."
+  },
+  {
+    "id": "fe-q089",
+    "technology": "General",
+    "level": "Beginner",
+    "question": "What is Git?",
+    "answer": "Distributed version control—tracks commits, branches, merges; enables collaboration and bisecting regressions.",
+    "explanation": "Know merge vs rebase trade-offs; signing commits optional.",
+    "example": "git checkout -b feat/login\ngit commit -m \"Add form\"\ngit push -u origin feat/login"
+  },
+  {
+    "id": "fe-q090",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Describe a branching strategy.",
+    "answer": "Common pattern: feature branches off `develop` or `main`, PR review, merge; gitflow uses release/hotfix branches; trunk-based favors short-lived branches.",
+    "explanation": "Align with release cadence and team size.",
+    "example": "feature/foo → PR → main (protected, requires green CI)."
+  },
+  {
+    "id": "fe-q091",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "let vs const — when to use which?",
+    "answer": "Default to `const` for bindings that should not be reassigned; use `let` when you must reassign; avoid `var`.",
+    "explanation": "`const` objects remain mutable at property level.",
+    "example": "const PI = 3.14;\nlet score = 0; score += 10;"
+  },
+  {
+    "id": "fe-q092",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What are arrow functions?",
+    "answer": "Concise syntax `(a) => a * 2`; lexical `this` (no own binding); not ideal for methods that need dynamic `this` unless wrapped.",
+    "explanation": "Cannot be used as constructors; no `arguments` object—use rest params.",
+    "example": "const nums = [1,2,3].map((n) => n * 2);"
+  },
+  {
+    "id": "fe-q093",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What does the spread operator do?",
+    "answer": "Expands collections into literals or argument lists—shallow copy for objects/arrays.",
+    "explanation": "Same as earlier deep dive—merge order matters.",
+    "example": "const copy = { ...defaults, ...overrides };"
+  },
+  {
+    "id": "fe-q094",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is destructuring (recap)?",
+    "answer": "Unpack properties or positions into variables succinctly—objects `{a,b}` and arrays `[x,y]`.",
+    "explanation": "Combine with defaults and renaming for clean APIs.",
+    "example": "function greet({ name = 'guest' } = {}) { return `Hi ${name}`; }"
+  },
+  {
+    "id": "fe-q095",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is a Promise (recap)?",
+    "answer": "Represents future completion—`.then` chains async success and `.catch` handles failures.",
+    "explanation": "Prefer async/await for readability in complex flows.",
+    "example": "Promise.all([fetch('/a'), fetch('/b')]).then(([ra,rb]) => Promise.all([ra.json(), rb.json()]));"
+  },
+  {
+    "id": "fe-q096",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is async/await (recap)?",
+    "answer": "Syntactic sugar on Promises—`await` pauses only the async function, not the whole thread.",
+    "explanation": "Combine with `Promise.all` for parallelism intentionally.",
+    "example": "const [u, p] = await Promise.all([getUser(), getPosts()]);"
+  },
+  {
+    "id": "fe-q097",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "Explain the event loop (recap).",
+    "answer": "Single-threaded JS runtimes process call stack, then microtasks, then macrotasks—explains ordering of promises vs timeouts.",
+    "explanation": "Worker threads and WASM can offload but default UI thread stays hot.",
+    "example": "Heavy sync loop blocks timers and paints—chunk work or use workers."
+  },
+  {
+    "id": "fe-q098",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is the Virtual DOM (recap)?",
+    "answer": "React keeps an element tree model to diff against previous render for minimal DOM updates.",
+    "explanation": "Fiber enables concurrency/prioritization in modern React.",
+    "example": "Keys help reconcile dynamic lists efficiently."
+  },
+  {
+    "id": "fe-q099",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What are Hooks?",
+    "answer": "Functions like `useState` that let function components hold state and side effects—rules: top-level only in React functions.",
+    "explanation": "Custom hooks share logic; hooks rely on call order each render.",
+    "example": "function useWindowWidth() {\n  const [w,setW]=useState(0);\n  useEffect(() => {\n    const h=()=>setW(innerWidth);\n    h(); addEventListener('resize',h);\n    return ()=>removeEventListener('resize',h);\n  },[]);\n  return w;\n}"
+  },
+  {
+    "id": "fe-q100",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "Describe the React component lifecycle (modern view).",
+    "answer": "Mount → updates when state/props/context change → unmount. Hooks map: `useEffect` for mount/update/cleanup, `useLayoutEffect` before paint, refs persist across renders.",
+    "explanation": "Class lifecycle names map roughly: `componentDidMount` ~ effect with []; updates ~ effect with deps; `willUnmount` ~ cleanup.",
+    "example": "useEffect(() => { subscribe(); return () => unsubscribe(); }, [deps]);"
+  }
+]

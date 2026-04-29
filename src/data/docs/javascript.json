@@ -1,0 +1,50 @@
+[
+  {
+    "id": "js-closures",
+    "title": "Closures",
+    "category": "JavaScript",
+    "tags": ["scope", "functions", "lexical", "interview"],
+    "summary": "A closure gives a function access to variables from its outer (enclosing) lexical scope, even after the outer function returns.",
+    "content": "## What is a closure?\n\nA **closure** is created when a nested function captures variables from its parent scope. Those variables persist as long as any reference to the inner function exists.\n\n## Why it matters\n\nClosures power modules before ES modules, memoization, React hooks (conceptually), and event handlers that remember configuration.\n\n## Common pitfalls\n\n- Accidentally sharing loop variables in older `var` loops (use `let` or IIFE).\n- Memory: closures keep outer variables alive—detach listeners when done.",
+    "code_examples": [
+      {
+        "title": "Basic closure",
+        "language": "javascript",
+        "code": "function createCounter() {\n  let count = 0;\n  return () => ++count;\n}\n\nconst next = createCounter();\nnext(); // 1\nnext(); // 2"
+      },
+      {
+        "title": "Factory with private state",
+        "language": "javascript",
+        "code": "function makeGreeter(name) {\n  return function greet() {\n    return `Hello, ${name}`;\n  };\n}\n\nconst hi = makeGreeter(\"Ada\");\nhi(); // Hello, Ada"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-js-1", "preview": "Explain closures in JavaScript" },
+      { "id": "int-js-2", "preview": "Difference between var and let in loops" }
+    ]
+  },
+  {
+    "id": "js-promises-async",
+    "title": "Promises and async/await",
+    "category": "JavaScript",
+    "tags": ["async", "promises", "fetch", "error-handling"],
+    "summary": "Promises model asynchronous completion. async/await is syntactic sugar that makes promise chains read like synchronous code.",
+    "content": "## Promises\n\nA Promise is an object representing eventual completion (`resolve`) or failure (`reject`).\n\n## async/await\n\n`async` functions always return a Promise. `await` pauses until the Promise settles *within that async function only*—it does not block the main thread globally.\n\n## Error handling\n\nUse `try/catch` around `await`, or `.catch()` on the promise chain.",
+    "code_examples": [
+      {
+        "title": "Promise chain",
+        "language": "javascript",
+        "code": "fetch(\"/api/user\")\n  .then((r) => r.json())\n  .then(console.log)\n  .catch(console.error);"
+      },
+      {
+        "title": "async/await",
+        "language": "javascript",
+        "code": "async function load() {\n  try {\n    const res = await fetch(\"/api/user\");\n    const data = await res.json();\n    return data;\n  } catch (e) {\n    console.error(e);\n  }\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-js-3", "preview": "How does the event loop relate to promises?" },
+      { "id": "int-js-4", "preview": "async/await error handling patterns" }
+    ]
+  }
+]

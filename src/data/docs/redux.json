@@ -1,0 +1,76 @@
+[
+  {
+    "id": "redux-core-concepts",
+    "title": "Redux core: store, actions, reducers",
+    "category": "Redux",
+    "tags": ["redux", "store", "reducer", "dispatch", "predictable-state"],
+    "summary": "Redux centralizes application state in a single store. Events are plain action objects; reducers compute the next state immutably.",
+    "content": "## Three principles\n\n- **Single source of truth** — one store holds app state.\n- **State is read-only** — change state by dispatching actions.\n- **Reducers are pure functions** — same input state + action always yields the same next state; no side effects inside the reducer.\n\n## Data flow\n\n`dispatch(action) → reducer(state, action) → newState → subscribers re-run`.\n\n## When to use\n\nHelpful for cross-cutting client state, time-travel debugging, and clear update traceability. For local UI state, `useState` is often enough.",
+    "code_examples": [
+      {
+        "title": "Minimal reducer + store (conceptual)",
+        "language": "typescript",
+        "code": "type State = { count: number };\n\ntype Action = { type: 'increment' } | { type: 'decrement' };\n\nfunction counter(state: State, action: Action): State {\n  switch (action.type) {\n    case 'increment':\n      return { count: state.count + 1 };\n    case 'decrement':\n      return { count: state.count - 1 };\n    default:\n      return state;\n  }\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-redux-1", "preview": "Redux vs React Context" },
+      { "id": "int-redux-3", "preview": "Redux Toolkit benefits" }
+    ]
+  },
+  {
+    "id": "react-redux-hooks",
+    "title": "react-redux: useSelector, useDispatch, useStore",
+    "category": "Redux",
+    "tags": ["useSelector", "useDispatch", "useStore", "react-redux", "hooks"],
+    "summary": "Connect React components to the Redux store. useSelector subscribes to state slices; useDispatch returns a stable dispatch function; useStore reaches the store instance (rare).",
+    "content": "## useSelector\n\n`const value = useSelector((state: RootState) => state.x)`\n\nRe-renders when the selected value changes (default `===` comparison; pass `shallowEqual` for shallow object compare).\n\n## useDispatch\n\nReturns `dispatch` for the nearest `<Provider>`. Use it in event handlers, not during render.\n\n## useStore\n\nAccess full store—prefer selectors for reads; use when integrating non-React subscribers.",
+    "code_examples": [
+      {
+        "language": "tsx",
+        "code": "import { useDispatch, useSelector } from 'react-redux';\nimport type { RootState, AppDispatch } from './store';\n\nexport function Counter() {\n  const count = useSelector((s: RootState) => s.counter.value);\n  const dispatch = useDispatch<AppDispatch>();\n  return (\n    <button type=\"button\" onClick={() => dispatch({ type: 'counter/increment' })}>\n      {count}\n    </button>\n  );\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-redux-2", "preview": "useSelector equality / reference stability" },
+      { "id": "int-redux-1", "preview": "Redux vs Context" }
+    ]
+  },
+  {
+    "id": "redux-toolkit-essentials",
+    "title": "Redux Toolkit: configureStore & createSlice",
+    "category": "Redux",
+    "tags": ["RTK", "createSlice", "configureStore", "immer"],
+    "summary": "Redux Toolkit is the official opinionated way to write Redux: less boilerplate, built-in Immer for immutable updates, and DevTools wired by default.",
+    "content": "## configureStore\n\nWraps `createStore` with good defaults: thunk middleware, serializable check (dev), DevTools.\n\n## createSlice\n\nGenerates action creators + reducer from `reducers` object; uses Immer so you can write \"mutative\" logic that stays immutable in reality.\n\n## createAsyncThunk\n\nStandard pattern for async logic with `pending`/`fulfilled`/`rejected` actions.",
+    "code_examples": [
+      {
+        "title": "createSlice",
+        "language": "typescript",
+        "code": "import { createSlice } from '@reduxjs/toolkit';\n\nconst slice = createSlice({\n  name: 'counter',\n  initialState: { value: 0 },\n  reducers: {\n    increment: (state) => {\n      state.value += 1;\n    },\n  },\n});\n\nexport const { increment } = slice.actions;\nexport default slice.reducer;"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-redux-3", "preview": "Why Redux Toolkit over hand-written Redux" },
+      { "id": "int-redux-4", "preview": "createAsyncThunk lifecycle" }
+    ]
+  },
+  {
+    "id": "redux-async-thunk",
+    "title": "Async logic: createAsyncThunk & listeners",
+    "category": "Redux",
+    "tags": ["createAsyncThunk", "async", "RTK", "API"],
+    "summary": "createAsyncThunk dispatches lifecycle actions for async work. RTK Query is often better for cacheable server state; thunks suit imperative flows.",
+    "content": "## Thunk args\n\nPayload creator receives `(arg, thunkAPI)` with `dispatch`, `getState`, `rejectWithValue`, etc.\n\n## Error handling\n\nUse `rejectWithValue` to pass structured errors to reducers.\n\n## Alternatives\n\n**RTK Query** for request caching/deduping; **listeners** (`createListenerMiddleware`) for reactive side effects.",
+    "code_examples": [
+      {
+        "language": "typescript",
+        "code": "import { createAsyncThunk } from '@reduxjs/toolkit';\n\nexport const fetchUser = createAsyncThunk(\n  'user/fetch',\n  async (userId: string, { rejectWithValue }) => {\n    const res = await fetch(`/api/users/${userId}`);\n    if (!res.ok) return rejectWithValue(await res.text());\n    return res.json();\n  }\n);"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-redux-4", "preview": "createAsyncThunk vs RTK Query" },
+      { "id": "int-redux-5", "preview": "Normalized entity state" }
+    ]
+  }
+]
