@@ -1,0 +1,272 @@
+[
+  {
+    "id": "sr-fe-001",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "You have a solid 10+ year background in UI development before moving heavily into React. How has deep Vanilla JS and jQuery experience influenced how you write React today?",
+    "answer": "Vanilla JS taught me what React is abstracting: the event loop, DOM cost, and implicit state in the DOM. jQuery made mutations easy but hid data flow—I still reach for direct DOM knowledge when debugging portals, focus traps, and measuring layout. In React I prefer explicit state, stable keys, and avoiding unnecessary effects because I have scar tissue from “change the DOM from ten callbacks” bugs.",
+    "explanation": "Interviewers want humility + specifics: mention profiling, progressive enhancement, when raw DOM APIs beat libraries, and how React DevTools + fundamentals interact.",
+    "example": "STAR hook: older SPAs with plugins vs today’s declarative trees—same UX goals, safer composition."
+  },
+  {
+    "id": "sr-fe-002",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "Tell me about advocating for a technology choice—for example Zustand over Redux or Next.js over plain React. How did you get team buy-in?",
+    "answer": "Frame it as risks and metrics, not taste: prototype in a spike, measure bundle size, DX time-to-feature, and operational cost (SSR hosting). Present trade-offs in writing—when Redux wins (time-travel, middleware-heavy workflows) vs lighter stores. Pilot on one vertical slice, codify patterns in ADRs, then expand once others copy-paste success.",
+    "explanation": "Buy-in = alignment + proof: involve skeptics early, show failing tests/migrations avoided, and define rollback.",
+    "example": "ADR template: context, decision, consequences; demo DevTools and onboarding time saved."
+  },
+  {
+    "id": "sr-fe-003",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "You have been in Agile sprint planning across many concurrent streams. As a Senior Developer, how do you balance coding with mentoring, reviews, and architecture?",
+    "answer": "Time-box non-coding work (office hours, office calendar blocks for reviews), batch interruptions, and protect deep-work slots. Delegate meaningful—not grunt—tasks to grow juniors. Use architecture as thin RFCs + async comments so meetings shrink. Say no or negotiate scope when WIP would sacrifice review quality or production safety.",
+    "explanation": "They want sustainable habits: async docs, templates for PR descriptions, pairing blocks, and escalation paths.",
+    "example": "Weekly tech sync + async RFCs; review SLA same-day for small PRs."
+  },
+  {
+    "id": "sr-fe-004",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "What was the steepest learning curve moving from traditional DOM manipulation (jQuery) to React’s state-driven component model?",
+    "answer": "Mental model shift: UI as a function of state, not imperative patches. Hardest parts were ownership of state (who updates what), async in effects, stale closures, and list reconciliation/keys. Learning to stop reaching for direct DOM except refs/measurement—and trusting batching—took deliberate practice.",
+    "explanation": "Good stories: one bug from nested plugins vs React’s single source of truth; DevTools as teacher.",
+    "example": "Contrast $('#x').text() with setState + derived UI; debugging with React Profiler."
+  },
+  {
+    "id": "sr-fe-005",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "How do you stay current with frontend trends (e.g. React 19, Server Components) without chasing hype?",
+    "answer": "Anchor on problems you actually have: performance, security, DX. Read release notes and RFCs, try features behind flags in side projects, adopt when team pain maps to the solution. Ignore buzzwords until there’s maintenance story—upgrade paths, hiring pool, ecosystem maturity.",
+    "explanation": "Mention trusted channels (React blog, web.dev), internal guilds, and measuring outcomes not novelty.",
+    "example": "Pilot RSC on read-heavy route only; benchmark LCP/TTFB before org-wide shift."
+  },
+  {
+    "id": "sr-fe-006",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "Your resume mentions architecting reusable React component libraries. Did you build from scratch or wrap libraries like MUI or Tailwind UI? How did you handle theme customization for Fortune-level clients?",
+    "answer": "Most teams compose: primitives + design tokens on top of a headless or accessible base (or MUI with heavy theming). Document tokens (color, spacing, radius), semantic slots, and white-label builds per tenant—CSS variables or runtime theme providers. Avoid fork wars: wrap vendor components behind your own API so swaps stay localized.",
+    "explanation": "White-label = contract + QA matrix per brand; Storybook + visual regression for themes.",
+    "example": "theme.ts layers: brand palette → semantic tokens → component variants."
+  },
+  {
+    "id": "sr-fe-007",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "How do you manage global state for a low-code/zero-code platform where users drag and drop UI elements? Redux, Context, or Zustand?",
+    "answer": "Often a normalized editor model (nodes/edges) in a dedicated store—Zustand or Redux Toolkit for undo/redo and middleware; Context only for stable, low-churn values like theme. Keep drag transient in local state or a tiny interaction slice to avoid global churn. Serialize graph to JSON from that single source of truth.",
+    "explanation": "Mention history stacks, selectors, batching updates during drag, and devtools for huge graphs.",
+    "example": "Normalized store: entities.byId + orderedChildrenIds; drag updates one slice."
+  },
+  {
+    "id": "sr-fe-008",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "You reduced delivery from months to weeks. What frontend bottlenecks did you remove?",
+    "answer": "Typical wins: design-system reuse vs bespoke CSS per screen, automated CI/visual tests, trunk-based flow with feature flags, killing duplicate API layers, bundler/code-splitting, template-driven forms, and clearer ownership (fewer handoffs). Quantify: fewer defects reaching QA, faster PR cycle time.",
+    "explanation": "Be honest—sometimes process + tooling + scope clarity, not magic.",
+    "example": "Before/after: bundle KB, build minutes, story completion days."
+  },
+  {
+    "id": "sr-fe-009",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "In a zero-code tool, user-generated JSON configs can get huge. How did you optimize rendering so the browser did not freeze on large DOM trees?",
+    "answer": "Virtualize long lists (windowing), lazy-mount subtrees, memoize expensive subtrees with stable props, split Server vs Client boundaries where applicable, debounce schema-driven updates, and prefer shallow trees + CSS containment. Profile with React Profiler and Performance panel—often O(n) rerenders or layout thrash, not raw DOM count alone.",
+    "explanation": "Mention Web Workers for validation/transform of giant JSON off main thread if needed.",
+    "example": "react-window for palette/gallery; incremental schema patch vs full replace."
+  },
+  {
+    "id": "sr-fe-010",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "How did you handle error boundaries and dynamic form validation when users dictate the data flow in a zero-code platform?",
+    "answer": "Route-level and widget-level error boundaries with actionable fallbacks; schema validation (e.g. JSON Schema / Zod) generated from the builder with clear field-level errors. Separate author-time validation from runtime user errors; log authoring mistakes separately. For dynamic flows, drive validation from a single schema version per published app.",
+    "explanation": "Defense in depth: never trust author JSON without validation; sandbox iframe if needed.",
+    "example": "<ErrorBoundary FallbackComponent={CanvasError}> around preview canvas"
+  },
+  {
+    "id": "sr-fe-011",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "(AI kiosk) Walk through integrating real-time voice with GPT-4o-mini and Twilio. How did you use WebSockets vs REST for audio streams?",
+    "answer": "High level: capture audio → stream or chunk to ASR/transcription service → LLM text via HTTPS REST or SSE/WebSocket for token streaming → TTS audio back. Twilio Media Streams often use WebSockets for bidirectional audio frames; control-plane REST for session setup. Separate concerns: signaling/metadata REST, low-latency audio over WS; backoff and reconnect strategy.",
+    "explanation": "Interviewers probe boundaries: auth tokens, rate limits, PCM vs compressed codecs, regional latency.",
+    "example": "Sequence diagram: device mic → WS binary frames → STT → REST/SSE to model → TTS WS playback"
+  },
+  {
+    "id": "sr-fe-012",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "Voice UIs suffer latency. What frontend strategies kept the UI responsive while waiting for the LLM and audio?",
+    "answer": "Optimistic UI: interim transcripts, typing indicators, skeleton waveforms, cancellable in-flight requests, prefetch next prompts, audio buffering with smooth fade-ins. Keep main thread light—decode audio off-thread where possible. Show perceived latency budgets (first token, first audio byte).",
+    "explanation": "Psychology matters: immediate mic level feedback, barge-in detection, disable double-submit.",
+    "example": "requestAnimationFrame visualizer + AbortController on new utterance"
+  },
+  {
+    "id": "sr-fe-013",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "(GoodHomes) Generating 3D from 2D floor plans is heavy. How did you handle loading, caching, and large assets without crashing the browser?",
+    "answer": "Progressive loading: LOD meshes, compressed textures (basis/KTX2), worker-side geometry prep, cache API or CDN immutable URLs, revokeObjectURL cleanup, cap concurrent downloads, memory budgets with LRU eviction. Show staged placeholders and cancel work on navigation.",
+    "explanation": "Mention Three.js/React Three Fiber patterns: suspense-like loaders, instancing, frustum culling.",
+    "example": "draco-compressed glTF + texture atlases; measure GPU memory in devtools"
+  },
+  {
+    "id": "sr-fe-014",
+    "technology": "CSS3",
+    "level": "Advanced",
+    "question": "How do you implement glassmorphism and heavy CSS animation while keeping ~60fps and the main thread responsive?",
+    "answer": "Prefer compositor-friendly properties (transform, opacity), avoid animating layout (width/height/top). Use `will-change` sparingly, `contain: layout paint`, reduce blur radius on large surfaces, respect `prefers-reduced-motion`. Offload non-visual work; batch reads/writes; profile with Performance panel—often backdrop-filter + large blur kills throughput.",
+    "explanation": "React layer: don’t rerender entire tree on animation tick—CSS transitions or FLIP in RAF.",
+    "example": "@keyframes on transform; toggle class vs inline style thrash"
+  },
+  {
+    "id": "sr-fe-015",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "(Rover) When deploying GenAI in enterprise, how did the frontend ensure sensitive workflow data was not exposed or logged improperly?",
+    "answer": "Minimize data to model: redact in browser before send where possible, short-lived tokens, TLS everywhere, no console logs of payloads in prod, disable third-party analytics on sensitive routes, client-side encryption only when paired with real key management (usually server-side boundary). Audit network tab + CSP; structured logging without PII fields.",
+    "explanation": "Clarify trust boundaries—frontend cannot be sole security; pair with BFF and policy.",
+    "example": "sanitize logs; env-based feature flags; strip attachments from telemetry"
+  },
+  {
+    "id": "sr-fe-016",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "When would you use TanStack Query instead of Redux or Zustand?",
+    "answer": "TanStack Query excels at server state: caching, deduping, background refetch, stale-while-revalidate, pagination/infinite scroll—replacing hand-rolled fetch + useEffect. Redux/Zustand fit complex client-owned cross-feature state, undo, or offline rules. Often compose: Query for API data, small global store for UI session.",
+    "explanation": "Say explicitly: don’t put fetched lists in Redux unless you need global broadcasting beyond Query cache.",
+    "example": "useQuery(['user', id], fetchUser) vs global store for editor tool mode"
+  },
+  {
+    "id": "sr-fe-017",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is your approach to side effects in React? When use a custom Hook vs logic inside useEffect?",
+    "answer": "Custom hooks extract reusable effect + state patterns (subscriptions, media queries, form controllers) and improve testability. Keep useEffect thin: sync with external systems; move business rules to pure functions or hooks with clear names. Avoid mega-effects—split by concern and dependency lists.",
+    "explanation": "Colocate related logic; separate “fetch + parse” from “render derived UI”.",
+    "example": "useMediaQuery, useDebouncedValue vs one giant effect with six responsibilities"
+  },
+  {
+    "id": "sr-fe-018",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "Explain SSR vs SSG. Which would you choose for an enterprise dashboard and why?",
+    "answer": "SSG pre-renders at build time—great for stable marketing/docs. SSR renders per request—fresh user-specific or volatile data. Dashboards are often auth-gated and personalized → dynamic rendering or SSR with caching segments; static shell + client fetch is common. Choose based on SEO needs (often low for app behind login) vs TTFB and freshness.",
+    "explanation": "Mention hybrid: partial prerender, edge SSR, `loading.tsx`, streaming.",
+    "example": "ISR rarely for semi-static tiles; otherwise dynamic SSR + short cache headers"
+  },
+  {
+    "id": "sr-fe-019",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "Explain prop drilling and architectural patterns to avoid it.",
+    "answer": "Prop drilling passes props through layers that don’t use them to reach a deep child. Mitigations: composition (`children`, render props), context for stable shared data, localized state lifting only as far as needed, router state, or lightweight stores for cross-cutting UI. Avoid context for high-frequency updates without splitting providers.",
+    "explanation": "Not all drilling is bad—sometimes clearer than implicit globals.",
+    "example": "<Layout sidebar={<Sidebar user={u} />} /> vs passing user through 6 wrappers"
+  },
+  {
+    "id": "sr-fe-020",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "How do you handle authentication and protected routes in React / Next.js?",
+    "answer": "Next.js App Router: middleware.guard for cookie/session checks, server-side data access in RSC, client boundaries only where hooks needed. React SPA: protected route wrapper reading auth context + redirect. Always validate on server for sensitive data—client checks are UX only. Refresh tokens carefully; avoid localStorage for refresh if XSS is a concern—httpOnly cookies + CSRF strategy.",
+    "explanation": "Mention OAuth flows, BFF pattern, role-based component gates vs route gates.",
+    "example": "middleware.ts matcher for /app/*; getServerSession in layout"
+  },
+  {
+    "id": "sr-fe-021",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "A component re-renders ~10 times per keystroke in an input. How do you debug and fix it?",
+    "answer": "Profiler: record interaction, see commit reasons and child cascade. Common fixes: lift controlled input local state, memoize heavy children (`memo` + stable props), `useCallback` when passing callbacks to memoized lists, debounce parent updates, fix Context value identity (memoize provider value), split context, avoid inline object/array props. Ensure keys stable.",
+    "explanation": "Verify Strict Mode double render in dev vs prod symptom.",
+    "example": "WhyDidYouRender or Profiler flame chart → unstable `value={{}}` on Provider"
+  },
+  {
+    "id": "sr-fe-022",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "Explain the JavaScript event loop and how it handles Promises versus setTimeout.",
+    "answer": "Run JS until stack empty; microtask queue runs next (Promise.then, queueMicrotask)—drained fully; then one macrotask (setTimeout, I/O). So Promise callbacks usually run before the next timer even at delay 0. Long tasks block rendering.",
+    "explanation": "Order demo: sync, microtasks, macrotasks; starve risks if infinite microtasks.",
+    "example": "console.log(1); setTimeout(() => console.log(2), 0); Promise.resolve().then(() => console.log(3)); // 1,3,2"
+  },
+  {
+    "id": "sr-fe-023",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What are closures in JavaScript? Give a modern application example.",
+    "answer": "A closure lets an inner function access outer variables after the outer function returns—preserving state. Modern uses: factory hooks patterns, debounce/throttle wrappers, React hooks themselves (state captured per component instance), and module-private helpers.",
+    "explanation": "Memory note: closures keep outer vars alive—avoid accidental huge captures.",
+    "example": "function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }"
+  },
+  {
+    "id": "sr-fe-024",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "Tailwind is on your resume. Biggest drawback of utility-first CSS vs SASS/CSS modules, and how do you mitigate?",
+    "answer": "Drawbacks: noisy JSX, risk of inconsistent one-offs without discipline, learning curve for tokens, and large HTML class strings. Mitigate with design tokens, `@apply` sparingly for repeated molecules, component wrappers, eslint plugins, Prettier class sorting, and Storybook docs so utilities stay aligned to system.",
+    "explanation": "Acknowledge bundle size—Tailwind JIT helps; purge unused.",
+    "example": "Extract <Button variant=\"primary\" /> instead of pasting 12 classes everywhere"
+  },
+  {
+    "id": "sr-fe-025",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "Explain CSS specificity. If styles do not apply as expected, how do you debug without !important?",
+    "answer": "Specificity: inline > ID > class/attr/pseudo-class > element; universal loses. Same specificity → last cascade wins. Debug: DevTools Computed panel shows winning rule and inherited chain; check order, `@layer`, duplicate selectors, shadow DOM, and inherited properties vs non-inherited.",
+    "explanation": "Modern: cascade layers `@layer base, components, utilities` control order cleanly.",
+    "example": "Why `.card .title` beats `.title`—increase target precision or restructure, not !important"
+  },
+  {
+    "id": "sr-fe-026",
+    "technology": "HTML5",
+    "level": "Advanced",
+    "question": "You shipped WCAG-compliant sites. What three things do developers most often forget for accessible React apps?",
+    "answer": "(1) Keyboard support and visible focus—not relying on mouse-only interactions. (2) Proper labels, roles, and live regions for dynamic updates (announce errors politely). (3) Semantic structure (headings, landmarks) instead of div soup—plus color contrast and motion preferences.",
+    "explanation": "Tie to testing: axe, VoiceOver/NVDA, not only Lighthouse scores.",
+    "example": "button vs div onClick; aria-live on toast; form errors linked with aria-describedby"
+  },
+  {
+    "id": "sr-fe-027",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "How do you deep-clone a nested JavaScript object?",
+    "answer": "Prefer `structuredClone(obj)` for most data (Dates, Maps, Sets supported). JSON round-trip loses functions/undefined/symbols. Libraries handle cycles; manual recursion needs cycle detection. For immutable updates, often use shallow copies at each level or Immer for drafts.",
+    "explanation": "Know when you need clone vs immutable structural sharing.",
+    "example": "const copy = structuredClone(original);"
+  },
+  {
+    "id": "sr-fe-028",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "Tell me about disagreeing with a UX/UI designer on a feature. How did you resolve it?",
+    "answer": "Stay user-outcome focused: share feasibility, performance, and accessibility trade-offs with prototypes or metrics—not personal taste. Use collaborative critique, optional A/B or usability test, and escalate with PM on scope/OKRs. Document agreed compromise and follow through.",
+    "explanation": "STAR: situation, friction, data brought, resolution, result.",
+    "example": "Animation vs motion-reduced users—offer reduced-motion path + simplified design"
+  },
+  {
+    "id": "sr-fe-029",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "A junior opens a PR: code works but is messy and breaks your architecture. How do you review it?",
+    "answer": "Praise what works; separate must-fix (correctness, security, perf) from style (lint autofix, patterns). Request changes with concrete examples and pointers to standards/templates; offer pair session instead of wall of text. Use checklist + incremental approval—merge risky fixes first if split possible.",
+    "explanation": "Psychological safety: criticize code, not person; leave learning path.",
+    "example": "Request refactor behind interface tests; follow-up ticket if scope creep"
+  },
+  {
+    "id": "sr-fe-030",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "Describe a nasty production bug—how you found it and what you learned.",
+    "answer": "Pick a real pattern: intermittent race, timezone/DST, caching staleness, or environment drift. Walk reproduction → logs/metrics → bisect deploy → root cause → guard (tests, monitors, feature flag). Learning: defensive coding, better observability, faster rollback playbook.",
+    "explanation": "Honesty wins—own mistakes with remediation; show structured debugging.",
+    "example": "Stale closure + stale cache double-hit—fixed with AbortController + cache TTL"
+  }
+]

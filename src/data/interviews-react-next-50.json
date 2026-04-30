@@ -1,0 +1,452 @@
+[
+  {
+    "id": "rn-f50-001",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is React?",
+    "answer": "React is a JavaScript library for building user interfaces from reusable components. You compose trees of components; React handles efficient updates to the browser DOM.",
+    "explanation": "Contrast “library” vs full frameworks; mention ecosystem (React Router, state libs, Next.js).",
+    "example": "function Welcome({ name }: { name: string }) {\n  return <h1>Hello, {name}</h1>;\n}"
+  },
+  {
+    "id": "rn-f50-002",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is JSX?",
+    "answer": "JSX is a syntax extension that looks like HTML inside JavaScript. It compiles to `React.createElement` calls (or equivalent) so you can describe UI in code.",
+    "explanation": "Rules: `className`, camelCase props, one root or fragments; expressions use `{}`.",
+    "example": "const el = <button type=\"button\" onClick={save}>Save</button>;"
+  },
+  {
+    "id": "rn-f50-003",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is the Virtual DOM?",
+    "answer": "It is React’s in-memory tree of plain JavaScript objects describing UI. On each update React compares the new tree to the previous one (diffing) and applies minimal changes to the real DOM.",
+    "explanation": "Call it reconciliation—not a second DOM implementation in the browser, but React’s diffing strategy.",
+    "example": "// JSX updates describe a new virtual tree; React commits patches to the DOM."
+  },
+  {
+    "id": "rn-f50-004",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is the difference between Real DOM and Virtual DOM?",
+    "answer": "Updating the real DOM involves layout and paint and is relatively costly. React batches logical updates against its lightweight virtual tree first, then touches the real DOM only where needed.",
+    "explanation": "Avoid claiming virtual DOM is always faster—large lists still need keys and good patterns.",
+    "example": "setState triggers reconcile → minimal document updates vs rewriting whole subtrees by hand."
+  },
+  {
+    "id": "rn-f50-005",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What are props?",
+    "answer": "Props (properties) are inputs passed from a parent component to a child. In React, treat them as read-only in the child—do not mutate props objects.",
+    "explanation": "One-way data flow down the tree; lifting state when siblings share data.",
+    "example": "<Avatar src={user.avatarUrl} alt={user.name} />"
+  },
+  {
+    "id": "rn-f50-006",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is state?",
+    "answer": "State is data owned by a component that can change over time. When state updates, React schedules a re-render so the UI reflects the new value.",
+    "explanation": "Compare props (external) vs state (internal); functional updates avoid stale closures.",
+    "example": "const [open, setOpen] = useState(false);"
+  },
+  {
+    "id": "rn-f50-007",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is prop drilling?",
+    "answer": "Passing props through many intermediate components that do not use them, only to reach a deep child. It works but gets noisy.",
+    "explanation": "Mitigate with context, composition (`children`), or state libraries.",
+    "example": "<App user={u}><Layout user={u}><Sidebar user={u} /></Layout></App>"
+  },
+  {
+    "id": "rn-f50-008",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What are React Fragments?",
+    "answer": "Fragments group multiple children without adding an extra DOM node—syntax `<>...</>` or `<React.Fragment>`.",
+    "explanation": "Useful when a component must return several siblings (table rows, list items).",
+    "example": "<>\n  <li>A</li>\n  <li>B</li>\n</>"
+  },
+  {
+    "id": "rn-f50-009",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is a controlled component?",
+    "answer": "A form input whose value is driven by React state: `value={state}` and `onChange` updates state. The source of truth lives in React.",
+    "explanation": "Enables validation, formatting, and instant UI sync.",
+    "example": "<input value={text} onChange={(e) => setText(e.target.value)} />"
+  },
+  {
+    "id": "rn-f50-010",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is an uncontrolled component?",
+    "answer": "The DOM holds the input value; React reads it via refs or on submit—`defaultValue` instead of controlled `value` for simple cases.",
+    "explanation": "Useful for file inputs or migrating legacy forms; controlled is default for most apps.",
+    "example": "const ref = useRef<HTMLInputElement>(null);\nref.current?.value;"
+  },
+  {
+    "id": "rn-f50-011",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What are Hooks?",
+    "answer": "Hooks are functions like `useState` and `useEffect` that let functional components use state, effects, context, and more—replacing most class lifecycle needs.",
+    "explanation": "Introduced in React 16.8; rules of hooks preserve call order.",
+    "example": "const [n, setN] = useState(0);"
+  },
+  {
+    "id": "rn-f50-012",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What are the Rules of Hooks?",
+    "answer": "Only call hooks at the top level of a React function or custom hook—never inside loops, conditions, or nested functions. Only call from React components or custom hooks.",
+    "explanation": "Hooks rely on a stable call order each render to bind state correctly.",
+    "example": "// Bad: if (x) useEffect(...);"
+  },
+  {
+    "id": "rn-f50-013",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is useState?",
+    "answer": "`useState` returns `[currentValue, setter]`. Calling the setter schedules a re-render with the new state.",
+    "explanation": "Functional updates `setN(n => n+1)` help when next state depends on previous.",
+    "example": "const [count, setCount] = useState(0);\nsetCount((c) => c + 1);"
+  },
+  {
+    "id": "rn-f50-014",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is useEffect?",
+    "answer": "`useEffect` runs side effects after paint: fetch data, subscribe to stores, sync DOM. Optional cleanup runs before re-run and unmount.",
+    "explanation": "Not tied to a single “lifecycle”—think syncing with external systems via dependencies.",
+    "example": "useEffect(() => {\n  const id = setInterval(tick, 1000);\n  return () => clearInterval(id);\n}, []);"
+  },
+  {
+    "id": "rn-f50-015",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is the dependency array in useEffect?",
+    "answer": "The second argument: `[]` runs once on mount (plus cleanup on unmount). `[a, b]` re-runs when `a` or `b` change. Omitting it runs after every render—usually wrong.",
+    "explanation": "eslint-plugin-react-hooks helps catch missing deps (stale closures).",
+    "example": "useEffect(() => {\n  load(userId);\n}, [userId]);"
+  },
+  {
+    "id": "rn-f50-016",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is useRef?",
+    "answer": "`useRef` returns `{ current }` that persists across renders. Updating `.current` does not trigger a re-render—use for DOM nodes or mutable values read by effects.",
+    "explanation": "Contrast with `useState`: ref updates are silent.",
+    "example": "const input = useRef<HTMLInputElement>(null);\ninput.current?.focus();"
+  },
+  {
+    "id": "rn-f50-017",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is useMemo?",
+    "answer": "`useMemo` memoizes a computed value until dependencies change—use for expensive pure derivations, not on every line by default.",
+    "explanation": "Reference identity matters for memo children; `useMemo` can stabilize objects passed as props.",
+    "example": "const sorted = useMemo(\n  () => items.slice().sort((a, b) => a.date - b.date),\n  [items]\n);"
+  },
+  {
+    "id": "rn-f50-018",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is useCallback?",
+    "answer": "`useCallback(fn, deps)` returns a stable function reference when deps are unchanged—pairs with `React.memo` on children to skip redundant renders.",
+    "explanation": "Profile before optimizing; inline handlers are fine unless children are expensive.",
+    "example": "const onSave = useCallback(() => submit(id), [id]);"
+  },
+  {
+    "id": "rn-f50-019",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is useContext?",
+    "answer": "`useContext` reads the nearest Provider value for a given context—share theme, auth, or locale without drilling props.",
+    "explanation": "Frequent context value changes re-render all consumers—split context or memoize value.",
+    "example": "const theme = useContext(ThemeContext);"
+  },
+  {
+    "id": "rn-f50-020",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is a custom Hook?",
+    "answer": "A function whose name starts with `use` and that calls other hooks. It lets you reuse stateful logic across components.",
+    "explanation": "Custom hooks are not a new React primitive—they share hook logic, not UI.",
+    "example": "function useWindowWidth() {\n  const [w, setW] = useState(0);\n  useEffect(() => { /* subscribe resize */ }, []);\n  return w;\n}"
+  },
+  {
+    "id": "rn-f50-021",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "Context API vs Redux: when to use which?",
+    "answer": "Context fits infrequent, broadly shared values (theme, auth snapshot). Redux/RTK or Zustand helps large apps with frequent updates, middleware, DevTools, and normalized client state.",
+    "explanation": "Context without care causes broad re-renders; Redux adds structure and patterns.",
+    "example": "ThemeContext vs Redux store for shopping cart with many events"
+  },
+  {
+    "id": "rn-f50-022",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is React.memo?",
+    "answer": "`React.memo` wraps a component to skip re-rendering when props are shallow-equal to the previous render.",
+    "explanation": "Wins nothing if props include new object/array identities each time.",
+    "example": "export const Row = React.memo(function Row({ title }: { title: string }) {\n  return <div>{title}</div>;\n});"
+  },
+  {
+    "id": "rn-f50-023",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "Why do we need key props in React lists?",
+    "answer": "Keys tell React which item is which across renders so inserts, deletes, and reorders reconcile correctly. They must be stable among siblings—prefer IDs from data over array index when order changes.",
+    "explanation": "Wrong keys cause lost focus, wrong animations, and buggy state.",
+    "example": "{items.map((item) => <li key={item.id}>{item.label}</li>)}"
+  },
+  {
+    "id": "rn-f50-024",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is lazy loading in React?",
+    "answer": "`React.lazy` dynamically imports a component; wrap it in `<Suspense>` with a fallback while the chunk loads—smaller initial bundle.",
+    "explanation": "Often used for route-level code splitting with React Router.",
+    "example": "const Page = lazy(() => import(\"./Page\"));\n<Suspense fallback={<Spinner />}><Page /></Suspense>"
+  },
+  {
+    "id": "rn-f50-025",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is an Error Boundary?",
+    "answer": "A class component (or framework wrapper) with `static getDerivedStateFromError` / `componentDidCatch` that catches render errors in descendants and shows fallback UI.",
+    "explanation": "Does not catch event handler errors or async—handle those with try/catch.",
+    "example": "<ErrorBoundary fallback={<p>Something broke</p>}>{children}</ErrorBoundary>"
+  },
+  {
+    "id": "rn-f50-026",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is Strict Mode?",
+    "answer": "`<React.StrictMode>` enables extra dev-only checks: double-invoking certain lifecycles and effects to surface impure side effects and deprecated API usage.",
+    "explanation": "No production bundle impact for those behaviors—helpful for finding bugs early.",
+    "example": "<StrictMode><App /></StrictMode>"
+  },
+  {
+    "id": "rn-f50-027",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is a SyntheticEvent?",
+    "answer": "React wraps native browser events in a cross-browser `SyntheticEvent` with a pooled-like API (modern React) so handlers behave consistently.",
+    "explanation": "Async access may need `e.persist()` in older patterns—know current React version behavior.",
+    "example": "function onClick(e: React.MouseEvent) {\n  e.preventDefault();\n}"
+  },
+  {
+    "id": "rn-f50-028",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is hydration?",
+    "answer": "After SSR, React attaches event listeners and takes over the server-rendered HTML on the client—making the page interactive. Mismatches warn if HTML differs.",
+    "explanation": "Critical for frameworks like Next.js App Router with server components at boundaries.",
+    "example": "// Server sends HTML; client JS hydrates <div id=\"root\">…"
+  },
+  {
+    "id": "rn-f50-029",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What are React portals?",
+    "answer": "`createPortal(children, domNode)` renders children into another part of the DOM—modals, tooltips, dropdown overlays—while keeping React context and event bubbling behavior.",
+    "explanation": "Escape overflow/stacking issues of parent containers.",
+    "example": "createPortal(<Modal />, document.body)"
+  },
+  {
+    "id": "rn-f50-030",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is the difference between default export and named exports?",
+    "answer": "A module can have one `export default` (import without braces, any local name). Named exports use `export const` / `export function` and import with `{ }` and exact names (or aliases).",
+    "explanation": "Teams often prefer named exports for refactoring and consistent APIs.",
+    "example": "import React from \"react\";\nimport { useState } from \"react\";"
+  },
+  {
+    "id": "rn-f50-031",
+    "technology": "Next.js",
+    "level": "Beginner",
+    "question": "What is Next.js?",
+    "answer": "Next.js is a React framework for production: file-based routing, rendering modes (SSR, SSG, ISR), API routes, image optimization, and more.",
+    "explanation": "Built by Vercel; App Router defaults to React Server Components.",
+    "example": "app/page.tsx → route /"
+  },
+  {
+    "id": "rn-f50-032",
+    "technology": "Next.js",
+    "level": "Beginner",
+    "question": "Why use Next.js instead of Create React App (CRA)?",
+    "answer": "CRA centered on client-only SPAs; Next adds server rendering, routing, optimizations, and deployment ergonomics—better SEO and perceived performance when you pre-render.",
+    "explanation": "CRA is deprecated/archived; greenfield React apps often pick Next, Vite, or Remix.",
+    "example": "get HTML with content on first paint vs empty shell + client bundle only"
+  },
+  {
+    "id": "rn-f50-033",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "What is the difference between the Pages Router and the App Router?",
+    "answer": "`pages/` is the legacy router (`_app`, `getServerSideProps`). `app/` (Next 13+) is the App Router with nested layouts, Server Components by default, and new APIs like `generateMetadata`.",
+    "explanation": "Both can coexist during migration; new projects favor `app/`.",
+    "example": "pages/index.tsx vs app/page.tsx"
+  },
+  {
+    "id": "rn-f50-034",
+    "technology": "Next.js",
+    "level": "Beginner",
+    "question": "How does routing work in Next.js?",
+    "answer": "File-system routing: folders map to URL segments; `page.tsx` makes a route public, `layout.tsx` wraps segments. Special files handle loading, error, not-found.",
+    "explanation": "Dynamic segments use `[param]`; route groups use `(name)` without affecting URL.",
+    "example": "app/dashboard/settings/page.tsx → /dashboard/settings"
+  },
+  {
+    "id": "rn-f50-035",
+    "technology": "Next.js",
+    "level": "Beginner",
+    "question": "What is dynamic routing in Next.js?",
+    "answer": "Folders like `app/blog/[id]/page.tsx` capture URL params—`/blog/123` passes `id` to the page via `params`.",
+    "explanation": "Catch-all `[...slug]` and optional `[[...slug]]` for advanced patterns.",
+    "example": "export default async function Page({ params }: { params: { id: string } }) { … }"
+  },
+  {
+    "id": "rn-f50-036",
+    "technology": "Next.js",
+    "level": "Beginner",
+    "question": "What is the Link component?",
+    "answer": "`next/link` performs client-side navigation between routes—prefetches routes in production when links enter the viewport for faster transitions.",
+    "explanation": "Prefer over raw `<a>` for internal routes; use `<a>` for external URLs.",
+    "example": "<Link href=\"/about\">About</Link>"
+  },
+  {
+    "id": "rn-f50-037",
+    "technology": "Next.js",
+    "level": "Beginner",
+    "question": "What is the Image component?",
+    "answer": "`next/image` optimizes images: resizing, modern formats, lazy loading, and layout stability—reducing bandwidth and CLS.",
+    "explanation": "Requires configuration for remote domains; know `fill`, `sizes`, and priority for LCP images.",
+    "example": "<Image src=\"/photo.jpg\" alt=\"\" width={600} height={400} />"
+  },
+  {
+    "id": "rn-f50-038",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "What are API routes in Next.js?",
+    "answer": "Route handlers in `app/api/.../route.ts` (or legacy `pages/api`) implement HTTP handlers (`GET`, `POST`) in the same deployment—useful for BFF-style endpoints.",
+    "explanation": "Still run server-side; validate auth and input like any backend.",
+    "example": "export async function GET() {\n  return Response.json({ ok: true });\n}"
+  },
+  {
+    "id": "rn-f50-039",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "What is Middleware in Next.js?",
+    "answer": "`middleware.ts` runs on the Edge before a request completes—rewrite, redirect, set headers, or gate auth based on cookies/pathname.",
+    "explanation": "Keep it fast; heavy work belongs in route handlers or backend services.",
+    "example": "export function middleware(req: NextRequest) {\n  if (!req.cookies.get(\"session\")) return NextResponse.redirect(new URL(\"/login\", req.url));\n}"
+  },
+  {
+    "id": "rn-f50-040",
+    "technology": "Next.js",
+    "level": "Beginner",
+    "question": "What is the layout.tsx file?",
+    "answer": "In the App Router, `layout.tsx` wraps a segment and persists across navigations within that segment—shared chrome like headers and sidebars.",
+    "explanation": "Nested layouts compose; state in layout survives child route changes.",
+    "example": "app/dashboard/layout.tsx wraps all /dashboard/* pages"
+  },
+  {
+    "id": "rn-f50-041",
+    "technology": "Next.js",
+    "level": "Beginner",
+    "question": "What is CSR (Client-Side Rendering)?",
+    "answer": "The browser downloads JS; React mounts and fetches data in the client. First paint may show shells or spinners—classic SPA behavior.",
+    "explanation": "Good interactivity; weaker first-contentful SEO vs pre-rendered HTML.",
+    "example": "CRA-style: empty root div until bundle runs"
+  },
+  {
+    "id": "rn-f50-042",
+    "technology": "Next.js",
+    "level": "Beginner",
+    "question": "What is SSR (Server-Side Rendering)?",
+    "answer": "The server renders HTML per request (or on demand) so the client receives a full document—useful for dynamic, personalized, or fresh data.",
+    "explanation": "TTFB vs caching trade-offs; pair with streaming in App Router.",
+    "example": "Dynamic HTML for user-specific dashboards"
+  },
+  {
+    "id": "rn-f50-043",
+    "technology": "Next.js",
+    "level": "Beginner",
+    "question": "What is SSG (Static Site Generation)?",
+    "answer": "HTML is generated at build time and served as static files—very fast and cache-friendly for content that rarely changes per request.",
+    "explanation": "Use CMS builds, marketing pages, docs.",
+    "example": "output: 'export' or static prerendered routes"
+  },
+  {
+    "id": "rn-f50-044",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "What is ISR (Incremental Static Regeneration)?",
+    "answer": "Serve static pages but revalidate in the background after a timeout or on-demand—refresh stale content without rebuilding the whole site.",
+    "explanation": "App Router uses `revalidate` on fetch or segment config vs Pages `revalidate` export.",
+    "example": "export const revalidate = 3600; // Pages ISR hourly"
+  },
+  {
+    "id": "rn-f50-045",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "What are React Server Components (RSC)?",
+    "answer": "Server Components run on the server and stream a serialized UI tree to the client. They can read files/DB directly without exposing secrets; interactive pieces opt into Client Components.",
+    "explanation": "They reduce shipped JS vs making everything client-side—but client boundaries still download JS for hooks/events.",
+    "example": "async function Page() {\n  const data = await db.query(...);\n  return <List items={data} />;\n}"
+  },
+  {
+    "id": "rn-f50-046",
+    "technology": "Next.js",
+    "level": "Beginner",
+    "question": "What are Client Components?",
+    "answer": "Files marked with `\"use client\"` ship to the browser and can use state, effects, and browser APIs. Use them at leaves where interactivity is needed.",
+    "explanation": "Server Components import Client Components; props must be serializable across the boundary.",
+    "example": "\"use client\";\nexport function Counter() {\n  const [n, setN] = useState(0);\n  ...\n}"
+  },
+  {
+    "id": "rn-f50-047",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "How do you fetch data in modern Next.js (App Router)?",
+    "answer": "In Server Components, `await fetch(...)` (with caching defaults) or query your database directly. For client fetching, use Client Components with SWR/React Query or route handlers.",
+    "explanation": "Understand `cache`, `next: { revalidate }`, and when to use server actions.",
+    "example": "export default async function Page() {\n  const res = await fetch(\"https://api…\", { next: { revalidate: 60 } });\n  const data = await res.json();\n  return <main>{data.title}</main>;\n}"
+  },
+  {
+    "id": "rn-f50-048",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "What were getStaticProps and getServerSideProps?",
+    "answer": "Pages Router data APIs: `getStaticProps` for SSG (and ISR via revalidate), `getServerSideProps` for SSR per request. The App Router replaces these with async Server Components, `fetch` options, and segment config.",
+    "explanation": "Migration guides map old patterns to `generateStaticParams`, etc.",
+    "example": "// pages era\nexport async function getServerSideProps(ctx) { … }"
+  },
+  {
+    "id": "rn-f50-049",
+    "technology": "Next.js",
+    "level": "Beginner",
+    "question": "How does Next.js handle SEO better than pure client-only React?",
+    "answer": "Pre-rendered HTML and metadata mean crawlers and previews see real content and titles immediately instead of an empty shell filled in later by JS.",
+    "explanation": "Still need good semantics, sitemaps, and Core Web Vitals.",
+    "example": "View page source on SSR/SSG vs CSR-only SPA"
+  },
+  {
+    "id": "rn-f50-050",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "What is the generateMetadata function?",
+    "answer": "In the App Router, `generateMetadata` (or a static `metadata` export) builds `<title>`, Open Graph, and Twitter tags—can be async and use route `params` or fetched data.",
+    "explanation": "Replaces many `next/head` patterns from `pages/`.",
+    "example": "export async function generateMetadata({ params }: Props): Promise<Metadata> {\n  const post = await getPost(params.slug);\n  return { title: post.title };\n}"
+  }
+]

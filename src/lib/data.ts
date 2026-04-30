@@ -15,6 +15,10 @@ import fe100d from "@/data/interviews-fe100-d.json";
 import interviewsAdvanced from "@/data/interviews-advanced-scenarios.json";
 import interviewsCssMaster from "@/data/interviews-css-master.json";
 import interviewsJsExtracted from "@/data/interviews-js-extracted.json";
+import interviewsTs50 from "@/data/interviews-typescript-50.json";
+import interviewsReactNext50 from "@/data/interviews-react-next-50.json";
+import interviewsJavascript50 from "@/data/interviews-javascript-50.json";
+import interviewsSeniorFe from "@/data/interviews-senior-fe.json";
 
 export const allDocs: DocTopic[] = [
   ...(javascript as DocTopic[]),
@@ -36,6 +40,10 @@ export const allInterviews: InterviewQuestion[] = [
   ...(interviewsAdvanced as InterviewQuestion[]),
   ...(interviewsCssMaster as InterviewQuestion[]),
   ...(interviewsJsExtracted as InterviewQuestion[]),
+  ...(interviewsTs50 as InterviewQuestion[]),
+  ...(interviewsReactNext50 as InterviewQuestion[]),
+  ...(interviewsJavascript50 as InterviewQuestion[]),
+  ...(interviewsSeniorFe as InterviewQuestion[]),
 ];
 
 const docById = new Map(allDocs.map((d) => [d.id, d]));

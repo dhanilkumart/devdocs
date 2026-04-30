@@ -4,7 +4,7 @@
     "technology": "React",
     "level": "Advanced",
     "question": "How do you prevent race conditions in React API calls?",
-    "answer": "Stale responses win when an older request completes after a newer one. Fix with AbortController (abort previous fetch when deps/url change or on unmount), or a monotonically increasing request id and only call setState if the response still matches the latest id.",
+    "answer": "When two requests overlap, the slower one can finish last and overwrite newer data—so the UI shows stale results. Fix it by canceling the old request with AbortController when the URL or inputs change or on unmount, or by tagging each request with an incrementing id and calling setState only if the response still matches the latest id.",
     "explanation": "Race conditions are timing bugs, not network “errors.” Pair abort with useEffect cleanup; for non-abortable APIs, use id/version checks before setState.",
     "example": "useEffect(() => {\n  const controller = new AbortController();\n  fetch(url, { signal: controller.signal })\n    .then((r) => r.json())\n    .then(setData)\n    .catch((e) => { if (e.name !== 'AbortError') console.error(e); });\n  return () => controller.abort();\n}, [url]);\n\n// Or: let seq = 0; const id = ++seq; ... if (id === seq) setData(data);"
   },
@@ -184,7 +184,7 @@
     "technology": "React",
     "level": "Advanced",
     "question": "What is a stale closure?",
-    "answer": "A closure over old render values—common when async callbacks or effects read state captured from an earlier render without updating deps or refs.",
+    "answer": "A stale closure means your function still “sees” state or props from an older render—like a snapshot that never updated. It usually happens when async callbacks or effects read values from an earlier render because dependency arrays or refs were wrong.",
     "explanation": "Hooks rely on fresh closures per render; stale deps in useEffect are the classic bug.",
     "example": "Broken: useEffect(() => { setInterval(() => console.log(count), 1000); }, []);\n// Fix: functional updates or ref for latest count."
   },

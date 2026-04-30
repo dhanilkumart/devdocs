@@ -58,7 +58,7 @@
     "technology": "JavaScript",
     "level": "Beginner",
     "question": "What is an arrow function in JavaScript?",
-    "answer": "Concise syntax using `=>`; inherits lexical `this` from enclosing scope—great for callbacks. Not constructors: no `prototype`, no own `arguments`, cannot use `new`.",
+    "answer": "Arrow functions are a shorter way to write functions: `(a) => a * 2` instead of `function (a) { return a * 2; }`. They take `this` from the surrounding code (they do not get their own `this`), which is handy in callbacks. You cannot use them with `new`, and they do not have the special `arguments` object.",
     "explanation": "Contrast with regular functions when `this` must be dynamic (methods, DOM handlers sometimes need `.bind`).",
     "example": "const sum = (a, b) => a + b;\nconst nums = [1, 2].map((n) => n * 2);"
   },
@@ -67,7 +67,7 @@
     "technology": "JavaScript",
     "level": "Intermediate",
     "question": "What is the `this` keyword in JavaScript?",
-    "answer": "`this` is determined by how the function is called: method call → receiver; plain call → global/window or `undefined` in strict mode; `bind/call/apply` fix context; arrow functions close over lexical `this`.",
+    "answer": "`this` is the value the runtime passes into a function when it runs. For `obj.method()`, `this` is `obj`. For a normal function called alone, `this` is often `undefined` in strict mode or the global object otherwise. `call` / `apply` / `bind` set `this` explicitly. Arrow functions do not get their own `this`—they use `this` from the code around them.",
     "explanation": "Misunderstood `this` is a top source of bugs—explicit binding vs lexical arrows.",
     "example": "const obj = {\n  name: \"Ada\",\n  greet() {\n    return this.name;\n  },\n};"
   },
@@ -105,7 +105,7 @@
     "technology": "JavaScript",
     "level": "Intermediate",
     "question": "What is async/await in JavaScript?",
-    "answer": "`async` functions return Promises; `await` pauses the async function until a Promise settles—use try/catch for errors like synchronous code.",
+    "answer": "Marking a function `async` makes it return a Promise. Inside it, `await` waits for another Promise to finish before the rest of that function runs—you can use ordinary `try` / `catch` for failures. Other code outside the function keeps running; only the `async` function body waits.",
     "explanation": "Still async—does not block the main thread globally; parallel work needs `Promise.all`.",
     "example": "async function load() {\n  const res = await fetch(\"/user\");\n  if (!res.ok) throw new Error(res.statusText);\n  return res.json();\n}"
   },
@@ -160,7 +160,7 @@
     "technology": "JavaScript",
     "level": "Beginner",
     "question": "What is JSON and how is it used in JavaScript?",
-    "answer": "JSON is a text format for data exchange—key/value arrays/objects. `JSON.parse` and `JSON.stringify` convert between strings and JS values; APIs almost always speak JSON today.",
+    "answer": "JSON is a text format for sending data over the network: nested objects and arrays, with string keys in double quotes. `JSON.parse` turns JSON text into JavaScript values; `JSON.stringify` does the reverse. Most web APIs use JSON in request and response bodies.",
     "explanation": "JSON is not identical to JS object literal (keys quoted; no functions).",
     "example": "const data = JSON.parse('{\"x\":1}');\nJSON.stringify({ ok: true });"
   },
@@ -178,7 +178,7 @@
     "technology": "JavaScript",
     "level": "Intermediate",
     "question": "What is a higher-order function?",
-    "answer": "A function that takes functions as args or returns functions—`map`, `filter`, `reduce` are built-in HOFs enabling functional composition.",
+    "answer": "A higher-order function either takes another function as an argument or returns a function. Examples built into JavaScript include `map`, `filter`, and `reduce`, which help you process arrays in a composable way.",
     "explanation": "Shows functional style and testability (pure mappers vs side-effect `forEach`).",
     "example": "const doubled = [1, 2, 3].map((n) => n * 2);"
   },

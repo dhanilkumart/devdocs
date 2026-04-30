@@ -31,15 +31,15 @@ export function QuestionCard({ q }: { q: InterviewQuestion }) {
       <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">{q.question}</h2>
       <div className="mt-4 space-y-4 text-[15px]">
         <section>
-          <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">Answer</h3>
+          <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">Quick answer</h3>
           <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">{q.answer}</p>
         </section>
         <section>
-          <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">Explanation</h3>
+          <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">More detail</h3>
           <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">{q.explanation}</p>
         </section>
         <section>
-          <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">Example</h3>
+          <h3 className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-500">Code example</h3>
           <pre className="overflow-x-auto rounded-xl bg-zinc-950 p-4 text-[13px] leading-relaxed text-zinc-100">
             <code>{q.example}</code>
           </pre>

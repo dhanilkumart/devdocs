@@ -1,0 +1,458 @@
+[
+  {
+    "id": "js-core50-001",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is the difference between var, let, and const?",
+    "answer": "`var` is function-scoped and can be redeclared. `let` and `const` are block-scoped (`{}`). `let` can be reassigned; `const` cannot rebind the variable, but object and array contents can still change unless you freeze them.",
+    "explanation": "Prefer `let`/`const`; use `const` by default. `let` in loops avoids classic `var` closure bugs.",
+    "example": "for (let i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 0);\n}"
+  },
+  {
+    "id": "js-core50-002",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is hoisting?",
+    "answer": "During compilation, declarations are hoisted to the top of their scope. `var` initializes as `undefined`; `function` declarations are fully available. `let`/`const` hoist but sit in the temporal dead zone until their line runs—assignments are not hoisted.",
+    "explanation": "Why you can call a `function` declaration before its line but not a `const` holding a function expression.",
+    "example": "console.log(x); // undefined\nvar x = 1;"
+  },
+  {
+    "id": "js-core50-003",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is a closure?",
+    "answer": "A closure is a function that keeps access to variables from an outer scope after the outer function has returned—used for private state, factories, and many callbacks.",
+    "explanation": "Outer variables stay alive while the inner function exists; watch memory with large captured objects.",
+    "example": "function makeCounter() {\n  let n = 0;\n  return () => ++n;\n}"
+  },
+  {
+    "id": "js-core50-004",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is the Temporal Dead Zone (TDZ)?",
+    "answer": "From scope entry until `let`/`const` is initialized, accessing the binding throws `ReferenceError`. It exists between “hoisted binding” and the declaration line.",
+    "explanation": "Contrast with `var`, which initializes as `undefined` when hoisted.",
+    "example": "console.log(a); // TDZ error\nlet a = 1;"
+  },
+  {
+    "id": "js-core50-005",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is strict mode (\"use strict\")?",
+    "answer": "A mode that tightens language behavior: catches silent errors, blocks undeclared assignments, restricts deleting names, and sets `this` to `undefined` for plain function calls in modules/class bodies.",
+    "explanation": "Modules are strict by default; whole-script vs function-body directive placement matters.",
+    "example": "\"use strict\";\nx = 1; // ReferenceError"
+  },
+  {
+    "id": "js-core50-006",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is an IIFE?",
+    "answer": "An Immediately Invoked Function Expression runs right after definition: `(function () { ... })();`—historically used for private scope before block scope with `let`/`const`.",
+    "explanation": "Still appears in bundles and legacy patterns; modules replaced many use cases.",
+    "example": "(function () {\n  const secret = 42;\n})();"
+  },
+  {
+    "id": "js-core50-007",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is the difference between undeclared and undefined?",
+    "answer": "Undeclared means referencing a name that was never declared—`ReferenceError` in strict contexts. `undefined` means the variable exists but has no assigned value yet.",
+    "explanation": "`typeof undeclaredName` oddly returns `\"undefined\"` (historical quirk)—still avoid relying on it.",
+    "example": "let a;\nconsole.log(a); // undefined"
+  },
+  {
+    "id": "js-core50-008",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is the difference between == and ===?",
+    "answer": "`==` allows type coercion; `===` checks value and type without coercion. Prefer `===` for predictable code.",
+    "explanation": "`Object.is` handles `NaN` and `-0` edge cases beyond `===`.",
+    "example": "0 == \"0\" // true\n0 === \"0\" // false"
+  },
+  {
+    "id": "js-core50-009",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is type coercion?",
+    "answer": "Implicit conversion between types—`+` may stringify, `-` may coerce to number, `==` applies abstract equality rules.",
+    "explanation": "Know surprising cases (`\"\"`, `0`, `[]`) when debugging legacy code.",
+    "example": "\"5\" + 1 // \"51\"\n\"5\" - 1 // 4"
+  },
+  {
+    "id": "js-core50-010",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is NaN?",
+    "answer": "`NaN` means “Not a Number” from invalid numeric operations. `typeof NaN` is `\"number\"`. Use `Number.isNaN(x)` to test (not loose global `isNaN` which coerces).",
+    "explanation": "`NaN === NaN` is false—use `Number.isNaN`.",
+    "example": "Number.isNaN(NaN); // true"
+  },
+  {
+    "id": "js-core50-011",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "How does the `this` keyword work in JavaScript?",
+    "answer": "`this` depends on how the function is called: `obj.method()` → `obj`; plain call often `undefined` (strict) or global (sloppy). Not fixed like class-based languages.",
+    "explanation": "`bind`/`call`/`apply` set `this` explicitly; arrow functions use lexical `this`.",
+    "example": "const o = { x: 1, f() { return this.x; } };\no.f();"
+  },
+  {
+    "id": "js-core50-012",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "How does `this` differ in arrow functions?",
+    "answer": "Arrow functions do not define their own `this`; they close over `this` from the enclosing scope where they were created.",
+    "explanation": "Good for callbacks; bad when you need dynamic `this` from the caller—use regular methods or `.bind`.",
+    "example": "class C {\n  x = 1;\n  ok = () => this.x;\n}"
+  },
+  {
+    "id": "js-core50-013",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What do call(), apply(), and bind() do?",
+    "answer": "They control `this` for a function. `call(thisArg, a, b)` invokes with comma args. `apply(thisArg, [a,b])` invokes with an array. `bind(thisArg)` returns a new function with bound `this`.",
+    "explanation": "`apply` useful for variadic math (`Math.max.apply(null, arr)` before spread).",
+    "example": "fn.call(obj, 1, 2);\nfn.apply(obj, [1, 2]);\nconst g = fn.bind(obj);"
+  },
+  {
+    "id": "js-core50-014",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is prototypal inheritance?",
+    "answer": "Objects delegate missing properties up the prototype chain via `[[Prototype]]`—access walks from instance → prototype → … → `null`.",
+    "explanation": "`class` syntax is syntactic sugar over prototypes and constructor functions.",
+    "example": "Object.getPrototypeOf({}) === Object.prototype"
+  },
+  {
+    "id": "js-core50-015",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is a higher-order function?",
+    "answer": "A function that takes functions as arguments and/or returns a function—`map`, `filter`, `reduce` are common HOFs.",
+    "explanation": "Enables composition and functional patterns.",
+    "example": "const twice = (f) => (x) => f(f(x));"
+  },
+  {
+    "id": "js-core50-016",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is the difference between a pure and impure function?",
+    "answer": "Pure: same inputs → same output, no observable side effects. Impure: reads globals, mutates arguments, I/O, DOM, randomness.",
+    "explanation": "Pure functions simplify testing and reasoning; React pure renders aim for predictability.",
+    "example": "const add = (a,b) => a+b // pure"
+  },
+  {
+    "id": "js-core50-017",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is function currying?",
+    "answer": "Turning `f(a,b)` into `f(a)(b)`—each step returns a function until all arguments are supplied—supports partial application.",
+    "explanation": "Common in FP libraries; manual currying in vanilla JS with closures.",
+    "example": "const add = (a) => (b) => a + b;\nadd(2)(3);"
+  },
+  {
+    "id": "js-core50-018",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is the difference between Object.freeze() and const?",
+    "answer": "`const` freezes the binding only—you cannot reassign the variable. `Object.freeze(obj)` makes the object’s own properties non-writable/non-configurable (shallow).",
+    "explanation": "Deep immutability needs libraries or manual recursion.",
+    "example": "const o = Object.freeze({ x: 1 });\n// o.x = 2 may fail silently in non-strict"
+  },
+  {
+    "id": "js-core50-019",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "How do you clone an object?",
+    "answer": "Shallow: spread `{...obj}` or `Object.assign({}, obj)`. Deep: `structuredClone(obj)` for most data; JSON round-trip loses functions/Dates/symbols; libraries for graphs.",
+    "explanation": "Know shallow vs deep—nested objects still shared after shallow clone.",
+    "example": "const copy = structuredClone(original);"
+  },
+  {
+    "id": "js-core50-020",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What are Map and Set?",
+    "answer": "`Map` stores key→value with keys of any type and insertion order. `Set` stores unique values. Both provide size and iterable APIs.",
+    "explanation": "Prefer over plain objects when keys are non-strings or you need frequent add/delete.",
+    "example": "const m = new Map([[{}, 1]]);\nconst s = new Set([1, 1, 2]);"
+  },
+  {
+    "id": "js-core50-021",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is the event loop?",
+    "answer": "JS runs on a single thread for your code: execute until stack empty, run microtasks (promises), then take macrotasks (timers, I/O) from queues—this scheduling loop keeps async responsive.",
+    "explanation": "Long sync work blocks the UI; async APIs schedule callbacks later.",
+    "example": "console.log(1); setTimeout(() => console.log(2), 0); Promise.resolve().then(() => console.log(3)); // 1,3,2"
+  },
+  {
+    "id": "js-core50-022",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is a callback and what is callback hell?",
+    "answer": "A callback runs later (events, async completion). Callback hell is deeply nested callbacks that obscure flow and error handling—mitigate with Promises or async/await.",
+    "explanation": "Name functions and modularize to flatten.",
+    "example": "getA(a => getB(a, b => getC(b, done)));"
+  },
+  {
+    "id": "js-core50-023",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is a Promise?",
+    "answer": "A Promise represents async completion: pending → fulfilled or rejected. Chain with `.then`/`.catch`; constructors run synchronously but may schedule async work.",
+    "explanation": "Microtask scheduling ties into the event loop.",
+    "example": "fetch(\"/api\").then((r) => r.json()).catch(console.error);"
+  },
+  {
+    "id": "js-core50-024",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is the difference between Promise.all() and Promise.race()?",
+    "answer": "`Promise.all` resolves when all settle successfully—one rejection rejects all. `Promise.race` settles with the first completed promise (fulfill or reject).",
+    "explanation": "Also know `allSettled` for independent outcomes.",
+    "example": "await Promise.all([a, b]);\nawait Promise.race([fetch, timeout]);"
+  },
+  {
+    "id": "js-core50-025",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is async / await?",
+    "answer": "`async` functions return Promises. `await` pauses only that async function until a Promise settles—use `try/catch` like synchronous code for errors.",
+    "explanation": "Parallelism still requires `Promise.all`—sequential await is not concurrent.",
+    "example": "async function load() {\n  const res = await fetch(\"/x\");\n  return res.json();\n}"
+  },
+  {
+    "id": "js-core50-026",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "How do you handle errors with async / await?",
+    "answer": "Wrap `await` in `try/catch/finally`, or attach `.catch` on the returned Promise. Unhandled rejections still crash unless caught.",
+    "explanation": "Consider `Promise.allSettled` when partial failure is OK.",
+    "example": "try {\n  await work();\n} catch (e) {\n  console.error(e);\n}"
+  },
+  {
+    "id": "js-core50-027",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is fetch()?",
+    "answer": "Browser API (and Node 18+) for HTTP: returns a Promise resolving to `Response`. Body methods (`json()`, `text()`) are async.",
+    "explanation": "For REST clients (e.g. IBM APIs), pair with auth headers and error handling.",
+    "example": "const res = await fetch(url, { headers: { Accept: \"application/json\" } });"
+  },
+  {
+    "id": "js-core50-028",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "Why doesn't a fetch() promise reject on a 404 or 500 error?",
+    "answer": "`fetch` rejects on network failures; HTTP error statuses still resolve. Check `response.ok` or `status` and throw yourself.",
+    "explanation": "Design mirrors low-level HTTP completion vs transport failure.",
+    "example": "if (!res.ok) throw new Error(await res.text());"
+  },
+  {
+    "id": "js-core50-029",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is debouncing?",
+    "answer": "Run a function only after the triggering events pause for a set delay—great for search-as-you-type and resize end.",
+    "explanation": "Different from throttling (steady rate cap).",
+    "example": "const onInput = debounce((q) => search(q), 300);"
+  },
+  {
+    "id": "js-core50-030",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is throttling?",
+    "answer": "Ensure a function runs at most once per window—e.g. scroll/resize handlers every 100ms—while events may fire much faster.",
+    "explanation": "Pick debounce vs throttle based on whether you need trailing idle vs periodic samples.",
+    "example": "window.onscroll = throttle(onScroll, 100);"
+  },
+  {
+    "id": "js-core50-031",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What does .map() do?",
+    "answer": "Returns a new array of the same length by transforming each element—does not mutate the original array.",
+    "explanation": "Chain-friendly; pass index/array args when needed.",
+    "example": "[1, 2, 3].map((n) => n * 2);"
+  },
+  {
+    "id": "js-core50-032",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What does .filter() do?",
+    "answer": "Returns a new array of elements where the predicate returns truthy—does not mutate the source array.",
+    "explanation": "Combine with `map` via chain or `flatMap` patterns.",
+    "example": "[1, 2, 3].filter((n) => n > 1);"
+  },
+  {
+    "id": "js-core50-033",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What does .reduce() do?",
+    "answer": "Folds an array to one value by combining each element with an accumulator—provide an initial value to avoid empty-array edge cases.",
+    "explanation": "Powerful but easy to overuse—consider readability.",
+    "example": "[1, 2, 3].reduce((a, n) => a + n, 0);"
+  },
+  {
+    "id": "js-core50-034",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is the difference between .forEach() and .map()?",
+    "answer": "`forEach` runs side effects and returns `undefined`. `map` builds a new transformed array and returns it.",
+    "explanation": "Use `map` when you need the array result; `forEach` for imperative iteration.",
+    "example": "const y = x.map(f);\nx.forEach(log);"
+  },
+  {
+    "id": "js-core50-035",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "How do you empty an array?",
+    "answer": "Common options: `arr.length = 0` (mutates in place), `arr.splice(0)`, or reassign if `let` (`arr = []`). Pick based on whether other references must stay cleared.",
+    "explanation": "`[]` assignment does not empty an array passed elsewhere unless shared reference intended.",
+    "example": "let a = [1, 2];\na = [];"
+  },
+  {
+    "id": "js-core50-036",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is destructuring?",
+    "answer": "Unpack arrays or object properties into variables: `const { name } = user`, `const [a, b] = tuple`—supports defaults and rest patterns.",
+    "explanation": "Common in function parameters for options objects.",
+    "example": "const { id, ...rest } = obj;"
+  },
+  {
+    "id": "js-core50-037",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is the spread operator (...)?",
+    "answer": "Expands iterables into places expecting elements—array concat, object merges, or argument lists. Object spread copies enumerable own properties (shallow).",
+    "explanation": "Order matters when merging objects—later keys win.",
+    "example": "const merged = { ...defaults, ...opts };"
+  },
+  {
+    "id": "js-core50-038",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What are rest parameters?",
+    "answer": "In parameters, `...rest` collects remaining arguments into a real array—must be last in the parameter list.",
+    "explanation": "Contrast with spread in call sites: `fn(...arr)`.",
+    "example": "function sum(first, ...nums) {\n  return first + nums.reduce((a, n) => a + n, 0);\n}"
+  },
+  {
+    "id": "js-core50-039",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "How do you check if a value is an array?",
+    "answer": "Use `Array.isArray(x)`—`typeof []` is `\"object\"` and not sufficient.",
+    "explanation": "Cross-realm arrays need `Array.isArray` too.",
+    "example": "Array.isArray([]); // true"
+  },
+  {
+    "id": "js-core50-040",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is the optional chaining operator (?.)?",
+    "answer": "Short-circuits property access when intermediate values are `null`/`undefined`—returns `undefined` instead of throwing.",
+    "explanation": "Pairs with `??` for defaults without falsy pitfalls.",
+    "example": "const zip = user?.address?.zip;"
+  },
+  {
+    "id": "js-core50-041",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "segment": "runtime",
+    "question": "What is event bubbling?",
+    "answer": "After the target handles an event, it propagates up through ancestors in the bubble phase unless stopped—parent listeners can observe child events.",
+    "explanation": "There is also capture phase (outer→inner) before target.",
+    "example": "parent.addEventListener(\"click\", onParent);\nchild.dispatchEvent(click); // bubbles"
+  },
+  {
+    "id": "js-core50-042",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "segment": "runtime",
+    "question": "What is event delegation?",
+    "answer": "Attach one listener on a parent and use `event.target` / `closest()` to handle many children—good for dynamic lists and fewer listeners.",
+    "explanation": "Relies on bubbling; similar idea to jQuery delegated `.on`.",
+    "example": "list.addEventListener(\"click\", (e) => {\n  const row = e.target && e.target.closest(\"tr[data-id]\");\n});"
+  },
+  {
+    "id": "js-core50-043",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "segment": "runtime",
+    "question": "What is the difference between event.preventDefault() and event.stopPropagation()?",
+    "answer": "`preventDefault()` cancels the browser’s default action (submit, link navigation). `stopPropagation()` stops the event from reaching further listeners along the capture/bubble path.",
+    "explanation": "`stopImmediatePropagation` also blocks listeners on the same element.",
+    "example": "form.addEventListener(\"submit\", (e) => {\n  e.preventDefault();\n});"
+  },
+  {
+    "id": "js-core50-044",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "segment": "runtime",
+    "question": "How do you select elements without jQuery?",
+    "answer": "`document.querySelector(sel)` returns the first match; `querySelectorAll` returns a static `NodeList` of all matches. Use modern APIs (`classList`, `dataset`) for manipulation.",
+    "explanation": "Live vs static NodeLists—`querySelectorAll` is static; older `getElementsBy*` can be live.",
+    "example": "document.querySelectorAll(\".item\");"
+  },
+  {
+    "id": "js-core50-045",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What are template literals?",
+    "answer": "Backtick strings supporting embedded `${expressions}` and multiline text—cleaner than concatenation.",
+    "explanation": "Tagged templates enable DSLs (styled-components, i18n).",
+    "example": "`Hello, ${name}!`;"
+  },
+  {
+    "id": "js-core50-046",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is the nullish coalescing operator (??)?",
+    "answer": "Returns the right side only when the left is `null` or `undefined`—unlike `||`, it keeps `0`, `\"\"`, and `false`.",
+    "explanation": "Useful for config defaults without swallowing valid falsy values.",
+    "example": "const port = options.port ?? 3000;"
+  },
+  {
+    "id": "js-core50-047",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "segment": "runtime",
+    "question": "What is the difference between local storage, session storage, and cookies?",
+    "answer": "`localStorage` persists per origin until cleared. `sessionStorage` lasts for the tab session. Cookies are small (~4KB), sent with HTTP requests if scoped—good for server-readable session IDs.",
+    "explanation": "Never store secrets in web storage; watch XSS impact.",
+    "example": "localStorage.setItem(\"theme\", \"dark\");"
+  },
+  {
+    "id": "js-core50-048",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What are ES6 modules?",
+    "answer": "Standard `import`/`export` syntax splitting code across files—statically analyzable, tree-shakeable. Browser loads with `type=\"module\"`; bundlers resolve graphs.",
+    "explanation": "Dynamic `import()` for lazy chunks.",
+    "example": "export function api() {}\nimport { api } from \"./api.js\";"
+  },
+  {
+    "id": "js-core50-049",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is a memory leak in JavaScript?",
+    "answer": "Retaining objects longer than needed so the garbage collector cannot reclaim them—timers, listeners, closures over large graphs, or global caches.",
+    "explanation": "DevTools heap snapshots help find retainers.",
+    "example": "setInterval without clear on route change"
+  },
+  {
+    "id": "js-core50-050",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "segment": "runtime",
+    "question": "What is the difference between window.onload and DOMContentLoaded?",
+    "answer": "`DOMContentLoaded` fires when HTML is parsed and DOM is ready—does not wait for images/styles. `window.onload` waits for all subresources (images, stylesheets, etc.).",
+    "explanation": "Modern apps often boot earlier on DOMContentLoaded or defer to framework lifecycles.",
+    "example": "document.addEventListener(\"DOMContentLoaded\", init);"
+  }
+]

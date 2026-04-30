@@ -77,7 +77,7 @@
     "level": "Beginner",
     "question": "map vs filter vs reduce?",
     "answer": "`map` transforms each element to a new array of same length. `filter` keeps elements matching a predicate. `reduce` folds the array into one accumulated value.",
-    "explanation": "Avoid mutating accumulators immutably unless intentional; `reduce` initial value prevents edge-case bugs on empty arrays.",
+    "explanation": "Usually return a new accumulator value each step (immutable style). If you mutate the accumulator on purpose, be explicit. Always pass an initial value to `reduce` so an empty array does not throw or surprise you.",
     "example": "[1,2,3].map(n => n*2) // [2,4,6]\n[1,2,3].filter(n => n>1) // [2,3]\n[1,2,3].reduce((a,n)=>a+n,0) // 6"
   },
   {
@@ -130,7 +130,7 @@
     "technology": "JavaScript",
     "level": "Intermediate",
     "question": "What is `this`?",
-    "answer": "`this` is determined by how a function is called: implicit binding (obj.method()), explicit (`call`/`apply`/`bind`), `new` binding, lexical `this` in arrow functions (inherits enclosing scope), or global/window in sloppy non-strict loose calls.",
+    "answer": "`this` is whoever “owns” the call at runtime—not where the function was written. Calling `obj.method()` sets `this` to `obj`. Calling the same function without an object often gives `undefined` (strict mode) or the global object (non‑strict). Arrow functions don’t define their own `this`; they reuse `this` from the surrounding scope. You can also pin `this` with `call`, `apply`, or `bind`, or with `new` for constructors.",
     "explanation": "Arrow functions never own their own `this`. Class methods often need `.bind` or arrows when passed as callbacks.",
     "example": "const o = { x: 1, f() { return this.x } };\no.f(); // 1\nconst g = o.f;\ng(); // undefined or global (strict)"
   },

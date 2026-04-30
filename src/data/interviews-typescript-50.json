@@ -1,0 +1,452 @@
+[
+  {
+    "id": "ts-f50-001",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "What is TypeScript?",
+    "answer": "TypeScript is a statically typed superset of JavaScript developed by Microsoft. It adds types, interfaces, and compile-time checking, then compiles to plain JavaScript for browsers and Node.js.",
+    "explanation": "Emphasize: same runtime as JS after compile; types exist only at compile time unless you emit decorators/metadata.",
+    "example": "// .ts compiles to .js\nconst n: number = 1;\n// becomes: const n = 1; in output"
+  },
+  {
+    "id": "ts-f50-002",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "How does TypeScript differ from JavaScript?",
+    "answer": "JavaScript is dynamically typed and runs as-is (interpreted or JIT). TypeScript adds static types, interfaces, and compile-time errors; it must be transpiled to JavaScript before execution in the browser or Node.",
+    "explanation": "Mention `.ts` vs `.js`, `tsc`/bundler pipeline, and that valid JS is usually valid TS (with `allowJs`).",
+    "example": "let x = \"hi\"; x = 1; // OK in .js; often flagged in strict .ts"
+  },
+  {
+    "id": "ts-f50-003",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "What are the main benefits of using TypeScript?",
+    "answer": "It catches many errors before runtime, improves autocomplete and navigation in the IDE, makes refactors safer, and documents intent through types.",
+    "explanation": "Acknowledge cost: build step, learning curve; teams often adopt gradually.",
+    "example": "rename symbol across codebase with confidence when props are typed"
+  },
+  {
+    "id": "ts-f50-004",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "What is a transpiler?",
+    "answer": "A transpiler converts source code from one language (or syntax) to another at roughly the same level of abstraction. The TypeScript compiler (`tsc`) transpiles `.ts` files into `.js`.",
+    "explanation": "Contrast with a compiler that targets machine code; bundlers often invoke `tsc` or `esbuild`/`swc` for TS.",
+    "example": "tsc src/app.ts --outDir dist"
+  },
+  {
+    "id": "ts-f50-005",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "Can browsers understand TypeScript natively?",
+    "answer": "No. Browsers execute JavaScript. TypeScript must be compiled or transpiled to JavaScript first (unless you use a dev-only loader that compiles on the fly).",
+    "explanation": "Deno can run TS with built-in tooling; production web apps still ship JS (or WASM).",
+    "example": "<script src=\"bundle.js\"></script> // not .ts in production"
+  },
+  {
+    "id": "ts-f50-006",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "What is type inference in TypeScript?",
+    "answer": "The compiler often figures out a variable’s type from its initializer or return types from expressions, so you do not need to write every annotation explicitly.",
+    "explanation": "Inference has limits; complex unions or empty arrays may need hints (`as const`, generic parameters).",
+    "example": "const x = 3; // inferred number\nconst y = []; // often unknown[] or any[] without context"
+  },
+  {
+    "id": "ts-f50-007",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "How do you compile a TypeScript file?",
+    "answer": "Run the compiler CLI: `tsc filename.ts`, which emits `filename.js` by default. Projects usually use `tsc` with `tsconfig.json` instead of single files.",
+    "explanation": "Mention `npx tsc`, watch mode `tsc --watch`, and bundlers that integrate TS (Vite, webpack).",
+    "example": "tsc\n// or: npx tsc --project tsconfig.json"
+  },
+  {
+    "id": "ts-f50-008",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "What is the tsconfig.json file?",
+    "answer": "It is the project configuration for TypeScript: which files to include, output folder, target ECMAScript version, strictness (`strict`), paths, and many compiler options.",
+    "explanation": "Fields like extends, references, and composite matter for monorepos.",
+    "example": "{ \"compilerOptions\": { \"strict\": true, \"target\": \"ES2022\" } }"
+  },
+  {
+    "id": "ts-f50-009",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "What are the basic primitive types in TypeScript?",
+    "answer": "`string`, `number`, `boolean`, `null`, `undefined`, `symbol`, and `bigint`—aligned with JavaScript primitives; TypeScript models them for typing.",
+    "explanation": "`number` covers all JS numbers; strict null checks distinguish `null` vs `undefined`.",
+    "example": "let id: bigint = 10n;\nlet sym: symbol = Symbol(\"x\");"
+  },
+  {
+    "id": "ts-f50-010",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "What is the default type if no type is assigned or inferred?",
+    "answer": "When inference fails and no annotation exists, you often get implicit `any`—unless `noImplicitAny` is enabled, in which case the compiler reports an error instead of defaulting to `any`.",
+    "explanation": "Prefer turning on `strict` and fixing implicit `any` with real types or `unknown`.",
+    "example": "function f(x) { } // implicit any without noImplicitAny"
+  },
+  {
+    "id": "ts-f50-011",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What is an interface in TypeScript?",
+    "answer": "An interface describes the shape of an object: property names, method signatures, and optionality. It is a compile-time contract for values that should match that structure.",
+    "explanation": "Interfaces are erased at runtime; they do not generate JS unless used with `implements` in type positions only.",
+    "example": "interface User { id: string; name: string; }\nconst u: User = { id: \"1\", name: \"Ada\" };"
+  },
+  {
+    "id": "ts-f50-012",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "How is an interface different from a type alias?",
+    "answer": "Interfaces are suited to object shapes and support declaration merging. `type` aliases can express unions, intersections, primitives, tuples, and more—but two declarations with the same `interface` name merge; duplicate `type` names do not.",
+    "explanation": "Teams often pick one style for simple objects; use `type` for unions and mapped types.",
+    "example": "type Id = string | number;\ninterface A { x: number }\ninterface A { y: number } // merged"
+  },
+  {
+    "id": "ts-f50-013",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "What is an enum?",
+    "answer": "An enum groups named constants—numeric (auto-incrementing), string, or const enums. It compiles to JavaScript objects and reverse maps for numeric enums.",
+    "explanation": "Some teams avoid enums in favor of unions of string literals + `as const` for smaller bundles.",
+    "example": "enum Role { Admin = \"ADMIN\", User = \"USER\" }\nconst r: Role = Role.Admin;"
+  },
+  {
+    "id": "ts-f50-014",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "What is the `any` type and when should you use it?",
+    "answer": "`any` disables type checking for that value. Use it rarely—for incremental migration from JS or truly dynamic data—then narrow or replace with safer types.",
+    "explanation": "eslint `@typescript-eslint/no-explicit-any` helps enforce discipline.",
+    "example": "function legacy(data: any) { return data.whatever; } // escape hatch"
+  },
+  {
+    "id": "ts-f50-015",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What is the `unknown` type?",
+    "answer": "`unknown` is like a safe top type: you can assign anything to it, but you must narrow (e.g. `typeof`, `instanceof`, custom guards) before using it as something specific.",
+    "explanation": "Prefer `unknown` over `any` for external input; forces checks.",
+    "example": "function parse(input: unknown) {\n  if (typeof input === \"string\") return input.toUpperCase();\n}"
+  },
+  {
+    "id": "ts-f50-016",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "What is a union type?",
+    "answer": "A union means “one of several types,” written with `|`. A value of type `A | B` can be an `A` or a `B`; you often narrow before accessing members specific to one side.",
+    "explanation": "Discriminated unions (`kind` tags) are a common pattern for safe branching.",
+    "example": "let id: string | number;\nid = 1; id = \"x\";"
+  },
+  {
+    "id": "ts-f50-017",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What is an intersection type?",
+    "answer": "An intersection `A & B` requires a value to satisfy both types at once—typically merging object fields. Primitives intersect to `never` if incompatible.",
+    "explanation": "Useful for mixing mixins, `extends`-like composition in type space.",
+    "example": "type Named = { name: string };\ntype Dated = { at: Date };\ntype Item = Named & Dated;"
+  },
+  {
+    "id": "ts-f50-018",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What are tuple types?",
+    "answer": "A tuple is an array with a fixed length and typed slots per index, e.g. `[number, string]` for a pair. Length and positions are checked more strictly than `Array<T>`.",
+    "explanation": "Optional/rest elements supported: `[number, string?]` or `[number, ...string[]]`.",
+    "example": "let row: [number, string] = [1, \"Alice\"];\n// row = [1]; // error"
+  },
+  {
+    "id": "ts-f50-019",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "What is the difference between `null` and `undefined` in TypeScript?",
+    "answer": "`undefined` usually means declared but not assigned or a missing optional property. `null` is an explicit “no object” assignment. With `strictNullChecks`, both are distinct from other types.",
+    "explanation": "`undefined` often comes from JS APIs; `null` is common in JSON.",
+    "example": "function f(x?: string) {\n  // x is string | undefined\n}"
+  },
+  {
+    "id": "ts-f50-020",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "What is the `void` type?",
+    "answer": "`void` is the return type for functions that do not return a meaningful value (or return `undefined`). It is mainly for documentation and checking callbacks.",
+    "explanation": "Do not confuse with `undefined` type; `void` allows functions that implicitly return undefined.",
+    "example": "function log(msg: string): void {\n  console.log(msg);\n}"
+  },
+  {
+    "id": "ts-f50-021",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "How do you specify optional parameters in a function?",
+    "answer": "Add `?` after the parameter name: `name?: string`. Optional parameters must follow required ones.",
+    "explanation": "Optional is not the same as `| undefined` in all positions—calling conventions differ slightly with `strictFunctionTypes`.",
+    "example": "function greet(name?: string) {\n  return `Hi ${name ?? \"guest\"}`;\n}"
+  },
+  {
+    "id": "ts-f50-022",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "What are default parameters?",
+    "answer": "Default parameters supply a value when the argument is omitted or `undefined`, e.g. `function greet(name = \"Guest\")`.",
+    "explanation": "Defaults make parameters optional without `?` in some styles; order still matters for positional args.",
+    "example": "function add(a = 0, b = 0) {\n  return a + b;\n}"
+  },
+  {
+    "id": "ts-f50-023",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "What are rest parameters in TypeScript?",
+    "answer": "Rest parameters collect remaining arguments into an array: `function sum(...nums: number[])`. TypeScript types the rest tuple or array.",
+    "explanation": "Contrast with spread when calling; rest is in the parameter list.",
+    "example": "function max(...n: number[]) {\n  return Math.max(...n);\n}"
+  },
+  {
+    "id": "ts-f50-024",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "How do you define a class in TypeScript?",
+    "answer": "Use the `class` keyword with fields, a `constructor`, methods, and optional access modifiers. TypeScript adds type annotations and implements interfaces.",
+    "explanation": "Classes emit ES5 constructor functions or native class syntax depending on `target`.",
+    "example": "class Point {\n  constructor(public x: number, public y: number) {}\n}"
+  },
+  {
+    "id": "ts-f50-025",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What are access modifiers in TypeScript classes?",
+    "answer": "`public` (default): visible everywhere. `private`: only inside the class. `protected`: inside the class and subclasses. TypeScript enforces these at compile time.",
+    "explanation": "`private` in TS is not runtime-private in emitted JS until modern `#` fields if you use them.",
+    "example": "class A {\n  private secret = 1;\n  protected hook() {}\n}"
+  },
+  {
+    "id": "ts-f50-026",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What is a `readonly` property?",
+    "answer": "A `readonly` field can only be assigned in its declaration or in the constructor; later assignments are errors.",
+    "explanation": "Shallow immutability—nested objects can still mutate unless you type them readonly too.",
+    "example": "class C {\n  readonly id: string;\n  constructor(id: string) { this.id = id; }\n}"
+  },
+  {
+    "id": "ts-f50-027",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "How does inheritance work in TypeScript classes?",
+    "answer": "Use `extends` to subclass: the child inherits fields and methods and can call `super()` in the constructor and `super.method()` for parent implementations.",
+    "explanation": "Same prototype model as ES classes; TS adds static-side typing.",
+    "example": "class Animal {\n  move() {}\n}\nclass Dog extends Animal {\n  bark() {}\n}"
+  },
+  {
+    "id": "ts-f50-028",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What are abstract classes?",
+    "answer": "Abstract classes cannot be instantiated; they may declare abstract methods that concrete subclasses must implement. Use them as shared base contracts.",
+    "explanation": "Unlike interfaces, abstract classes can contain implemented methods and state.",
+    "example": "abstract class Shape {\n  abstract area(): number;\n}"
+  },
+  {
+    "id": "ts-f50-029",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "What is method overriding?",
+    "answer": "A subclass provides its own implementation for a method defined on the parent—same name and compatible signature—often calling `super` for partial reuse.",
+    "explanation": "Method resolution follows JS prototype chain.",
+    "example": "class B extends A {\n  override greet() { return super.greet() + \"!\"; }\n}"
+  },
+  {
+    "id": "ts-f50-030",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What are getter and setter accessors?",
+    "answer": "`get`/`set` define property accessors that run code when a property is read or written, hiding internal storage and validation.",
+    "explanation": "Compile to `Object.defineProperty` on older targets.",
+    "example": "class Box {\n  private _v = 0;\n  get value() { return this._v; }\n  set value(n: number) { this._v = n; }\n}"
+  },
+  {
+    "id": "ts-f50-031",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What are generics in TypeScript?",
+    "answer": "Generics parameterize types and functions with type variables like `<T>` so one implementation works for many concrete types while preserving type relationships.",
+    "explanation": "Contrast with `any`: generics keep compile-time checks.",
+    "example": "function first<T>(arr: T[]): T | undefined {\n  return arr[0];\n}"
+  },
+  {
+    "id": "ts-f50-032",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "Why use generics instead of `any`?",
+    "answer": "`any` turns off checking. Generics carry the actual type through—input and output stay correlated so mistakes are caught.",
+    "explanation": "Default generic params and constraints (`extends`) refine further.",
+    "example": "function id<T>(x: T): T { return x; }\nid(3); // T inferred number"
+  },
+  {
+    "id": "ts-f50-033",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What is a type assertion?",
+    "answer": "Assertions tell the compiler to treat a value as a specific type: `value as Type` or `<Type>value` in `.ts` files. They do not change runtime data or validate.",
+    "explanation": "Unsafe if wrong—prefer narrowing and validation libraries for external data.",
+    "example": "const el = document.getElementById(\"x\") as HTMLInputElement;"
+  },
+  {
+    "id": "ts-f50-034",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What is a type guard?",
+    "answer": "A type guard is code that refines a union to a narrower type: `typeof`, `instanceof`, `in`, equality checks, or a user-defined predicate `x is Foo`.",
+    "explanation": "Custom guards improve discriminated union handling.",
+    "example": "function isString(v: unknown): v is string {\n  return typeof v === \"string\";\n}"
+  },
+  {
+    "id": "ts-f50-035",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What is the `never` type?",
+    "answer": "`never` is the empty type: no value should exist. It appears for impossible branches, exhaustive checks, and functions that never return (always throw or infinite loop).",
+    "explanation": "In exhaustive `switch`, final branch can assign to `never` to ensure all cases handled.",
+    "example": "function fail(msg: string): never {\n  throw new Error(msg);\n}"
+  },
+  {
+    "id": "ts-f50-036",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What are literal types?",
+    "answer": "Literal types narrow to one exact value, e.g. `\"success\"`, `42`, `true`. Combined with unions they model fixed sets of states.",
+    "explanation": "`as const` infer widens minimally to literal unions.",
+    "example": "type Dir = \"left\" | \"right\";\nconst d: Dir = \"left\";"
+  },
+  {
+    "id": "ts-f50-037",
+    "technology": "TypeScript",
+    "level": "Advanced",
+    "question": "What is the `keyof` operator?",
+    "answer": "`keyof T` produces a union of known keys of object type `T`—string, number, or symbol literals depending on `T`.",
+    "explanation": "Pairs with indexed access `T[K]` and mapped types.",
+    "example": "type K = keyof { a: number; b: string }; // \"a\" | \"b\""
+  },
+  {
+    "id": "ts-f50-038",
+    "technology": "TypeScript",
+    "level": "Advanced",
+    "question": "What is the `typeof` operator in TypeScript's type context?",
+    "answer": "In type position, `typeof value` refers to the TypeScript type of that value (not the runtime `typeof` string). Useful for capturing configurations and `const` shapes.",
+    "explanation": "`typeof` on classes yields instance vs constructor types depending on usage—learn the distinction.",
+    "example": "const theme = { fg: \"#000\", bg: \"#fff\" };\ntype Theme = typeof theme;"
+  },
+  {
+    "id": "ts-f50-039",
+    "technology": "TypeScript",
+    "level": "Advanced",
+    "question": "What are mapped types?",
+    "answer": "Mapped types iterate keys with `[K in keyof T]` to produce new object types—often optionalizing, readonly wrapping, or remapping keys.",
+    "explanation": "Built-ins like `Partial`, `Readonly` are mapped types.",
+    "example": "type Flags<T> = { [K in keyof T]: boolean };"
+  },
+  {
+    "id": "ts-f50-040",
+    "technology": "TypeScript",
+    "level": "Advanced",
+    "question": "What is a conditional type?",
+    "answer": "Conditional types choose types based on a condition: `T extends U ? X : Y`. They power advanced utilities and `infer` for extracting pieces of types.",
+    "explanation": "Distributive behavior when `T` is a union—know when to wrap in `[T] extends ...` to disable.",
+    "example": "type IsString<T> = T extends string ? true : false;"
+  },
+  {
+    "id": "ts-f50-041",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What does the `Partial<T>` utility type do?",
+    "answer": "`Partial<T>` makes every property of `T` optional—useful for patch/update payloads.",
+    "explanation": "Only shallow; nested objects need mapped recursion for deep partials.",
+    "example": "type U = Partial<{ id: string; name: string }>;\n// id?: string; name?: string"
+  },
+  {
+    "id": "ts-f50-042",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What does the `Required<T>` utility type do?",
+    "answer": "`Required<T>` removes optionality from all keys of `T`—every property becomes required.",
+    "explanation": "Opposite of `Partial` at one level.",
+    "example": "type R = Required<{ a?: number }>; // { a: number }"
+  },
+  {
+    "id": "ts-f50-043",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What does the `Readonly<T>` utility type do?",
+    "answer": "`Readonly<T>` marks every property as readonly at the type level—reassignment errors, though nested mutability may remain.",
+    "explanation": "Use `ReadonlyArray` for immutable array typing.",
+    "example": "const cfg: Readonly<{ host: string }> = { host: \"x\" };\n// cfg.host = \"y\"; // error"
+  },
+  {
+    "id": "ts-f50-044",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What does the `Record<K, T>` utility type do?",
+    "answer": "`Record<K, T>` is an object type with keys in `K` and values of type `T`—a typed dictionary map.",
+    "explanation": "Often `Record<string, unknown>` for open maps; `keyof` unions for finite key sets.",
+    "example": "type Scores = Record<string, number>;\nconst m: Scores = { a: 1 };"
+  },
+  {
+    "id": "ts-f50-045",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What does the `Pick<T, K>` utility type do?",
+    "answer": "`Pick<T, K>` selects a subset of keys `K` from `T`, producing a new object type with only those properties.",
+    "explanation": "`K` must extend `keyof T`.",
+    "example": "type NameOnly = Pick<{ id: string; name: string }, \"name\">;"
+  },
+  {
+    "id": "ts-f50-046",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What does the `Omit<T, K>` utility type do?",
+    "answer": "`Omit<T, K>` builds a type like `T` but without the keys listed in `K`—the inverse of `Pick` for removal.",
+    "explanation": "Implemented as Pick + Exclude at the key level in lib typings.",
+    "example": "type NoId = Omit<{ id: string; name: string }, \"id\">;"
+  },
+  {
+    "id": "ts-f50-047",
+    "technology": "TypeScript",
+    "level": "Advanced",
+    "question": "What does the `Exclude<T, U>` utility type do?",
+    "answer": "`Exclude<T, U>` removes from union `T` any member assignable to `U`. Common for filtering literal unions.",
+    "explanation": "Works on unions, not object properties—pair with `keyof` patterns.",
+    "example": "type R = Exclude<\"a\" | \"b\" | \"c\", \"a\">; // \"b\" | \"c\""
+  },
+  {
+    "id": "ts-f50-048",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What is the `strict` flag in tsconfig.json?",
+    "answer": "`\"strict\": true` enables the main strict checks together—`strictNullChecks`, `noImplicitAny`, `strictFunctionTypes`, and others—tighter than legacy defaults.",
+    "explanation": "You can enable `strict` then relax individual flags if migrating legacy code.",
+    "example": "{ \"compilerOptions\": { \"strict\": true } }"
+  },
+  {
+    "id": "ts-f50-049",
+    "technology": "TypeScript",
+    "level": "Advanced",
+    "question": "What is declaration merging?",
+    "answer": "The compiler merges multiple declarations with the same name into one—most common for `interface` blocks and namespace augmentation. `type` aliases do not merge.",
+    "explanation": "Used for extending third-party types via `declare module \"x\"`.",
+    "example": "interface Window { myLib: unknown; }\n// merged with lib.dom"
+  },
+  {
+    "id": "ts-f50-050",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What are `.d.ts` files?",
+    "answer": "Declaration files contain only type information—no runtime output—to describe JavaScript libraries or ambient globals so TypeScript can type-check imports.",
+    "explanation": "`@types/*` on DefinitelyTyped publishes many `.d.ts` packages for npm modules.",
+    "example": "declare module \"my-legacy\" {\n  export function run(): void;\n}"
+  }
+]

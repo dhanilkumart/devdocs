@@ -40,7 +40,7 @@
     "technology": "React",
     "level": "Intermediate",
     "question": "When would you choose useReducer instead of useState?",
-    "answer": "When next state depends on complex logic, multiple sub-values update together, or you want a reducers-style transition table that is easier to test.",
+    "answer": "When next state depends on complex logic, several fields must update together, or you want a single reducer-style update path (often easier to test than many scattered `setState` calls).",
     "explanation": "Contrast boilerplate vs clarity for wizard flows, undo/redo, or state machines.",
     "example": "const [state, dispatch] = useReducer(reducer, initial); dispatch({ type: 'increment' });"
   },
