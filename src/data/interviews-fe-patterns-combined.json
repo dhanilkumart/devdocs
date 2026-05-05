@@ -1,0 +1,146 @@
+[
+  {
+    "id": "pat-cmb-001",
+    "technology": "TypeScript",
+    "level": "Advanced",
+    "question": "In TypeScript, what is the difference between `any` and `unknown`, and how would you safely parse a deeply nested JSON response from an unreliable third-party API?",
+    "answer": "`any` disables the type checker—you lose safety. `unknown` is the safe top type: you must narrow before use (type guards, `typeof`, `in`, or libraries). For messy APIs, type the JSON as `unknown`, then validate at runtime with **Zod**, **Valibot**, or a custom **type predicate** so only verified shapes reach your React components.",
+    "explanation": "Interviewers want runtime + compile-time: schema validation catches drift when APIs change; keep parsers near boundaries.",
+    "example": "function isUser(data: unknown): data is { name: string; age: number } {\n  return typeof data === \"object\" && data !== null && \"name\" in data && \"age\" in data;\n}\nconst data: unknown = await response.json();\nif (isUser(data)) console.log(data.name);"
+  },
+  {
+    "id": "pat-cmb-002",
+    "technology": "JavaScript",
+    "level": "Advanced",
+    "question": "You need to execute 100 independent API calls. How do you do this efficiently in ES6+ without crashing the browser or overwhelming the backend?",
+    "answer": "Avoid `for await` over an array if it serializes into a waterfall. Avoid firing all 100 through `Promise.all` at once—too many sockets and rate limits. Use **bounded concurrency**: process in chunks (e.g. 5–10 at a time) with a small pool—hand-rolled async queue, **`p-limit`**, **`async.mapLimit`**, or Bluebird-style concurrency.",
+    "explanation": "Mention backoff/retry policies and cancelability if user navigates away.",
+    "example": "import pLimit from \"p-limit\";\nconst limit = pLimit(5);\nawait Promise.all(urls.map((u) => limit(() => fetch(u))));"
+  },
+  {
+    "id": "pat-cmb-003",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "How do you use ES6 `Map` and `Set` in a modern frontend architecture compared to plain objects and arrays?",
+    "answer": "**Set**: enforce uniqueness fast—dedupe IDs or tags without `filter`/`indexOf` loops at scale. **Map**: frequent insert/delete, arbitrary keys (objects, DOM nodes, functions), and ordering by insertion—better than abusing objects as string-key-only bags.",
+    "explanation": "`WeakMap`/`WeakSet` help attach metadata without leaking memory when keys are objects GC’d.",
+    "example": "const seen = new Set(ids);\nconst byKey = new Map([[node, meta]]);"
+  },
+  {
+    "id": "pat-cmb-004",
+    "technology": "Next.js",
+    "level": "Advanced",
+    "question": "A client reports poor Largest Contentful Paint (LCP) on mobile for your Next.js app. How do you diagnose and fix it?",
+    "answer": "Identify the **LCP element** in Lighthouse or Web Vitals—often a hero image or large text block. **Images**: don’t lazy-load the hero; use `next/image` with **`priority`** and correct `sizes`. **Fonts**: subset, preload critical weights, `font-display: swap` so text paints with fallback first. Reduce render-blocking JS/CSS and long server TTFB.",
+    "explanation": "Measure field data (CrUX) vs lab; fix CLS separately—LCP is largest paint metric.",
+    "example": "<Image src=\"/hero.jpg\" alt=\"\" priority width={1200} height={600} sizes=\"100vw\" />"
+  },
+  {
+    "id": "pat-cmb-005",
+    "technology": "CSS3",
+    "level": "Advanced",
+    "question": "Your UI uses CSS Grid and glassmorphism (`backdrop-filter`). It works in Chrome but older Safari shows layout breaks and lag. How do you handle it?",
+    "answer": "Use **`@supports`** for progressive enhancement: ship a solid fallback first, enhance when `backdrop-filter` exists. Run **Autoprefixer** (`-webkit-backdrop-filter`). Test real Safari versions; reduce blur cost—large blurred layers hurt GPU. Never let cosmetics break core layout or readability.",
+    "explanation": "Feature queries beat browser sniffing; `prefers-reduced-transparency` where available.",
+    "example": ".card { background: rgba(255,255,255,0.9); }\n@supports (backdrop-filter: blur(10px)) {\n  .card {\n    background: rgba(255,255,255,0.2);\n    backdrop-filter: blur(10px);\n  }\n}"
+  },
+  {
+    "id": "pat-cmb-006",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is the difference between debouncing and throttling—and which would you use for `resize` that triggers heavy canvas redraws?",
+    "answer": "**Debounce** runs the handler after activity pauses—good when you only need the final state after the user stops resizing.**Throttle** caps how often the handler runs during continuous events. For heavy canvas work during resize, **debounce** is usually right: recalc once when the drag ends, not every frame.",
+    "explanation": "If you need progressive feedback while dragging, throttle + lighter preview, debounce for final quality pass.",
+    "example": "const onResize = debounce(() => redrawCanvas(), 150);\nwindow.addEventListener(\"resize\", onResize);"
+  },
+  {
+    "id": "pat-cmb-007",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "Users say that after leaving your SPA open for hours, the tab freezes or crashes. How do you track down a memory leak?",
+    "answer": "Suspect **listeners, timers, subscriptions, or closures** holding DOM or large graphs. Use Chrome **Memory**: heap snapshots before/after repeating actions (open/close modals, navigate). Compare **Detached DOM** or retained objects. In React, verify **effect cleanup**, abort in-flight fetch, unsubscribe observables, clear `setInterval`, and avoid growing caches.",
+    "explanation": "Performance monitor + allocation timeline; reproduce under production-like build.",
+    "example": "useEffect(() => {\n  const id = setInterval(tick, 1000);\n  return () => clearInterval(id);\n}, []);"
+  },
+  {
+    "id": "pat-cmb-008",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "How do you prevent race conditions—e.g. switching profiles quickly, or fast typing in search—so stale responses don’t overwrite state?",
+    "answer": "**Stale fetch**: use **`AbortController`** in `useEffect` cleanup when `id` changes or on unmount—ignore errors named `AbortError`. **Fast search**: **debounce** input, or **`switchMap`** in RxJS, or **React Query** keyed by query string so only latest matters. Optionally track a **monotonic request id** and discard late responses.",
+    "explanation": "Same root cause as senior screening race questions—tie async completion to “still valid”.",
+    "example": "useEffect(() => {\n  const c = new AbortController();\n  fetch(`/api/user/${id}`, { signal: c.signal })\n    .then((r) => r.json())\n    .then(setData)\n    .catch((e) => { if (e.name !== \"AbortError\") console.error(e); });\n  return () => c.abort();\n}, [id]);"
+  },
+  {
+    "id": "pat-cmb-009",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "A bug only appears in production. The console shows a minified error like `Cannot read properties of undefined (reading 'length')` in `main.8f72a.js`. How do you troubleshoot?",
+    "answer": "Use **source maps**: CI should upload them to **Sentry/Datadog** so stack traces map to real files/lines. Locally, enable source maps in DevTools **Sources**. The error means `.length` on **undefined**—often API returned `undefined` instead of `[]`. Add **defensive defaults**, schema validation at boundaries, and logging with correlation IDs—not raw PII.",
+    "explanation": "Reproduce with same build ID; compare staging payloads to prod.",
+    "example": "const items = data?.items ?? [];\nitems.length;"
+  },
+  {
+    "id": "pat-cmb-010",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "In a large SPA, how do you decide between local state, global state (Redux/Zustand), and server cache (TanStack Query / SWR)?",
+    "answer": "**Local state** — UI-only, short-lived: toggles, form drafts, component animation. **Global client state** — shared across routes: auth snapshot, theme, feature flags, wizard flows. **Server state** — API-owned data: use React Query or SWR for cache, dedupe, invalidation, retries—not Redux by default. Rule: server owns remote data → server cache; app owns cross-UI behavior → global store; component owns presentation → local useState.",
+    "explanation": "Avoid duplicating fetched lists in Redux unless you need offline-first or app-wide derived graphs Query cannot express.",
+    "example": "const { data } = useQuery({ queryKey: [\"user\", id], queryFn: () => fetchUser(id) });\nconst [open, setOpen] = useState(false);"
+  },
+  {
+    "id": "pat-cmb-011",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "In Angular, how do you prevent memory leaks from RxJS subscriptions—and how do you ensure cleanup on component destroy?",
+    "answer": "Prefer the **`async` pipe** in templates (auto unsubscribe). For imperative code, use **`takeUntilDestroyed()`** (modern Angular) or **`takeUntil(subject$)`** with `ngOnDestroy` completing the subject. Avoid bare **`.subscribe()`** without teardown. Use **`switchMap`** so new navigations cancel prior HTTP streams.",
+    "explanation": "Tie stream lifetime to component/DI destroy signal; share long-lived streams via dedicated services with clear ownership.",
+    "example": "this.service.data$.pipe(takeUntilDestroyed()).subscribe(...);"
+  },
+  {
+    "id": "pat-cmb-012",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is the real difference between using `fetch` in the browser versus `axios`/`fetch` on a Node.js backend?",
+    "answer": "It’s mostly **environment and trust**, not the library name. **Browser `fetch`**: subject to **CORS**, user cookies, visible to DevTools, rate-limited by tabs.**Server-side HTTP**: no browser CORS; can call **internal services**, attach secrets, aggregate and retry safely. Choose patterns by **boundary**: public client vs trusted backend.",
+    "explanation": "CORS is a browser policy; same-origin server-to-server calls ignore it.",
+    "example": "// Browser: public API\n// BFF route: server fetch to internal network"
+  },
+  {
+    "id": "pat-cmb-013",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "How do you handle authentication end-to-end—cookies vs localStorage—and how does Node.js validate tokens on each request?",
+    "answer": "**Avoid `localStorage` for sensitive tokens** (XSS can exfiltrate). Prefer **HttpOnly Secure SameSite cookies** for refresh/session flows; keep access tokens **short-lived** (memory or cookie per threat model). **Node middleware**: read cookie/`Authorization` header, **verify JWT** (signature, `iss`/`aud`, expiry), load user/roles, attach `req.user`, reject otherwise. **Server is source of truth**—never trust client-only checks.",
+    "explanation": "Mention CSRF for cookie sessions (SameSite, CSRF tokens for state-changing cookie auth).",
+    "example": "app.use((req, res, next) => {\n  const token = readToken(req);\n  req.user = verifyJwt(token) ?? null;\n  next();\n});"
+  },
+  {
+    "id": "pat-cmb-014",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "How do you approach responsive typography with modern CSS (`clamp()`)?",
+    "answer": "Use **`clamp(min, preferred, max)`** with `vw`/`rem` in the middle for fluid scaling between readable bounds—typically **~16px minimum body**, capped maximum, consistent **type scale**. Pair with **`rem`** for user zoom, sensible **line-height (1.4–1.6)**, and **max line length** (~60–75ch) for readability.",
+    "explanation": "Design tokens for steps; test zoom and large text settings.",
+    "example": "h1 { font-size: clamp(1.25rem, 2vw + 1rem, 2.25rem); }\nbody { max-width: 65ch; }"
+  },
+  {
+    "id": "pat-cmb-015",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "Without `await`, what UI bugs can appear in React when calling async functions?",
+    "answer": "Control flow breaks: navigation or UI updates **before** work finishes, **spinners/toasts** desync, errors become **unhandled rejections**, and **race conditions** mix stale and new state. Always **`await`** inside async handlers or chain `.then`/`.catch` deliberately.",
+    "explanation": "Event handlers marked `async` still need awaits inside; fire-and-forget promises need explicit error handling.",
+    "example": "async function onSave() {\n  setLoading(true);\n  try {\n    await save();\n    toast.success(\"Saved\");\n  } finally {\n    setLoading(false);\n  }\n}"
+  },
+  {
+    "id": "pat-cmb-016",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "Where should async error handling live in React—the event handler, a custom hook, or a global boundary?",
+    "answer": "**Event handlers** — user-triggered flows: toasts, inline errors, retry.**Custom hooks / data layer** — reusable fetch logic, shared parsing, React Query `onError`.**Error boundaries** — **render** errors and broken trees—not a substitute for handling failed `fetch` (those must be caught in async path).",
+    "explanation": "Boundaries don’t catch errors inside async callbacks unless they throw during render.",
+    "example": "const mutation = useMutation({ mutationFn: save, onError: (e) => toast.error(e.message) });"
+  }
+]

@@ -1,5 +1,116 @@
 [
   {
+    "id": "js-main-features",
+    "title": "Core JavaScript language features",
+    "category": "JavaScript",
+    "tags": ["fundamentals", "language", "overview", "basics"],
+    "summary": "The pillars of JavaScript: dynamic typing, first-class functions, prototype-based objects, a single-threaded event-loop concurrency model, and a rich standard library.",
+    "content": "## Dynamic typing\n\nVariables have no fixed type; values carry types. Operations may trigger **coercion** (implicit conversion)—know `==` vs `===`.\n\n## Primitives and objects\n\nPrimitives: `string`, `number`, `bigint`, `boolean`, `symbol`, `undefined`, `null`. Everything else is an **object** (including arrays and functions). Primitives are immutable; objects are mutable by default.\n\n## First-class functions\n\nFunctions are values: assign them, pass them, return them. Enables callbacks, higher-order functions, and closures.\n\n## Prototype-based OOP\n\nObjects delegate missing properties along the **prototype chain** (`Object.getPrototypeOf`). ES2015 `class` is syntactic sugar over prototypes.\n\n## Single thread & concurrency\n\nOne **call stack** runs your JS; async work uses queues (callbacks, promises, timers). Long synchronous tasks block UI in browsers.\n\n## Variables and scope\n\n`var` is function-scoped; `let`/`const` are block-scoped and avoid classic loop bugs. **Hoisting** moves declarations; `let`/`const` live in the **temporal dead zone** until initialized.\n\n## Strict mode\n\n`\"use strict\"` tightens parsing and runtime behavior (e.g. undeclared assignments throw). ES modules are strict by default.\n\n## Errors\n\n`try` / `catch` / `finally`, `throw`. Built-ins include `Error`, `TypeError`, `ReferenceError`, etc.\n\n## Built-in utilities\n\n**JSON**: `JSON.parse` / `JSON.stringify`. **Math**, **Date**, **Intl** for formatting. **RegExp** for pattern matching.\n\n## Closures\n\nInner functions retain access to outer variables—see the dedicated **Closures** topic.",
+    "code_examples": [
+      {
+        "title": "typeof and primitives",
+        "language": "javascript",
+        "code": "typeof \"x\"; // \"string\"\ntypeof 42; // \"number\"\ntypeof {}; // \"object\"\ntypeof function () {}; // \"function\""
+      },
+      {
+        "title": "Strict mode",
+        "language": "javascript",
+        "code": "\"use strict\";\n// mistypedVariable = 1; // ReferenceError"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-001", "preview": "var vs let vs const" },
+      { "id": "fe-q005", "preview": "== vs ===?" }
+    ]
+  },
+  {
+    "id": "js-es6-syntax",
+    "title": "ES6 / ES2015 syntax and values",
+    "category": "JavaScript",
+    "tags": ["ES6", "ES2015", "let", "const", "arrow", "destructuring"],
+    "summary": "ECMAScript 2015 introduced block-scoped bindings, arrow functions, template literals, destructuring, spread/rest, default parameters, `for...of`, and enhanced object literals.",
+    "content": "## `let` and `const`\n\n**Block-scoped** bindings (nearest `{}`). `const` requires initialization and forbids **rebinding** the identifier (object contents can still mutate unless frozen).\n\n## Temporal Dead Zone (TDZ)\n\nFrom block entry until `let`/`const` execute, accessing the binding throws `ReferenceError`.\n\n## Arrow functions\n\nConcise syntax; **no own `this`**—lexically inherits from enclosing scope. Not suitable for methods that need dynamic `this` unless bound.\n\n## Template literals\n\nBackticks with `${expression}` interpolation and multiline strings. **Tagged templates** pass cooked/raw segments to a function.\n\n## Destructuring\n\nUnpack arrays/objects: `const { a, b } = obj`, `const [x, y] = arr`. Supports defaults and rest patterns.\n\n## Spread and rest\n\n**Spread** expands iterables (`...arr`, object spread). **Rest** collects remaining items (`function f(a, ...rest)`).\n\n## Default parameters\n\n`function greet(name = \"Guest\")` — defaults apply when argument is `undefined`.\n\n## Enhanced object literals\n\nShorthand `{ x }` for `{ x: x }`, methods `{ foo() {} }`, computed keys `{ [key]: value }`.\n\n## `for...of` vs `for...in`\n\n`for...of` iterates **values** of iterables. `for...in` enumerates **keys** (including inherited enumerable string keys)—often avoid for arrays.\n\n## Unicode\n\nBetter support for astral plane characters in strings and identifiers (`\\u{...}`).\n\n## Modules\n\nSee **ES6 modules, classes, and built-ins** for `import` / `export`.",
+    "code_examples": [
+      {
+        "title": "Destructuring and defaults",
+        "language": "javascript",
+        "code": "const { name, age = 0 } = user;\nconst [first, ...rest] = items;"
+      },
+      {
+        "title": "Arrow functions",
+        "language": "javascript",
+        "code": "const add = (a, b) => a + b;\nconst ids = items.map((item) => item.id);"
+      },
+      {
+        "title": "Spread in arrays and objects",
+        "language": "javascript",
+        "code": "const merged = { ...defaults, ...options };\nconst nums = [1, ...more, 9];"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-ex-007", "preview": "What is an arrow function?" },
+      { "id": "js-core50-036", "preview": "What is destructuring?" }
+    ]
+  },
+  {
+    "id": "js-es6-modules-classes-builtins",
+    "title": "ES6 modules, classes, and built-ins",
+    "category": "JavaScript",
+    "tags": ["ES6", "modules", "class", "Symbol", "Map", "Set", "Promise"],
+    "summary": "ES2015 added static `import`/`export`, class syntax, Symbol, Map and Set, Promises, iterators, generators, and Proxy/Reflect.",
+    "content": "## ES modules\n\n`export` / `import` with static analysis and live bindings. **Default** vs **named** exports. Run in strict mode; bundlers and native `<script type=\"module\">` support.\n\n## Classes\n\n`class`, `extends`, `super`, `constructor`, method shorthand, `static` methods, `get`/`set` accessors. Underlying model remains prototype-based.\n\n## Promises\n\nStandard pattern for async completion (pending → fulfilled/rejected). Chain with `.then` / `.catch`. See also **Promises and async/await**.\n\n## Symbol\n\nUnique opaque values; use for non-colliding property keys (`Symbol.iterator`, etc.).\n\n## Map and Set\n\n**Map** for arbitrary keys with insertion order. **Set** for unique values. WeakMap/WeakSet hold weak object keys for GC-friendly metadata.\n\n## Iterators and generators\n\n**Iterator protocol**: `{ next() → { value, done } }`. **Generators** (`function*`) yield sequences lazily.\n\n## Proxy and Reflect\n\n**Proxy** intercepts object operations (get, set, apply). **Reflect** provides default forwarding helpers—often paired with Proxy.\n\n## Next steps\n\nModern syntax after ES2015 (optional chaining, `async`/`await`, dynamic `import`) are covered in **Modern ECMAScript (ES2017+)**.",
+    "code_examples": [
+      {
+        "title": "ES module exports",
+        "language": "javascript",
+        "code": "// math.js\nexport const PI = 3.14;\nexport function sum(a, b) {\n  return a + b;\n}\nexport default function main() {}"
+      },
+      {
+        "title": "Class inheritance",
+        "language": "javascript",
+        "code": "class Animal {\n  constructor(name) {\n    this.name = name;\n  }\n}\nclass Dog extends Animal {\n  bark() {\n    return `${this.name} woofs`;\n  }\n}"
+      },
+      {
+        "title": "Map vs object keys",
+        "language": "javascript",
+        "code": "const m = new Map();\nm.set(\"key\", 1);\nm.set({}, 2); // object keys OK\nconst s = new Set([1, 1, 2]); // { 1, 2 }"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-ts-1", "preview": "interface vs type" },
+      { "id": "js-ex-011", "preview": "What are Promises?" }
+    ]
+  },
+  {
+    "id": "js-modern-ecmascript",
+    "title": "Modern ECMAScript (ES2017+)",
+    "category": "JavaScript",
+    "tags": ["ES2017", "ES2020", "async", "optional-chaining", "dynamic-import"],
+    "summary": "Features after ES2015: async/await, object spread, optional chaining, nullish coalescing, dynamic import(), BigInt, and yearly syntax and library improvements.",
+    "content": "## ES2017\n\n- **`async`/`await`**: built on Promises; use `try/catch` for errors.\n- **Trailing commas** in parameter lists and calls.\n- **`Object.entries` / `Object.values`** alongside existing `Object.keys`.\n\n## ES2018\n\n- **Rest/spread for objects** (`{ ...obj }` already common via transpilation).\n- **Promise.prototype.finally**.\n- **Regex** named groups, dotAll, lookbehind (engine support varies by age).\n\n## ES2019\n\n- **`Array.prototype.flat` / `flatMap`**.\n- **`Object.fromEntries`**.\n- **`String.prototype.trimStart` / `trimEnd`**.\n- **Optional `catch` binding** (`catch { }`).\n\n## ES2020\n\n- **Optional chaining** `?.` for safe property access.\n- **Nullish coalescing** `??` (only `null`/`undefined` trigger fallback).\n- **`import()`** dynamic module loading (returns Promise).\n- **`BigInt`** for arbitrary-precision integers.\n- **`globalThis`** uniform global reference.\n- **`Promise.allSettled`**.\n\n## Later highlights\n\n- **Logical assignment** (`??=`, `&&=`, `||=`).\n- **Class fields** and **private methods** (`#field`) in modern engines.\n- **`String.prototype.replaceAll`**, **`Promise.any`**, **`Array.prototype.at`**.\n- **Top-level `await`** in modules.\n\n## Using new features\n\nCheck **Baseline** / **Can I use** / MDN compatibility tables; transpilers (Babel, SWC) and bundlers target your minimum browsers.",
+    "code_examples": [
+      {
+        "title": "Optional chaining and nullish coalescing",
+        "language": "javascript",
+        "code": "const street = user?.address?.street;\nconst port = options.port ?? 3000;\n// ?? unlike || keeps 0 and \"\""
+      },
+      {
+        "title": "Dynamic import",
+        "language": "javascript",
+        "code": "async function loadFeature() {\n  const mod = await import(\"./feature.js\");\n  mod.init();\n}"
+      },
+      {
+        "title": "BigInt",
+        "language": "javascript",
+        "code": "const n = 9007199254740993n;\ntypeof n; // \"bigint\""
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-040", "preview": "Optional chaining operator (?.)" },
+      { "id": "int-js-4", "preview": "async/await error handling" }
+    ]
+  },
+  {
     "id": "js-closures",
     "title": "Closures",
     "category": "JavaScript",

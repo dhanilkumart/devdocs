@@ -19,6 +19,7 @@ import interviewsTs50 from "@/data/interviews-typescript-50.json";
 import interviewsReactNext50 from "@/data/interviews-react-next-50.json";
 import interviewsJavascript50 from "@/data/interviews-javascript-50.json";
 import interviewsSeniorFe from "@/data/interviews-senior-fe.json";
+import interviewsFePatternsCombined from "@/data/interviews-fe-patterns-combined.json";
 
 export const allDocs: DocTopic[] = [
   ...(javascript as DocTopic[]),
@@ -44,6 +45,7 @@ export const allInterviews: InterviewQuestion[] = [
   ...(interviewsReactNext50 as InterviewQuestion[]),
   ...(interviewsJavascript50 as InterviewQuestion[]),
   ...(interviewsSeniorFe as InterviewQuestion[]),
+  ...(interviewsFePatternsCombined as InterviewQuestion[]),
 ];
 
 const docById = new Map(allDocs.map((d) => [d.id, d]));
