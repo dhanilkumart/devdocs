@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { searchAll } from "@/lib/search";
+import { getInterviewCardBlurb, interviewSlug } from "@/lib/interviewDisplay";
 
 export const metadata = {
   title: "Search results",
@@ -67,7 +68,7 @@ export default async function SearchPage({
               className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/40"
             >
               <Link
-                href={`/interview#${h.item.id}`}
+                href={`/question/${interviewSlug(h.item)}`}
                 className="font-semibold text-zinc-900 hover:text-violet-600 dark:text-zinc-50 dark:hover:text-violet-400"
               >
                 {h.item.question}
@@ -75,7 +76,9 @@ export default async function SearchPage({
               <p className="mt-1 text-xs font-medium text-violet-600 dark:text-violet-400">
                 {h.item.technology} · {h.item.level}
               </p>
-              <p className="mt-2 line-clamp-2 text-sm text-zinc-600 dark:text-zinc-400">{h.item.answer}</p>
+              <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                {getInterviewCardBlurb(h.item)}
+              </p>
             </li>
           ),
         )}

@@ -13,7 +13,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         >
           <Sidebar />
         </aside>
-        <main className="min-h-0 min-w-0 flex-1 overflow-y-auto pl-0">{children}</main>
+        <main className="min-h-0 min-w-0 flex-1 overflow-y-auto px-0 lg:px-6">{children}</main>
       </div>
       <MobileNav />
     </div>

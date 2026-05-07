@@ -20,6 +20,8 @@ import interviewsReactNext50 from "@/data/interviews-react-next-50.json";
 import interviewsJavascript50 from "@/data/interviews-javascript-50.json";
 import interviewsSeniorFe from "@/data/interviews-senior-fe.json";
 import interviewsFePatternsCombined from "@/data/interviews-fe-patterns-combined.json";
+import { enrichInterviewQuestion } from "@/lib/interviewContent";
+import { interviewSlug } from "@/lib/interviewDisplay";
 
 export const allDocs: DocTopic[] = [
   ...(javascript as DocTopic[]),
@@ -32,7 +34,7 @@ export const allDocs: DocTopic[] = [
   ...(graphql as DocTopic[]),
 ];
 
-export const allInterviews: InterviewQuestion[] = [
+const rawInterviews: InterviewQuestion[] = [
   ...(interviews as InterviewQuestion[]),
   ...(fe100a as InterviewQuestion[]),
   ...(fe100b as InterviewQuestion[]),
@@ -48,8 +50,11 @@ export const allInterviews: InterviewQuestion[] = [
   ...(interviewsFePatternsCombined as InterviewQuestion[]),
 ];
 
+export const allInterviews: InterviewQuestion[] = rawInterviews.map(enrichInterviewQuestion);
+
 const docById = new Map(allDocs.map((d) => [d.id, d]));
 const interviewById = new Map(allInterviews.map((q) => [q.id, q]));
+const interviewBySlug = new Map(allInterviews.map((q) => [interviewSlug(q), q] as const));
 
 export function getDocById(id: string): DocTopic | undefined {
   return docById.get(id);
@@ -57,6 +62,10 @@ export function getDocById(id: string): DocTopic | undefined {
 
 export function getInterviewById(id: string): InterviewQuestion | undefined {
   return interviewById.get(id);
+}
+
+export function getInterviewBySlug(slug: string): InterviewQuestion | undefined {
+  return interviewBySlug.get(slug);
 }
 
 export const CATEGORIES: TechCategory[] = [

@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import type { InterviewSegment, TechCategory } from "@/types";
 import { InterviewFilters } from "@/components/interview/InterviewFilters";
 import { SegmentFilter } from "@/components/interview/SegmentFilter";
-import { QuestionCard } from "@/components/interview/QuestionCard";
+import { InterviewCardCompact } from "@/components/interview/InterviewCardCompact";
 import { interviewsFiltered } from "@/lib/data";
 
 export function InterviewPageClient() {
@@ -19,14 +19,18 @@ export function InterviewPageClient() {
         <InterviewFilters value={tech} onChange={setTech} />
         <SegmentFilter value={segment} onChange={setSegment} />
       </div>
-      <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
-        <strong>Focus</strong> splits <span className="text-zinc-700 dark:text-zinc-300">core language & patterns</span> from{" "}
-        <span className="text-zinc-700 dark:text-zinc-300">DOM & browser events</span>. Doc topics stay under{" "}
-        <strong>Topics</strong> in the sidebar—interview cards are Q&amp;A only.
+      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+        Each card shows the question, topic, level, and a <strong className="text-zinc-800 dark:text-zinc-200">short answer</strong> only.
+        Open a card for the full guide: longer explanation, real-world use, code, mistakes to avoid, and interview tips. Doc
+        guides stay under <strong className="text-zinc-800 dark:text-zinc-200">Topics</strong> in the sidebar.
       </p>
-      <div className="mt-6 space-y-6">
+      <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-500">
+        <span className="font-medium text-zinc-600 dark:text-zinc-400">Focus</span> filters core language vs DOM & browser
+        questions.
+      </p>
+      <div className="mt-8 flex flex-col gap-4">
         {filtered.map((q) => (
-          <QuestionCard key={q.id} q={q} />
+          <InterviewCardCompact key={q.id} q={q} />
         ))}
       </div>
     </>

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { searchAll } from "@/lib/search";
 import { useRecentSearches } from "@/hooks/useRecentSearches";
+import { interviewSlug } from "@/lib/interviewDisplay";
 
 export function GlobalSearch() {
   const router = useRouter();
@@ -47,7 +48,7 @@ export function GlobalSearch() {
         const first = hits[0];
         pushRecent(query.trim());
         if (first.kind === "doc") router.push(`/docs/${first.item.id}`);
-        else router.push(`/interview#${first.item.id}`);
+        else router.push(`/question/${interviewSlug(first.item)}`);
       } else goSearchPage();
       setOpen(false);
     }
@@ -139,7 +140,7 @@ export function GlobalSearch() {
             ) : (
               <Link
                 key={`i-${h.item.id}`}
-                href={`/interview#${h.item.id}`}
+                href={`/question/${interviewSlug(h.item)}`}
                 role="option"
                 className="flex flex-col gap-0.5 border-b border-zinc-50 px-4 py-3 last:border-0 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800"
                 onClick={() => {

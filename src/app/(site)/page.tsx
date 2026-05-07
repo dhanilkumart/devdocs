@@ -1,18 +1,45 @@
 import Link from "next/link";
-import { CATEGORIES, allDocs } from "@/lib/data";
+import { InterviewCardCompact } from "@/components/interview/InterviewCardCompact";
+import { CATEGORIES, allDocs, allInterviews } from "@/lib/data";
+
+const HOME_QUESTION_COUNT = 6;
 
 export default function HomePage() {
+  const homeQuestions = allInterviews.slice(0, HOME_QUESTION_COUNT);
+
   return (
     <div className="space-y-12">
       <section className="mx-auto max-w-3xl text-center">
         <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-sky-600 dark:text-sky-400">DevDocs AI</p>
         <h1 className="text-balance text-3xl font-semibold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-50">
-          Documentation and interview prep, curated for frontend & full-stack developers
+          Learn frontend topics, practice interview questions, in plain language
         </h1>
         <p className="mt-4 text-pretty text-lg text-zinc-600 dark:text-zinc-400">
-          Search across topics with fuzzy matching, explore structured guides, and practice level-tagged questions—without
-          scraping raw vendor docs.
+          Curated docs, fuzzy search, and question pages written for real humans—short answers on cards, full guides when you
+          drill in.
         </p>
+      </section>
+
+      <section>
+        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">Practice questions</h2>
+            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+              Topic, difficulty, and a quick answer—tap through for the full walkthrough.
+            </p>
+          </div>
+          <Link
+            href="/interview"
+            className="text-sm font-medium text-sky-600 hover:underline dark:text-sky-400"
+          >
+            View all questions →
+          </Link>
+        </div>
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {homeQuestions.map((q) => (
+            <InterviewCardCompact key={q.id} q={q} />
+          ))}
+        </div>
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -41,7 +68,7 @@ export default function HomePage() {
             { href: "/docs/js-closures", label: "JavaScript closures" },
             { href: "/docs/graphql-queries-mutations", label: "GraphQL queries & mutations" },
             { href: "/docs/next-app-router", label: "Next.js App Router" },
-            { href: "/interview", label: "Interview bank" },
+            { href: "/interview", label: "All practice questions" },
             { href: "/playground", label: "HTML/CSS/JS playground" },
           ].map((item) => (
             <li key={item.href}>

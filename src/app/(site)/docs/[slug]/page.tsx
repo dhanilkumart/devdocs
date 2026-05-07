@@ -4,6 +4,7 @@ import { BookmarkButton } from "@/components/docs/BookmarkButton";
 import { CodeBlock } from "@/components/docs/CodeBlock";
 import { DocMarkdown } from "@/lib/markdown-lite";
 import { getDocById, getInterviewById, allDocs } from "@/lib/data";
+import { interviewSlug } from "@/lib/interviewDisplay";
 import type { Metadata } from "next";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -70,7 +71,7 @@ export default async function DocPage({ params }: Props) {
               return (
                 <li key={rq.id}>
                   <Link
-                    href={`/interview#${rq.id}`}
+                    href={`/question/${interviewSlug(iq ?? { id: rq.id })}`}
                     className="text-sky-600 hover:underline dark:text-sky-400"
                   >
                     {iq?.question ?? rq.preview}
