@@ -58,6 +58,65 @@ export interface InterviewQuestion {
   relatedQuestions?: RelatedQuestionRef[];
   /** Core language & patterns vs web platform (DOM, events in the page). Omitted = fundamentals. */
   segment?: InterviewSegment;
+  /** Optional curated section (e.g., "react-core-concepts"). Used for sectioned interview pages. */
+  section?: string;
+}
+
+export interface InterviewSection {
+  /** URL slug for /interview/section/[slug]. */
+  slug: string;
+  /** Display title shown on cards and the section page header. */
+  title: string;
+  /** Short description shown on the section card and at the top of the page. */
+  description: string;
+  /** Tech category badge for the section card (mirrors existing category palette). */
+  technology: TechCategory;
+}
+
+/** Snapshot of an interview question stored when a user saves it from the UI. */
+export interface SavedQuestionSnapshot extends InterviewQuestion {
+  savedAt: number;
+}
+
+/** A resume-driven interview question — answered in the candidate's own voice. */
+export interface ResumeQuestion {
+  id: string;
+  /** Topic chip on the card (e.g., "State Management", "WebSockets"). */
+  topic: string;
+  /** Optional project tag (e.g., "AI-Kiosk", "GoodHomes", "ZEOS", "ROVER"). */
+  project?: string;
+  question: string;
+  /** Optional 1-line summary used as the card preview. */
+  short?: string;
+  /** Full answer in the candidate's voice. May contain newlines for paragraphs. */
+  answer: string;
+}
+
+/**
+ * A single technical-keyword glossary entry. Powers the in-prose chips,
+ * the `<KeywordModal>`, and the dedicated `/keyword/[slug]` page.
+ */
+export interface GlossaryEntry {
+  /** URL slug for /keyword/[slug]. */
+  slug: string;
+  /** Canonical display term (e.g., "React Server Components"). */
+  term: string;
+  /**
+   * Alternate strings to match in prose (case-insensitive). Always include
+   * the canonical term + acronym variants. Order does not matter — matching
+   * is by length-descending automatically.
+   */
+  aliases: string[];
+  /** Loose grouping shown on the detail page (e.g., "React", "Tooling"). */
+  category?: string;
+  /** 1–2 sentence summary shown on the chip tooltip and modal lead. */
+  short: string;
+  /** Longer explanation rendered as paragraphs on the modal + detail page. */
+  long: string;
+  /** Optional code or example block. */
+  example?: string;
+  /** Slugs of related glossary entries to surface as quick links. */
+  related?: string[];
 }
 
 export interface RecentSearch {

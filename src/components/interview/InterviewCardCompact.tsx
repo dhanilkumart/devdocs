@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { InterviewQuestion } from "@/types";
 import { getInterviewCardBlurb, interviewSlug } from "@/lib/interviewDisplay";
+import { QuestionSaveButton } from "@/components/interview/QuestionSaveButton";
 
 const LEVEL_STYLE: Record<string, string> = {
   Beginner: "bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200",
@@ -30,7 +31,10 @@ export function InterviewCardCompact({ q }: { q: InterviewQuestion }) {
         </h2>
         <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">{blurb}</p>
       </div>
-      <p className="shrink-0 text-xs font-medium text-sky-600 dark:text-sky-400">Open full guide -&gt;</p>
+      <div className="flex shrink-0 items-center gap-3 sm:flex-col sm:items-end">
+        <QuestionSaveButton q={q} variant="icon" />
+        <p className="text-xs font-medium text-sky-600 dark:text-sky-400">Open full guide -&gt;</p>
+      </div>
     </Link>
   );
 }

@@ -1,0 +1,484 @@
+[
+  {
+    "id": "rb-001",
+    "topic": "Component Architecture",
+    "project": "ZEOS",
+    "question": "How did you handle versioning and breaking changes when multiple Fortune-level clients were using the same core React component library?",
+    "short": "Strict SemVer + monorepo, with variants instead of mutating the base when one client needed a tweak.",
+    "answer": "To handle multiple clients on one core library, we implemented strict Semantic Versioning (SemVer) and a monorepo architecture. If a Fortune-level client needed a specific tweak that broke existing contracts, we didn't mutate the base component — instead we created a variant or extended the base interface. We used feature flags to roll out new UI components gradually, ensuring older client configurations didn't break during updates."
+  },
+  {
+    "id": "rb-002",
+    "topic": "State Management",
+    "project": "ZEOS",
+    "question": "A zero-code builder means users are constantly dragging and dropping elements, causing massive state updates. Did you use Redux, Context API, or Zustand for the builder's canvas state, and how did you prevent the entire DOM from re-rendering on every mouse move?",
+    "short": "Zustand with transient updates + React.memo on canvas nodes, so 60 FPS dragging didn't trigger React renders.",
+    "answer": "We chose Zustand over Redux for the builder state. Redux's boilerplate was too heavy for the rapid, localized updates required by drag-and-drop actions. To prevent the entire DOM from re-rendering on every mouse move, we utilized Zustand's transient updates feature — subscribing to store changes without triggering a React render cycle — and heavily memoized the canvas nodes using React.memo with custom comparison functions."
+  },
+  {
+    "id": "rb-003",
+    "topic": "Payload Structure",
+    "project": "ZEOS",
+    "question": "For the workflow data-transfer modules, how did you serialize the React UI state into a JSON payload the backend could understand and execute?",
+    "short": "We saved the layout as an Abstract Syntax Tree (AST), so the backend stayed framework-agnostic and the frontend re-rendered from the schema.",
+    "answer": "The React UI state was serialized into an Abstract Syntax Tree (AST) JSON format. Instead of saving HTML, we saved a schema representing the layout hierarchy — for example, { type: 'Container', children: [{ type: 'Button', props: { color: 'blue' } }] }. This let the backend stay agnostic to the frontend framework: it simply stored the JSON, and the frontend engine parsed and rendered it dynamically on load."
+  },
+  {
+    "id": "rb-004",
+    "topic": "Performance Profiling",
+    "project": "ZEOS",
+    "question": "You reduced delivery time from months to weeks by optimizing UI module architecture. What specific React profiling tools did you use, and what was the exact bottleneck you discovered and removed?",
+    "short": "React DevTools Profiler showed Context API as the bottleneck; we moved hot canvas state to Zustand and got under 16ms per render.",
+    "answer": "Using the React DevTools Profiler, the biggest bottleneck I found was our initial use of the React Context API for global canvas state. Context triggers a re-render for every consuming component whenever any value changes. Moving the rapidly changing X/Y coordinate data out of Context and into Zustand — and reading it via selective selectors — cut our render times from hundreds of milliseconds to under 16ms, hitting the 60fps target."
+  },
+  {
+    "id": "rb-005",
+    "topic": "WebSocket Stability",
+    "project": "AI-Kiosk",
+    "question": "Integrating GPT-4o-mini-realtime and Twilio means dealing with persistent WebSocket connections. How did you handle the React component state when the patient's network dropped or the WebSocket connection suddenly closed?",
+    "short": "Exponential backoff reconnect plus a local message queue in React state — outgoing data flushed automatically on reconnect, so zero data was lost.",
+    "answer": "Network drops are inevitable in hospital environments. I implemented an exponential backoff strategy for the WebSocket reconnections. On the frontend, we maintained a local message queue in the React state — if the socket dropped, outgoing voice transcriptions or commands were queued and automatically flushed to the server the moment the connection was re-established, ensuring zero data loss."
+  },
+  {
+    "id": "rb-006",
+    "topic": "Audio Context",
+    "project": "AI-Kiosk",
+    "question": "Modern browsers strictly block auto-playing audio without user interaction. How did you handle the browser's AudioContext constraints to ensure the real-time voice assistant actually spoke back to the patient without being blocked?",
+    "short": "A 'Tap Here to Start Consultation' button unlocked the AudioContext; we kept the same context alive for the whole session.",
+    "answer": "Modern browsers block auto-playing audio. To solve this, the kiosk UI required an initial physical interaction — a 'Tap Here to Start Consultation' button. That single user interaction unlocked the browser's AudioContext. We then kept that context active and passed the Twilio audio streams through it, allowing the GPT-4o-mini-realtime assistant to speak freely without being muted by the browser."
+  },
+  {
+    "id": "rb-007",
+    "topic": "Latency Masking",
+    "project": "AI-Kiosk",
+    "question": "Voice assistants often suffer from high latency while the LLM generates a response. What specific optimistic UI updates or visual loading states did you build in React to keep the patient engaged while waiting?",
+    "short": "Stream text tokens into the UI as soon as they arrive and render a canvas-based audio visualizer that reacts to the 'thinking' state.",
+    "answer": "While waiting for the LLM, staring at a loading spinner breaks the conversational illusion. We masked latency by streaming the text response chunks into the UI immediately, even before the Text-to-Speech audio finished generating. We also implemented a canvas-based audio visualizer that reacted to a 'thinking' state, providing continuous visual feedback that the system was actively processing the request."
+  },
+  {
+    "id": "rb-008",
+    "topic": "WhatsApp Onboarding",
+    "project": "AI-Kiosk",
+    "question": "The Twilio WhatsApp API has strict 24-hour session windows and template rules. If a patient started the onboarding process but took 48 hours to upload their documents, how did your frontend handle the expired session state?",
+    "short": "Detected 'session expired' from the API and surfaced a button that asked the backend to send a pre-approved template to legally re-open the 24-hour window.",
+    "answer": "When dealing with Twilio's strict 24-hour session window for WhatsApp, the frontend state had to handle expirations gracefully. If a patient tried to upload a document at hour 48, the React UI displayed a specific 'Session Expired' fallback. It prompted them to click a button that fired a REST API call to our backend, which then sent a pre-approved WhatsApp template message to the user's phone to legally re-open the 24-hour conversational window."
+  },
+  {
+    "id": "rb-009",
+    "topic": "Vibe Coding Reliability",
+    "project": "GoodHomes",
+    "question": "GoodHomes was built completely using 'vibe coding'. As a senior developer, how did you maintain strict TypeScript interfaces and ensure predictable application state when relying heavily on AI-assisted code generation?",
+    "short": "Defined TypeScript interfaces and Zod schemas first; the AI was only allowed to fill in logic that satisfied those pre-defined contracts.",
+    "answer": "Vibe coding with AI heavily accelerates feature building, but it can create spaghetti code if left unchecked. The key to maintaining reliability was strictly defining TypeScript interfaces and Zod schemas before prompting the AI. I used TypeScript as the rigid structural blueprint — the AI was only allowed to generate the logic that satisfied those pre-defined contracts, ensuring the application state remained predictable."
+  },
+  {
+    "id": "rb-010",
+    "topic": "LLM Output Validation",
+    "project": "GoodHomes",
+    "question": "Vision LLMs extracting architectural metadata are prone to hallucinating JSON formats. How did you validate and sanitize the JSON response from Gemini/GPT before injecting it into your React state to prevent application crashes?",
+    "short": "Strict Zod parsing layer between the model and React state; malformed JSON triggered a 'Refining analysis…' toast and a silent retry.",
+    "answer": "Vision LLMs extracting architectural metadata often hallucinate broken JSON or inject markdown formatting. I implemented a strict parsing layer using Zod. Before any LLM response touched the React state, it was parsed. If the JSON was malformed or missing required keys (like room boundaries), the frontend caught the error, gracefully showed a 'Refining analysis…' toast to the user, and silently triggered an automatic retry to the backend."
+  },
+  {
+    "id": "rb-011",
+    "topic": "Delta Editing Logic",
+    "project": "GoodHomes",
+    "question": "For 'Continuation Mode', calculating parameter deltas for 3D state is incredibly complex. Did you store the previous render state in the client (Zustand/Redux) or fetch it from the backend? Walk me through the exact diffing logic you used.",
+    "short": "Lightweight JSON of the room's parameters lived in Zustand on the client; only the diffed deltas went to Vercel Serverless Functions.",
+    "answer": "For Continuation Mode, storing massive 3D render states entirely in the client was too heavy. We kept a lightweight JSON representation of the current room's parameters in Zustand. When the user changed a finish, the frontend ran a diffing utility against the previous JSON state. We only sent the extracted deltas (e.g., wall_color: changed_to_blue) back to the Vercel Serverless Functions, saving massive amounts of payload bandwidth."
+  },
+  {
+    "id": "rb-012",
+    "topic": "Asset Uploads",
+    "project": "GoodHomes",
+    "question": "You used Cloudflare R2 for binary asset persistence. When a user uploaded a massive texture sample (e.g., a 10MB high-res image), how did you handle the file upload securely from the React client? Did you use pre-signed URLs or pipe it through your Next.js/Express server?",
+    "short": "Browser asked the backend for a pre-signed URL, then PUT the file straight to Cloudflare R2 — bypassing the Node servers entirely.",
+    "answer": "You can never pipe a 10MB texture file through a Next.js API route because it will hit serverless function timeout limits and consume unnecessary bandwidth. Instead, the React client requested a pre-signed upload URL from our backend. Once received, the frontend uploaded the binary asset directly from the browser to Cloudflare R2, completely bypassing our Node.js servers for the heavy lifting."
+  },
+  {
+    "id": "rb-013",
+    "topic": "Prompt Engineering UI",
+    "project": "GoodHomes",
+    "question": "For the hierarchical prompt builder, how did you structure the React UI state to allow users to lock in 'Mandatory UI picks' while safely discarding rejected 'AI suggestions' without resetting the entire prompt payload?",
+    "short": "Two state buckets — Draft for AI suggestions, Active for the final payload; suggestions only merged into Active when the user clicked Apply.",
+    "answer": "To manage the hierarchical prompt builder, I separated the UI into 'Draft State' and 'Active State.' AI suggestions were mapped to the Draft State and displayed as dismissible chips in the UI. They were only merged into the Active State (the final payload sent to the API) when the user explicitly clicked 'Apply.' This prevented rogue AI suggestions from corrupting the user's mandatory design choices."
+  },
+  {
+    "id": "rb-014",
+    "topic": "Framer Motion Performance",
+    "project": "GoodHomes",
+    "question": "Heavy animations while waiting for 3D renders can drop the browser's frame rate. How did you ensure your Framer Motion animations ran smoothly at 60fps while the main thread was busy processing large image blobs?",
+    "short": "Animated only transform and opacity (GPU-composited) and applied will-change: transform on the critical hero elements.",
+    "answer": "To keep Framer Motion animations smooth while the browser processed large image blobs, I strictly animated only composite properties — transform (scale, translate) and opacity. Animating properties like width, height, or margin forces the browser to recalculate the layout on the main thread, causing severe lag. I also applied will-change: transform to critical UI elements to force GPU hardware acceleration."
+  },
+  {
+    "id": "rb-015",
+    "topic": "Data Visualization",
+    "project": "Sentiment Analysis",
+    "question": "For the Sentiment Analysis Engine, what specific charting library did you implement? When fetching rapid, real-time Twitter data, how did you update the charts without causing massive layout thrashing in the browser?",
+    "short": "D3.js owned the chart math, React owned the DOM, and a 500ms throttle batched the firehose into a single visual update per tick.",
+    "answer": "For the Sentiment Analysis dashboards, pushing rapid Twitter data directly into the DOM causes layout thrashing and freezes the browser. I utilized a combination of D3.js for the complex chart logic and React for the DOM rendering. To handle the firehose of data, I implemented a throttling function — the chart data state only updated every 500ms, batching the visual updates to keep the UI perfectly responsive."
+  },
+  {
+    "id": "rb-016",
+    "topic": "Accessibility Auditing",
+    "project": "Sesame Technologies",
+    "question": "You ensured strict WCAG accessibility compliance across 150+ websites. Name a complex ARIA pattern you had to manually implement that standard HTML couldn't handle natively.",
+    "short": "Custom modal focus trap — manage Tab/Shift+Tab cycling, restore focus on close, and dynamically maintain aria-expanded and aria-controls.",
+    "answer": "Achieving strict WCAG compliance goes far beyond alt tags. For custom-built dropdowns and modal windows, I had to manually manage keyboard focus. That meant implementing logic to trap the focus inside an open modal so screen readers wouldn't wander into the background body, ensuring the Escape key reliably closed the component, and correctly managing aria-expanded and aria-controls attributes dynamically via React state."
+  },
+  {
+    "id": "rb-017",
+    "topic": "Cross-Browser Nightmares",
+    "project": "Sesame Technologies",
+    "question": "Think back to a time before Flexbox and Grid were widely supported. What was your strategy for making PSD/XD designs pixel-perfect across older versions of Internet Explorer while maintaining responsiveness?",
+    "short": "Modernizr-driven graceful degradation: float-based fallbacks and display: table where Flexbox wasn't available, with simplified-but-functional designs on IE9.",
+    "answer": "Before Flexbox and Grid were reliable, ensuring pixel-perfect PSD-to-HTML conversions across older versions of IE required graceful degradation. We used feature detection libraries like Modernizr. If a browser didn't support a modern layout feature, we served a fallback stylesheet using float-based layouts or display: table. The design might have been slightly simplified on IE9, but the core functionality never broke."
+  },
+  {
+    "id": "rb-018",
+    "topic": "The Disaster Question",
+    "project": "Cross-project",
+    "question": "What was the most catastrophic production bug you pushed in either ZEOS or GoodHomes, and exactly what steps did you take in the React/Node codebase to track it down and fix it?",
+    "short": "A useEffect missing its cleanup attached window listeners that pinned closures — Chrome heap snapshots showed detached DOM trees; adding removeEventListener to the cleanup fixed it.",
+    "answer": "Early on, I pushed a memory leak in a highly interactive dashboard. Users reported the tab crashing after 2 hours. I tracked it down using Chrome DevTools Memory Heap Snapshots. I discovered we had custom event listeners attached to global window objects inside a useEffect hook, but we forgot to return the cleanup function (window.removeEventListener). React was unmounting the components visually, but the closures were keeping the DOM nodes trapped in memory."
+  },
+  {
+    "id": "rb-019",
+    "topic": "State Management Showdown",
+    "project": "GoodHomes",
+    "question": "Your skills list both Redux and Zustand. In your recent projects, tell me a specific scenario where you explicitly chose Zustand over Redux, and explain the technical reasoning.",
+    "short": "GoodHomes' 3D parameter sliders bound to WebGL needed direct, low-ceremony updates — Zustand's 10-line store beat Redux's actions/reducers/dispatchers.",
+    "answer": "In GoodHomes, we strictly chose Zustand over Redux for the 3D visualization parameters. Redux requires actions, reducers, and dispatchers, which is great for complex, asynchronous data flows like e-commerce carts. However, for GoodHomes we needed a simple, rapid way to bind UI sliders directly to WebGL parameters. Zustand let us write a store in 10 lines of code and bind it instantly without the architectural overhead of Redux."
+  },
+  {
+    "id": "rb-020",
+    "topic": "Security & Governance",
+    "project": "ROVER",
+    "question": "For the ROVER Gen AI platform, you ensured zero compliance risk. When passing sensitive enterprise data into LLM prompts, did you implement PII scrubbing on the React frontend, or did you rely entirely on the backend to handle data masking?",
+    "short": "Defense in depth — a Regex-based PII scrubber on the React frontend masked SSNs and credit cards to [REDACTED] before the payload ever hit the network tab.",
+    "answer": "For the ROVER Gen AI platform, achieving zero compliance risk meant we could not trust the backend to catch everything. We implemented a fast Regex-based PII (Personally Identifiable Information) scrubber directly on the React frontend. If a user pasted a social security number or a credit card into the prompt, the frontend masked it to [REDACTED] before the payload was even serialized for the HTTP request, ensuring sensitive data never touched the network tab or the LLM logs."
+  },
+
+  {
+    "id": "rb-021",
+    "topic": "Modular Architecture",
+    "project": "ZEOS",
+    "question": "You said you reduced delivery time from months to weeks. What exactly did you change to make that happen?",
+    "short": "Broke a single monolithic UI into independent modules with defined input/output contracts, so teams could build new features in parallel without merge conflicts.",
+    "answer": "Before, the whole frontend was built as one big block. If one team wanted to add a new feature, they had to touch the same codebase everyone else was working on. That caused conflicts, delays, and a lot of testing just to make sure nothing broke.\n\nWhat I did was break the UI into separate, independent modules. Each module had a clear job — it accepted a defined input and gave a defined output. Think of it like building with Lego blocks instead of carving from a single piece of wood.\n\nSo when a new feature was needed, we just built a new module and plugged it in. We didn't have to touch the existing modules. That's what cut the time dramatically — teams could work in parallel without stepping on each other."
+  },
+  {
+    "id": "rb-022",
+    "topic": "Workflow Graph State",
+    "project": "ZEOS",
+    "question": "How did you store the workflow graph in state? What was the structure?",
+    "short": "Two normalized lists — nodes and edges — held in Redux Toolkit so we got predictable transitions, time-travel debugging, and easy sharing across the UI.",
+    "answer": "A workflow in ZEOS is basically a flowchart — boxes connected by arrows. In technical terms, that's called a graph. Each box is a node and each arrow is an edge.\n\nI stored it as two separate lists — one for all the nodes and one for all the connections between them. Each node had an ID, a type, and its configuration. Each edge stored which node it starts from and which node it goes to, along with the type of data passing through it.\n\nI used Redux Toolkit for this because the workflow state was complex, shared across multiple parts of the UI, and needed to be debuggable. When something went wrong, I could rewind through the exact sequence of actions that caused it."
+  },
+  {
+    "id": "rb-023",
+    "topic": "Redux vs Zustand",
+    "project": "ZEOS",
+    "question": "You used both Redux and Zustand. Why both? What went where?",
+    "short": "Redux owned the global workflow data; Zustand owned local feature state like panel toggles and form drafts. Simple rule: app-wide → Redux, single-corner → Zustand.",
+    "answer": "Redux and Zustand do similar things, but I used them for different kinds of state.\n\nRedux held the main workflow data — the nodes, connections, and the overall structure of what the user was building. This data was important, complex, and needed to be shared across many parts of the screen at once. Redux's strict structure helped keep this under control.\n\nZustand handled smaller, temporary things — like whether a settings panel was open or closed, or what a user had typed in a form before saving. These things didn't need the heavy structure of Redux. Zustand let me keep that state close to the feature that needed it, without polluting the global Redux store with noise.\n\nSimple rule I followed: if it matters to the whole app, it goes in Redux. If it only matters to one corner of the screen, it goes in Zustand."
+  },
+  {
+    "id": "rb-024",
+    "topic": "Workflow Modules",
+    "project": "ZEOS",
+    "question": "What does a 'workflow data-transfer module' actually look like in code?",
+    "short": "Each module is a visual component plus a schema describing its inputs and outputs; the platform refuses to connect modules whose shapes don't match.",
+    "answer": "Every module in ZEOS had two parts — a visual component (what the user sees and configures on screen) and a schema (a definition of what data it accepts and what data it produces).\n\nWhen a user connects two modules, the platform checks whether the output from the first module matches what the second module is expecting. If they don't match, the connection is rejected with a clear error. This is similar to how a USB-A plug won't fit a USB-C port — the shapes have to match.\n\nAt runtime, when the workflow runs, actual data flows through these connections following the shapes we defined. This made it safe for non-technical users to build workflows without accidentally connecting incompatible pieces."
+  },
+  {
+    "id": "rb-025",
+    "topic": "Team Coordination",
+    "project": "ZEOS",
+    "question": "Give me a real example of a dependency conflict between two teams and how you fixed it.",
+    "short": "Agreed on the component's interface up front, gave one team ownership, ran the other team's changes through PR review, and used feature flags so unfinished work could merge safely.",
+    "answer": "We had two teams — one building the workflow canvas (the drag-and-drop area) and one building the properties panel (where you configure a selected node). Both teams needed to modify the same shared component that showed node settings.\n\nThe conflict was that one team wanted to add new fields to it while the other team was changing the layout. If both did that at the same time, they'd keep overwriting each other's work.\n\nWhat we did was agree on the component's interface first — what props it accepts, what it renders — before either team touched it. One team owned the component. The other team submitted their changes through a pull request that the owner reviewed. We also used feature flags so each team could merge their code into the main branch without their half-finished feature going live to users."
+  },
+  {
+    "id": "rb-026",
+    "topic": "WebSocket Lifecycle",
+    "project": "AI-Kiosk",
+    "question": "GPT-4o-mini-realtime uses WebSocket. How did your React app manage that connection?",
+    "short": "Open in useEffect with a cleanup that closes the socket and removes listeners on unmount, plus a ref to track the same connection across re-renders.",
+    "answer": "When the kiosk session started, my app opened a WebSocket connection to the GPT-4o-realtime API. From that point, audio from the microphone was captured, converted into chunks, and continuously sent through that connection. The server processed the audio and streamed back both text and audio responses in real time.\n\nThe tricky part was cleanup. If the user walked away or the kiosk screen changed, the WebSocket had to be properly closed — otherwise it kept running in the background, eating memory and causing issues. I handled this with a cleanup function in React's useEffect hook that closed the connection and removed all event listeners the moment the component was no longer on screen.\n\nI also used a useRef variable to track the connection across re-renders without accidentally reopening it every time the component updated."
+  },
+  {
+    "id": "rb-027",
+    "topic": "Measured Impact",
+    "project": "AI-Kiosk",
+    "question": "You said you cut manual data entry by 40%. How was that actually measured?",
+    "short": "Compared 8–10 minutes of manual nurse data entry per patient before, vs. doctor-spoken auto-fill plus review after, across a pilot sample.",
+    "answer": "We measured it by comparing how long nurses and staff took to enter patient vitals and prescription data before and after the system was in place.\n\nBefore the kiosk: a nurse would manually type in blood pressure, temperature, medication names, and dosage into the hospital system after each consultation. This took around 8–10 minutes per patient.\n\nAfter the voice assistant: the doctor spoke naturally during the consultation, the assistant picked up the relevant data, and it was auto-filled into the system. Staff only had to review and confirm, not type everything from scratch.\n\nThe 40% reduction was measured across a sample of patient encounters during a pilot period. It accounted for both time saved and the reduction in data entry errors."
+  },
+  {
+    "id": "rb-028",
+    "topic": "Interruption Handling",
+    "project": "AI-Kiosk",
+    "question": "How did you handle the situation where a patient speaks while the assistant is still talking?",
+    "short": "Listened for the realtime API's 'new speech detected' event, immediately stopped current playback, and cleared the response queue — sub-second barge-in.",
+    "answer": "This is called interruption handling or barge-in. In a normal conversation, if you start talking while someone else is mid-sentence, they stop. The voice assistant needed to do the same.\n\nThe GPT-4o-realtime API detects when the user starts speaking again — it sends an event to the app saying 'new speech detected.' When my app received that event, it immediately stopped playing the current audio response and cleared the response queue. It was like pressing a stop button the moment a new question started.\n\nThe challenge was that this had to be instant. In a healthcare setting, if a doctor interrupts to correct a medication name, the system had to respond immediately — any delay would feel broken and untrustworthy."
+  },
+  {
+    "id": "rb-029",
+    "topic": "WhatsApp Onboarding Flow",
+    "project": "AI-Kiosk",
+    "question": "Walk me through the Twilio WhatsApp patient onboarding from start to finish.",
+    "short": "Patient enters phone → backend creates a 15-min secure upload link → Twilio sends it via WhatsApp (SMS fallback) → patient uploads docs → backend signals kiosk in real time over WebSocket.",
+    "answer": "Here's exactly how it worked, step by step:\n\n1. The patient walks up to the kiosk and enters their phone number.\n2. Our backend creates a secure upload link that is only valid for 15 minutes.\n3. The backend sends a WhatsApp message to the patient's phone via Twilio with that link.\n4. The patient opens the link on their phone — it's a simple mobile-friendly page I built in React.\n5. They take photos of their ID and insurance card and upload them.\n6. Those documents are sent to our backend and saved.\n7. The backend sends a signal to the kiosk saying 'documents received.'\n8. The kiosk screen updates in real time to show the staff that documents are ready.\n\nWe also handled situations where the patient didn't have WhatsApp — in that case, the same link was sent as a regular SMS. And if the 15-minute link expired before they uploaded, they could request a new one from the kiosk."
+  },
+  {
+    "id": "rb-030",
+    "topic": "AI Document Summarization",
+    "project": "AI-Kiosk",
+    "question": "How did you build the AI document summarization and make sure it didn't make things up?",
+    "short": "Strict 'only what's in the document, otherwise say NOT FOUND' prompt, fixed JSON output schema for programmatic validation, and a visible 'verify with original' disclaimer.",
+    "answer": "Doctors have very little time during consultations. Reading 10 pages of patient history in 2 minutes is not realistic. So we had the AI read it and produce a short, structured summary.\n\nThe key challenge was making sure the AI didn't invent anything. In healthcare, a made-up medication or wrong allergy could be dangerous.\n\nHere's how I handled it: I gave the AI very strict instructions — 'only use information that is literally in this document, and if you don't find something, write NOT FOUND — do not guess.' The output was always in a fixed format (chief complaint, current medications, allergies, recent history) so the system could validate it programmatically.\n\nI also made sure every summary showed a disclaimer: 'AI-generated — please verify with original records.' The AI assisted the doctor, it didn't replace their judgment."
+  },
+  {
+    "id": "rb-031",
+    "topic": "2D-to-3D Pipeline",
+    "project": "GoodHomes",
+    "question": "Describe the full pipeline — what happens from the moment someone uploads a floor plan to the moment they see a 3D room?",
+    "short": "Gemini Vision extracts room JSON → user style + materials get layered into a prompt → image model renders the room → Cloudflare R2 stores it → React fetches a signed link.",
+    "answer": "It's a multi-step process, almost like an assembly line.\n\nStep 1 — Understanding the floor plan: The uploaded 2D floor plan image is sent to Google Gemini's vision model. Gemini looks at the image and extracts structured information — where the rooms are, where the doors and windows are, roughly how big each room is. This comes back as structured JSON.\n\nStep 2 — Building the design brief: That structured data is combined with what the user selected in the UI — their preferred style (modern, rustic, etc.), materials (marble floors, wooden furniture), and colour palette.\n\nStep 3 — Generating the image: All of that is assembled into a detailed prompt which is sent to an image generation model. The model produces a photorealistic 3D render of the room.\n\nStep 4 — Saving and displaying: The generated image is stored on Cloudflare R2 and a secure link is sent back to the React frontend where the user sees the result.\n\nThe whole pipeline takes about 20–40 seconds end to end."
+  },
+  {
+    "id": "rb-032",
+    "topic": "Continuation Mode",
+    "project": "GoodHomes",
+    "question": "What is 'Continuation Mode' and how does it work technically?",
+    "short": "Remember the last render's parameters, diff what changed, and image-to-image regenerate using the previous render as a structural reference so only the targeted edit changes.",
+    "answer": "Imagine you generated a beautiful 3D bedroom render. Now you want to change just the floor tiles — but keep everything else exactly the same. That's what Continuation Mode is for.\n\nWithout it, if you changed one setting and regenerated, the AI would produce a completely different image — different camera angle, different lighting, different furniture arrangement. Everything changes.\n\nWith Continuation Mode: the system remembers the exact settings used for the previous render. When you change only the floor tile option, the system calculates what changed — in this case, just the floor material.\n\nThe new render is generated using the previous image as a reference. The image generation model is told: 'keep the walls, lighting, furniture, and camera angle exactly the same — only update the floor.' This is done using an image-to-image technique where the original render guides the structure of the new one.\n\nThe result looks like you made a targeted edit, not a complete regeneration."
+  },
+  {
+    "id": "rb-033",
+    "topic": "Hierarchical Prompt Builder",
+    "project": "GoodHomes",
+    "question": "How does the hierarchical prompt builder work? How does it decide what wins when two things conflict?",
+    "short": "Layered priorities: structural constraints > explicit user picks > vision-detected materials > AI style suggestions. Higher layer always wins.",
+    "answer": "Think of it like a priority list. When building the final prompt that gets sent to the image generation model, the system layers information in a specific order — and higher-priority layers always win.\n\nHere's the order from most important to least:\n\n1. Structural constraints — things the floor plan tells us that cannot change, like where the walls are.\n2. What the user explicitly picked — if you selected 'white marble floors,' that's a hard choice.\n3. What the AI detected from a texture photo you uploaded — if you uploaded a photo of a fabric sample, Gemini Vision analyses it and describes its colour and texture.\n4. AI style suggestions — the model's own creative ideas based on the overall style.\n\nExample of a conflict: you selected 'white marble' in the UI, but you also uploaded a dark granite photo. White marble wins because explicit user choice (level 2) beats vision-detected material (level 3).\n\nThe final prompt is assembled combining all these layers in the right order, with clear instructions about which material applies to which surface."
+  },
+  {
+    "id": "rb-034",
+    "topic": "Vibe Coding Discipline",
+    "project": "GoodHomes",
+    "question": "You said this project was 'built completely using vibe coding.' What does that mean and how did you make sure it actually works properly?",
+    "short": "AI generated the foundation; the reliability came from disciplined human review — TypeScript everywhere, explicit error handling, and end-to-end tests with messy real-world inputs.",
+    "answer": "Vibe coding means using AI tools (like Claude or ChatGPT) to generate most of the code, rather than writing every line yourself. You describe what you want, the AI writes the code, you review it, run it, and keep going.\n\nIt's fast — I built GoodHomes much quicker than I would have by hand. But it comes with risks. AI-generated code often handles the happy path well (when everything goes right) but misses edge cases (what if the upload fails? what if Gemini returns an empty response?).\n\nSo my job shifted from writing code to reviewing and fixing code. I went through every AI-generated function and asked: 'What happens if this breaks?' I added error handling wherever it was missing. I enforced TypeScript types throughout so the code would at least break loudly at compile time if something was wrong. And I tested the full pipeline with real floor plan images — not just clean, perfect ones, but messy hand-drawn ones too.\n\nThe foundation was AI-generated. The reliability came from careful human review on top of it."
+  },
+  {
+    "id": "rb-035",
+    "topic": "R2 vs S3",
+    "project": "GoodHomes",
+    "question": "Why did you choose Cloudflare R2 over Amazon S3 for storing the generated images?",
+    "short": "Same API, but R2 has zero egress fees — decisive for a media-heavy product where users re-view 3–5MB renders constantly. Access is gated through expiring signed URLs.",
+    "answer": "Both R2 and S3 do the same job — they store files. The API is almost identical, so switching is easy.\n\nThe big difference is cost. With Amazon S3, you pay every time someone downloads a file — this is called 'egress fee.' For a platform that serves large 3D render images (each one could be 3–5 MB), and where users view and re-view their designs repeatedly, those download costs add up very quickly.\n\nCloudflare R2 has zero egress fees. You only pay for storage, not for every time the image is served. For GoodHomes, that was the deciding factor.\n\nFor access control, I made sure the React frontend never had direct access to R2. Instead, the backend generates a temporary link that expires after a set time (like a one-time ticket). The user accesses their image through that link. Once it expires, they need to request a fresh one — which the backend generates on demand."
+  },
+  {
+    "id": "rb-036",
+    "topic": "AI Compliance",
+    "project": "ROVER",
+    "question": "You said ROVER had 'zero compliance risk.' What does that actually mean in practice?",
+    "short": "Keys in a backend secrets vault, every request/response logged, PII scrubbed before crossing the boundary, and role-based access enforced server-side, not just in the UI.",
+    "answer": "'Zero compliance risk' means we made sure using AI inside a company didn't break any rules — around data privacy, security, or regulations.\n\nHere's what that looked like practically:\n\nAPI keys were never in the frontend code. If an API key is in the browser, a hacker can steal it. All AI calls went through our backend, which held the keys securely in a secrets vault.\n\nEverything was logged. Every AI request and response was recorded — who asked what, when, and what the AI said. This is required for audits in regulated industries.\n\nSensitive data never left the company. Before any data was sent to an external AI model, it was scanned for personal information (names, emails, ID numbers). If found, it was either removed or anonymized.\n\nAccess was role-controlled. Not every employee could use every AI feature. Managers could approve certain AI tools for their teams. This was enforced at the backend level, not just hidden in the UI.\n\nThis combination is what let us tell enterprise clients: 'You can deploy AI without worrying about a compliance violation.'"
+  },
+  {
+    "id": "rb-037",
+    "topic": "Role-Based UI",
+    "project": "ROVER",
+    "question": "What did the ROVER frontend look like? How were AI features shown to users based on their role?",
+    "short": "AI capabilities rendered as a marketplace of cards; the user's JWT role decided which were enabled, locked, or hidden — and the backend re-checked the same permissions.",
+    "answer": "When a user logged into ROVER, the system checked their role (stored securely in their login token). Based on that role, the frontend decided what to show them.\n\nThe AI capabilities were displayed as a marketplace — a grid of cards, each representing a different AI tool: 'Summarize a Document,' 'Answer from your Knowledge Base,' 'Generate a Report,' etc.\n\nIf your role gave you access to a feature, you saw a full, clickable card. If you didn't have access, you either saw a locked version of the card with a message explaining how to request access, or you didn't see the card at all.\n\nThis wasn't just a visual trick — the actual AI calls on the backend also checked permissions. So even if someone tried to call the API directly (bypassing the UI), they'd get an 'access denied' response."
+  },
+  {
+    "id": "rb-038",
+    "topic": "WebSocket Memory Leak",
+    "project": "AI-Kiosk",
+    "question": "Across all your projects, what's the hardest WebSocket bug you ever debugged?",
+    "short": "AI-Kiosk leaked one socket + listener set per session because useEffect had no cleanup; heap snapshots showed it. Adding the cleanup made memory flat for 12+ hours.",
+    "answer": "The hardest one was a memory leak on the AI-Kiosk project.\n\nAfter several hours of running, the kiosk would slow down noticeably. Opening Chrome's memory profiler, I could see the memory growing steadily — it wasn't releasing anything.\n\nThe cause was that every time a patient session started, a new WebSocket connection was opened and a new set of event listeners was attached. But when the session ended and the component was removed from the screen, the old connection was never closed. The event listeners kept running in the background, holding references to old data and preventing garbage collection.\n\nThe fix was simple once I found it — adding a cleanup function to the useEffect hook that explicitly closed the WebSocket and removed all listeners when the component unmounted. After that fix, memory stayed flat for 12+ hours of continuous operation.\n\nThe lesson: always clean up after yourself in React. If you open something, you must close it when you're done."
+  },
+  {
+    "id": "rb-039",
+    "topic": "VLMs vs LLMs",
+    "project": "GoodHomes",
+    "question": "You've used Vision-Language Models (VLMs) in GoodHomes. What's the difference between a VLM and a regular LLM, and what were the real limitations you hit?",
+    "short": "VLMs encode image patches as visual tokens fed into the same transformer. Real limits: hand-drawn plans confuse the model, dimensions are unreliable, and regional architectural symbols misread.",
+    "answer": "A regular LLM (like GPT-4) only understands text. You give it words, it gives you words back.\n\nA Vision-Language Model (like Gemini Vision) can also understand images. You can show it a picture and ask questions about it. Under the hood, it converts the image into a format the language model can process — breaking it into patches and encoding each patch as a kind of visual 'word.'\n\nIn GoodHomes, I used Gemini Vision to 'read' 2D floor plans. The real limitations I hit:\n\n• Hand-drawn or messy floor plans confused the model. It worked well on clean, computer-generated architectural drawings but struggled with rough sketches.\n• Scale and measurement — the model could identify rooms but struggled to reliably extract actual dimensions. We had to validate any numbers it gave against a plausible range.\n• Non-standard symbols — architectural drawings from different regions use different symbols for doors, stairs, and windows. Gemini was trained mostly on Western conventions and sometimes misread symbols from other styles.\n\nMy solutions: pre-process images (increase contrast, upscale resolution), write prompts that explicitly ask the model to flag uncertainty rather than guess, and validate extracted data against expected room size ranges."
+  },
+  {
+    "id": "rb-040",
+    "topic": "Honest Tech Debt",
+    "project": "GoodHomes",
+    "question": "Out of all your projects — ZEOS, AI-Kiosk, ROVER, GoodHomes — which one are you least proud of technically, and why?",
+    "short": "GoodHomes — vibe-coded fast, so the AI pipeline lacks proper retry logic and the state management is scattered. I'd consolidate to a single Zustand store and add E2E tests next.",
+    "answer": "Honestly, GoodHomes has the most technical debt.\n\nBecause it was built using vibe coding, I moved fast — maybe too fast in some areas. The multi-stage AI pipeline works, but it has no proper retry logic. If Stage 2 (image generation) fails halfway through, the system just shows an error. It doesn't automatically try again or fall back gracefully. In a production app with paying users, that's not good enough.\n\nThe state management is also a bit scattered. Because I was generating code quickly and iterating fast, some state lives in component-level hooks, some in module-level context, and there's no clean, consistent pattern across the whole app.\n\nIf I had more time, I'd add retry logic with exponential backoff to the pipeline, consolidate state management into a clean Zustand store, and add proper end-to-end tests for the full floor-plan-to-render flow.\n\nI'm proud of what GoodHomes does — the output is genuinely impressive. But the code behind it reflects the speed it was built at, and I know it."
+  },
+
+  {
+    "id": "rb-041",
+    "topic": "Voice Assistant Architecture",
+    "project": "AI-Kiosk",
+    "question": "In your AI-KIOSK project, how did the real-time voice assistant actually work end-to-end?",
+    "short": "Twilio streamed audio over WebSocket to a Node.js backend that proxied chunks to GPT-4o realtime; React rendered streamed text and audio events live.",
+    "answer": "We used Twilio for voice streaming, React for the UI, and a Node.js backend connected to GPT-4o realtime APIs.\n\nWhen the patient or doctor spoke, audio was streamed through Twilio to our backend using WebSockets. The backend forwarded chunks to the GPT realtime model. The AI response came back as text and audio events, and we updated the UI live in React. One challenge was handling delays and keeping the conversation natural without interruptions."
+  },
+  {
+    "id": "rb-042",
+    "topic": "GPT Realtime Hardest Part",
+    "project": "AI-Kiosk",
+    "question": "What was the hardest part of integrating GPT realtime APIs?",
+    "short": "Streaming state and interruption handling — partial responses, connection stability, and stopping playback when the user interrupted.",
+    "answer": "Managing streaming state and interruptions.\n\nThe hardest part was handling real-time streaming properly. Audio chunks come continuously, so we had to manage connection stability, partial responses, and interruptions. Sometimes users spoke while AI was still talking, so we implemented logic to stop previous playback and switch context smoothly."
+  },
+  {
+    "id": "rb-043",
+    "topic": "Manual Entry Reduction",
+    "project": "AI-Kiosk",
+    "question": "How did you reduce manual prescription entry by 40%?",
+    "short": "Auto-converted spoken consultations into structured fields; doctors reviewed and edited instead of typing from scratch.",
+    "answer": "We automated voice-to-structured-data conversion.\n\nNormally nurses or doctors manually typed symptoms and prescriptions. Our system converted spoken conversations into structured fields automatically. Doctors could review and edit instead of typing everything from scratch, which saved time during OP consultations."
+  },
+  {
+    "id": "rb-044",
+    "topic": "Redux vs Zustand Choice",
+    "project": "Cross-project",
+    "question": "In your React projects, when did you choose Redux vs Zustand?",
+    "short": "Redux for shared enterprise-wide workflow state with strict architecture; Zustand for smaller, independent modules without enterprise-debugging needs.",
+    "answer": "Redux for complex enterprise-wide state, Zustand for lightweight modular state.\n\nIn large workflow-heavy screens with shared enterprise data, Redux helped because of predictable state flow and middleware support. For smaller independent modules, Zustand was faster and cleaner with less boilerplate. I usually preferred Zustand when state didn't need enterprise-level debugging or strict architecture."
+  },
+  {
+    "id": "rb-045",
+    "topic": "Zero-Code Frontend",
+    "project": "ZEOS",
+    "question": "In the zero-code platform, what exactly did the frontend do?",
+    "short": "React rendered screens dynamically from JSON configurations the backend supplied — no hardcoded UI, so non-developers could build apps.",
+    "answer": "The frontend dynamically rendered workflows and forms from configuration data.\n\nThe UI wasn't hardcoded. Backend configurations described components, workflows, validations, and actions. React rendered screens dynamically based on JSON configurations. So users could build applications without developers changing frontend code each time."
+  },
+  {
+    "id": "rb-046",
+    "topic": "Schema-Driven Forms",
+    "project": "ZEOS",
+    "question": "How did you manage dynamic forms in React?",
+    "short": "Backend returned field definitions; React mapped them to components dynamically. Hardest part was nested validations and conditional fields without losing performance.",
+    "answer": "We used schema-driven rendering.\n\nThe backend returned form definitions like field type, validation, labels, and actions. React components mapped those configs dynamically. One challenge was handling nested validations and conditional fields while keeping performance stable."
+  },
+  {
+    "id": "rb-047",
+    "topic": "TanStack Query",
+    "project": "Cross-project",
+    "question": "Why did you use TanStack Query?",
+    "short": "Replaced hand-rolled loading/caching/retries with stale-data handling, background refetching, and automatic state out of the box.",
+    "answer": "For caching, retries, background refetching, and API state management.\n\nEarlier we manually managed loading, caching, and refetch logic. TanStack Query simplified that. It handled stale data, retries, loading states, and caching automatically, which reduced a lot of repetitive API code."
+  },
+  {
+    "id": "rb-048",
+    "topic": "Floor Plan Pipeline (Brief)",
+    "project": "GoodHomes",
+    "question": "In GoodHomes AI, how did the 2D-to-3D pipeline work?",
+    "short": "Vision AI extracted layout metadata; image-generation models produced photorealistic interiors from prompts plus that metadata.",
+    "answer": "We extracted metadata using Vision AI and generated renders using image generation models.\n\nUsers uploaded floor plans. Vision models analyzed room boundaries, openings, and layout details. We converted that into structured metadata, then passed prompts and layout data into image-generation models to create photorealistic interiors."
+  },
+  {
+    "id": "rb-049",
+    "topic": "Continuation Mode (Brief)",
+    "project": "GoodHomes",
+    "question": "What is 'Continuation Mode' in your AI visualization platform?",
+    "short": "Stores session state so we only diff and update changed parameters — preserves lighting, structure, and camera angle.",
+    "answer": "It updates only changed parts while preserving the rest of the design.\n\nIf users modified furniture or finishes, we didn't regenerate the entire image from scratch. We stored session state and calculated differences between old and new parameters. That helped maintain lighting and room structure consistency."
+  },
+  {
+    "id": "rb-050",
+    "topic": "Prompt Conflict Resolution",
+    "project": "GoodHomes",
+    "question": "How did you avoid prompt conflicts in AI generation?",
+    "short": "Priority hierarchy: explicit user choices always beat AI suggestions when prompts conflict.",
+    "answer": "We used priority-based prompt construction.\n\nUsers could select mandatory materials while AI also suggested styles. Sometimes prompts conflicted. So we created a hierarchy where explicit user choices always had higher priority than AI-generated suggestions."
+  },
+  {
+    "id": "rb-051",
+    "topic": "React Render Optimization",
+    "project": "Cross-project",
+    "question": "How did you optimize React rendering performance?",
+    "short": "Memoization (React.memo, useMemo), lazy loading, virtualization for long lists, and component splitting so unrelated state didn't trigger full-page re-renders.",
+    "answer": "Memoization, lazy loading, virtualization, and reducing unnecessary rerenders.\n\nIn dashboard-heavy applications, rerenders became expensive. We used React.memo, useMemo, and lazy loading. For large lists we used virtualization. We also split components properly so state updates didn't rerender the entire page."
+  },
+  {
+    "id": "rb-052",
+    "topic": "Enterprise API Issues",
+    "project": "Cross-project",
+    "question": "What kind of API issues did you face in enterprise apps?",
+    "short": "Huge nested payloads needed normalization, and concurrent calls created race conditions on shared UI state.",
+    "answer": "Large payloads, inconsistent responses, and async timing issues.\n\nSome enterprise APIs returned huge nested objects. We had to normalize data before rendering. Another issue was race conditions when multiple API calls updated the same UI state."
+  },
+  {
+    "id": "rb-053",
+    "topic": "Race Conditions",
+    "project": "Cross-project",
+    "question": "How did you handle race conditions in React?",
+    "short": "AbortController to cancel stale requests, plus request tracking IDs to ignore late responses that no longer match the latest query.",
+    "answer": "AbortController and stale-response protection.\n\nFor search or workflow APIs, older responses sometimes arrived after newer ones. We used AbortController and request tracking IDs to ignore stale responses and prevent incorrect UI updates."
+  },
+  {
+    "id": "rb-054",
+    "topic": "Accessibility (Healthcare)",
+    "project": "AI-Kiosk",
+    "question": "What accessibility work did you do?",
+    "short": "Keyboard-only navigation, semantic HTML, ARIA labels — critical for clinical environments with strict usability rules.",
+    "answer": "Keyboard navigation, semantic HTML, and screen-reader support.\n\nWe ensured forms and navigation worked using keyboard only. We used semantic HTML and proper labels. For healthcare apps especially, accessibility was important because some systems were used in clinical environments with strict usability requirements."
+  },
+  {
+    "id": "rb-055",
+    "topic": "WebSockets in Hospitals",
+    "project": "AI-Kiosk",
+    "question": "Why did you use WebSockets in hospital systems?",
+    "short": "Live voice streaming and workflow events needed instant push — polling would have added unacceptable latency.",
+    "answer": "For real-time communication and updates.\n\nWe needed live updates for voice streaming and workflow events. Polling would create delays. WebSockets gave instant communication between frontend and backend."
+  },
+  {
+    "id": "rb-056",
+    "topic": "Enterprise AI Security",
+    "project": "ROVER",
+    "question": "How did you secure enterprise AI systems?",
+    "short": "Backend-only AI calls (no keys in frontend), request validation, audit logging, and environment-based access restrictions.",
+    "answer": "Backend-controlled APIs and environment-based access.\n\nWe never exposed AI keys in the frontend. All sensitive AI calls went through backend APIs. We also added logging, request validation, and environment-based restrictions for enterprise deployments."
+  },
+  {
+    "id": "rb-057",
+    "topic": "Sprint Planning",
+    "project": "Cross-project",
+    "question": "What was your role in Agile sprint planning?",
+    "short": "Frontend effort estimation, breaking features into tasks, coordinating dependencies with backend and QA — often across multiple product streams.",
+    "answer": "I estimated frontend effort and coordinated dependencies.\n\nI participated in sprint discussions, broke features into tasks, estimated frontend timelines, and coordinated with backend and QA teams. Sometimes we handled multiple product streams simultaneously."
+  },
+  {
+    "id": "rb-058",
+    "topic": "Production Debugging",
+    "project": "Cross-project",
+    "question": "How did you debug frontend production issues?",
+    "short": "Reproduce → check network calls and console errors → isolate state/render behaviour → use logs and API tracing for production-only timing bugs.",
+    "answer": "Browser DevTools, logs, network tracing, and reproduction steps.\n\nFirst I tried reproducing the issue consistently. Then I checked network calls, console errors, and component rendering behavior. For production-only issues, logs and API tracing helped identify timing or state problems."
+  },
+  {
+    "id": "rb-059",
+    "topic": "Enterprise vs Normal Apps",
+    "project": "Cross-project",
+    "question": "What's the biggest difference between normal apps and enterprise apps?",
+    "short": "Scale, maintainability, and workflow complexity dominate — permissions, integrations, and long-term reliability matter more than just building screens.",
+    "answer": "Scalability, maintainability, and workflow complexity.\n\nEnterprise apps usually have complex permissions, workflows, integrations, and long-term maintainability requirements. The challenge is less about building screens and more about handling scale, flexibility, and reliability."
+  },
+  {
+    "id": "rb-060",
+    "topic": "Architecture Standout",
+    "project": "Cross-project",
+    "question": "If I open your codebase today, what architectural decisions would stand out?",
+    "short": "Reusable components, modular structure, centralized API and state layers, and configuration-driven workflows — built for evolving enterprise systems.",
+    "answer": "Reusable components, modular structure, and configuration-driven design.\n\nI focus heavily on modular architecture. Shared UI components, reusable API layers, centralized state handling, and configuration-driven workflows were important in most projects because enterprise systems evolve constantly."
+  }
+]

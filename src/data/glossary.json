@@ -1,0 +1,985 @@
+[
+  {
+    "slug": "websockets",
+    "term": "WebSockets",
+    "aliases": ["WebSockets", "WebSocket", "Web Socket", "Web Sockets"],
+    "category": "Networking",
+    "short": "A persistent two-way connection between the browser and a server, kept open for the lifetime of a session.",
+    "long": "WebSockets upgrade an HTTP connection into a long-lived TCP-style channel. Either side can push messages whenever they have something to say — no polling, no per-request handshake. That makes them the default transport for real-time UIs: chat, presence, voice/audio streaming, live dashboards, collaborative editing.\n\nThe handshake starts as an HTTP request with `Upgrade: websocket`. After the server accepts, the same socket carries binary or text frames in both directions. The browser exposes them via the global `WebSocket` constructor; on the server it's typically the `ws` library on Node, plus a router (Socket.IO, uWS, etc.) on top.\n\nIn React, the lifecycle bug to watch is the leaked connection: open one in `useEffect` and you must return a cleanup that closes it on unmount, otherwise every navigation stacks another live socket and listener.",
+    "example": "useEffect(() => {\n  const sock = new WebSocket(url);\n  sock.onmessage = (e) => store.apply(JSON.parse(e.data));\n  return () => sock.close();\n}, [url]);",
+    "related": ["webrtc", "audiocontext", "abortcontroller"]
+  },
+  {
+    "slug": "redux",
+    "term": "Redux",
+    "aliases": ["Redux", "classic Redux"],
+    "category": "State management",
+    "short": "Predictable, single-store state container for JavaScript apps, popularized as the canonical way to share state across React.",
+    "long": "Redux holds the whole client state in one immutable tree. UI doesn't mutate it directly — it dispatches actions, and pure reducer functions return the next state. Components subscribe through selectors (`useSelector`) and only re-render when the slice they care about actually changes.\n\nThe big win is debuggability: every state transition is an explicit action, so the Redux DevTools can replay them, time-travel through them, and pinpoint which one introduced a bug. The cost is boilerplate — actions, types, reducers, dispatchers — which is why most teams now start with Redux Toolkit (RTK) instead of writing classic Redux by hand.\n\nReach for it when the same complex state is read and written across many parts of the screen and you need predictable, auditable updates. Skip it for purely local UI state.",
+    "example": "const slice = createSlice({\n  name: 'workflow',\n  initialState: { nodes: {}, edges: {} },\n  reducers: {\n    addNode(state, action) { state.nodes[action.payload.id] = action.payload; },\n  },\n});",
+    "related": ["redux-toolkit", "zustand", "react-context"]
+  },
+  {
+    "slug": "redux-toolkit",
+    "term": "Redux Toolkit",
+    "aliases": ["Redux Toolkit", "RTK"],
+    "category": "State management",
+    "short": "The official, batteries-included way to write Redux today — slices, thunks, and Immer-backed mutating syntax, with the boilerplate removed.",
+    "long": "Redux Toolkit (RTK) bundles `createSlice`, `createAsyncThunk`, `createEntityAdapter`, and a configured store with sensible middleware defaults. Slices co-locate the reducer and its action creators; Immer lets you write `state.nodes[id] = node` and still get an immutable update.\n\nFor large apps it also ships RTK Query — a TanStack-Query-style data layer wired into Redux for teams that want one source of truth for both client and server state. Migrating an existing classic Redux store to RTK is usually a multi-week project that pays for itself in dropped boilerplate and lower ongoing change cost.",
+    "related": ["redux", "tanstack-query"]
+  },
+  {
+    "slug": "zustand",
+    "term": "Zustand",
+    "aliases": ["Zustand"],
+    "category": "State management",
+    "short": "A tiny store library that exposes state through a single hook — no providers, no actions, no reducers required.",
+    "long": "Zustand stores are created with `create((set, get) => ({...}))`. Components subscribe through the returned hook with a selector — only consumers whose selector output actually changed will re-render. There's no `<Provider>` and no action/reducer ceremony, so a feature-scoped store fits comfortably in 10–20 lines.\n\nIt also supports transient updates — a `subscribe` API that runs side effects on store changes without re-rendering React at all. That's the trick for binding rapid mouse-coordinate or WebGL parameter updates to UI without trashing the frame budget.\n\nUse it where Redux feels heavy: a single feature's draft form, a panel's open/closed state, an interactive canvas's hot data, a 3D viewer's parameters.",
+    "example": "const usePanel = create((set) => ({\n  open: false,\n  toggle: () => set((s) => ({ open: !s.open })),\n}));\n\nconst open = usePanel((s) => s.open);",
+    "related": ["redux", "redux-toolkit", "react-context"]
+  },
+  {
+    "slug": "tanstack-query",
+    "term": "TanStack Query",
+    "aliases": ["TanStack Query", "React Query"],
+    "category": "Data fetching",
+    "short": "A server-state cache for React — `useQuery`, `useMutation`, background refetching, optimistic updates, infinite scroll, all out of the box.",
+    "long": "TanStack Query (formerly React Query) treats every server resource as a cache keyed by an array (`queryKey`). Components call `useQuery({ queryKey, queryFn })` and get `{ data, isLoading, error }` plus automatic deduplication, stale-while-revalidate behaviour, and background refetch on focus or reconnect.\n\n`useMutation` handles writes with hooks for optimistic UI: cancel in-flight queries on `onMutate`, snapshot the cache, write the optimistic value, restore the snapshot on `onError`, and refetch on `onSettled`. `useInfiniteQuery` covers paginated and cursor-based feeds.\n\nIt removes the need to maintain hand-rolled `loading`/`error` booleans and ad-hoc fetch deduplication inside Redux.",
+    "example": "const { data, isLoading } = useQuery({\n  queryKey: ['patients', page],\n  queryFn: () => api.patients(page),\n  staleTime: 30_000,\n});",
+    "related": ["abortcontroller", "optimistic-updates"]
+  },
+  {
+    "slug": "react-memo",
+    "term": "React.memo",
+    "aliases": ["React.memo", "memo"],
+    "category": "React",
+    "short": "A higher-order component that skips re-rendering when a component's props haven't changed.",
+    "long": "Wrapping a functional component in `React.memo` tells React to compare incoming props against the previous render and bail out if they're shallow-equal. It's most effective on pure presentational components inside a list, where a parent often re-renders for unrelated reasons.\n\nA second optional argument is a custom comparator — useful for deep object props or when you want to whitelist which props matter. Pair it with stable function references from `useCallback` and stable derived values from `useMemo`, otherwise a new function or object reference will defeat the memoization on every parent render.",
+    "example": "const Row = React.memo(function Row({ item, onPick }) {\n  return <button onClick={() => onPick(item.id)}>{item.label}</button>;\n});",
+    "related": ["use-callback", "use-memo", "memoization"]
+  },
+  {
+    "slug": "use-effect",
+    "term": "useEffect",
+    "aliases": ["useEffect"],
+    "category": "React",
+    "short": "The hook that runs side effects after render — subscriptions, fetches, timers — and runs cleanup on unmount or dependency change.",
+    "long": "`useEffect(fn, deps)` schedules `fn` to run after the browser commits a paint. The optional return value is a cleanup function that React runs before the next effect or when the component unmounts. That cleanup is where every subscription, timer, listener, or socket you opened gets closed — forget it and you have a memory leak, or worse, listeners firing against an unmounted component's stale closure.\n\nThe dependency array decides when the effect re-runs: `[]` = once on mount, `[a, b]` = whenever `a` or `b` changes, omit it = every render. Linting (`react-hooks/exhaustive-deps`) is the only sane way to keep dependency arrays correct as the function body evolves.",
+    "example": "useEffect(() => {\n  const ctrl = new AbortController();\n  fetch('/api/me', { signal: ctrl.signal }).then(setUser);\n  return () => ctrl.abort();\n}, []);",
+    "related": ["use-state", "use-ref", "use-layout-effect", "abortcontroller", "memory-leak"]
+  },
+  {
+    "slug": "use-state",
+    "term": "useState",
+    "aliases": ["useState"],
+    "category": "React",
+    "short": "The hook that adds local mutable state to a functional component; an update schedules a re-render.",
+    "long": "`useState(initial)` returns `[value, setValue]`. Calling `setValue(next)` (or `setValue((prev) => next)`) tells React to re-render with the new value. Multiple `setState` calls inside the same event handler are batched into one render in React 18+.\n\nFor state derived from previous state, always use the function form (`setCount(c => c + 1)`) to avoid stale-closure bugs. For state shared by many siblings, lift it up to a common ancestor — or, when it's truly app-wide, move it into a store (Redux, Zustand) or Context.",
+    "related": ["use-reducer", "use-effect", "react-state"]
+  },
+  {
+    "slug": "use-memo",
+    "term": "useMemo",
+    "aliases": ["useMemo"],
+    "category": "React",
+    "short": "Cache an expensive computed value across renders; recompute only when its dependencies change.",
+    "long": "`useMemo(() => computeExpensive(input), [input])` runs the computation on the first render, then returns the cached value until `input` changes. Use it for genuinely expensive work (filtering thousands of rows, deriving a normalized lookup) — every memoization has its own cost (memory + per-render dependency check), so wrapping cheap expressions hurts more than it helps.\n\nTwo legitimate triggers: a profiler-confirmed re-render storm caused by a new derived value reference, or an expensive transform that actually shows up in flame graphs.",
+    "related": ["use-callback", "react-memo", "memoization"]
+  },
+  {
+    "slug": "use-callback",
+    "term": "useCallback",
+    "aliases": ["useCallback"],
+    "category": "React",
+    "short": "Cache a function reference across renders, useful when passing callbacks to memoized children.",
+    "long": "`useCallback(fn, deps)` is `useMemo(() => fn, deps)`. The function itself isn't \"faster\" — what changes is the reference identity. That matters when a child is wrapped in `React.memo`: a new function reference on every render breaks the memo bail-out and the child re-renders anyway. Stabilize the function with `useCallback` and the bail-out works.\n\nSkip it for callbacks passed only to non-memoized children — the cost of the cache check outweighs any benefit.",
+    "related": ["react-memo", "use-memo", "memoization"]
+  },
+  {
+    "slug": "use-reducer",
+    "term": "useReducer",
+    "aliases": ["useReducer"],
+    "category": "React",
+    "short": "useState's older sibling for complex transitions: dispatch an explicit action, a reducer returns the next state.",
+    "long": "`useReducer(reducer, initial)` returns `[state, dispatch]`. When state has 3+ related fields that change together (a table with sort/filter/pagination, a wizard with step + draft + errors), modeling transitions as actions keeps update logic in one tested function instead of scattered `setState` calls that race each other.\n\nIt also makes the state machine explicit: every legal transition is an action type, which is easier to reason about and easier to log/test than a fan of `setX` callbacks.",
+    "example": "function reducer(state, action) {\n  switch (action.type) {\n    case 'sort': return { ...state, sort: action.payload, page: 1 };\n    case 'filter': return { ...state, filter: action.payload, page: 1 };\n    default: return state;\n  }\n}",
+    "related": ["use-state", "redux"]
+  },
+  {
+    "slug": "use-ref",
+    "term": "useRef",
+    "aliases": ["useRef"],
+    "category": "React",
+    "short": "Mutable container whose value persists across renders without triggering a re-render when it changes.",
+    "long": "`useRef(initial)` returns `{ current }`. Mutating `ref.current` is invisible to React's render scheduler — useful for DOM nodes (`<input ref={ref}/>`), buffer arrays for incoming WebSocket events, or for tracking a flag like `isMounted` without causing extra renders.\n\nKey rule: never read `ref.current` during render and use it to drive UI — React doesn't know to re-render when it changes. If something needs to drive UI, it belongs in state.",
+    "related": ["use-effect", "use-state"]
+  },
+  {
+    "slug": "use-layout-effect",
+    "term": "useLayoutEffect",
+    "aliases": ["useLayoutEffect"],
+    "category": "React",
+    "short": "Like useEffect, but runs synchronously after DOM mutations and before the browser paints.",
+    "long": "Use `useLayoutEffect` when you need to read layout (`getBoundingClientRect`, scroll position) and apply a state or style update before the user sees anything — otherwise you get a one-frame flicker. Because it blocks paint, keep the work tiny.\n\nFor everything else (data fetching, subscriptions, analytics), prefer `useEffect`, which runs asynchronously and never blocks the paint pipeline.",
+    "related": ["use-effect"]
+  },
+  {
+    "slug": "use-sync-external-store",
+    "term": "useSyncExternalStore",
+    "aliases": ["useSyncExternalStore"],
+    "category": "React",
+    "short": "The React 18 hook for subscribing to mutable external sources (localStorage, browser events, third-party stores) without tearing.",
+    "long": "Provide a `subscribe(cb)` (returns unsubscribe), a `getSnapshot()` that returns a stable reference for unchanged data, and an optional `getServerSnapshot()` for SSR. React handles the subscription lifecycle, batches updates correctly across concurrent renders, and avoids the cascading-render problems of doing the same thing manually with `useEffect` + `setState`.",
+    "related": ["use-effect", "use-state"]
+  },
+  {
+    "slug": "react-context",
+    "term": "React Context",
+    "aliases": ["React Context", "Context API", "useContext"],
+    "category": "React",
+    "short": "React's built-in mechanism for passing data through the component tree without prop drilling.",
+    "long": "Wrap a subtree in `<MyContext.Provider value={...}>` and any descendant can read it with `useContext(MyContext)`. Great for low-frequency, app-wide data: theme, current user, locale, feature flags.\n\nThe gotcha: every consumer re-renders whenever the provider's value reference changes — Context has no selector. For high-frequency state (drag positions, real-time vitals) reach for a store with selective subscriptions (Zustand, Redux with `useSelector`) instead.",
+    "related": ["redux", "zustand"]
+  },
+  {
+    "slug": "react-state",
+    "term": "React state",
+    "aliases": ["React state"],
+    "category": "React",
+    "short": "Internal data owned by a component (or a store consumed by it) that drives what gets rendered.",
+    "long": "Anything that, when it changes, should cause the UI to re-render is React state. Local state lives in `useState`/`useReducer`; cross-component state lives in Context, Zustand, or Redux; server state lives in TanStack Query. Picking the smallest scope that still works is the simplest rule for keeping a React app fast.",
+    "related": ["use-state", "react-context", "zustand", "redux"]
+  },
+  {
+    "slug": "virtual-dom",
+    "term": "Virtual DOM",
+    "aliases": ["Virtual DOM", "VDOM"],
+    "category": "React",
+    "short": "An in-memory tree of plain objects describing what the UI should look like; React diffs it against the previous tree and patches only the changed real DOM nodes.",
+    "long": "On every render React produces a virtual DOM tree. It compares that tree to the previous one (reconciliation) and computes a minimal set of real DOM mutations. That's why `setState` on one piece of data doesn't blow away the whole document.\n\nThe virtual DOM isn't magic speed — it's a strategy for making fine-grained updates declarative. Lists still need stable `key`s, large lists still need virtualization, and expensive subtrees still need memoization to stay fast.",
+    "related": ["reconciliation", "react-fiber"]
+  },
+  {
+    "slug": "reconciliation",
+    "term": "reconciliation",
+    "aliases": ["reconciliation", "diffing", "Diffing", "reconciliation algorithm"],
+    "category": "React",
+    "short": "React's process of diffing the new virtual DOM tree against the previous one and patching only what changed.",
+    "long": "Reconciliation walks the two trees level by level (O(n) instead of O(n³)) using two assumptions: elements of different types produce different subtrees, and elements with the same `key` are the same logical element across renders. That's why list keys must be stable IDs, not array indexes — wrong keys make React reuse the wrong node and produce subtle visual bugs and lost focus.",
+    "related": ["virtual-dom", "react-fiber"]
+  },
+  {
+    "slug": "react-fiber",
+    "term": "React Fiber",
+    "aliases": ["React Fiber", "Fiber architecture", "Fiber"],
+    "category": "React",
+    "short": "React's internal reconciler, rewritten in React 16 to make rendering work interruptible and prioritizable.",
+    "long": "Fiber represents each unit of rendering work as a node in a linked list. The scheduler can pause work mid-tree, yield back to the browser, and resume later — the foundation for concurrent features like `useTransition`, `useDeferredValue`, and Suspense with streaming SSR. Before Fiber, rendering was a single synchronous walk that blocked the main thread.",
+    "related": ["virtual-dom", "reconciliation"]
+  },
+  {
+    "slug": "jsx",
+    "term": "JSX",
+    "aliases": ["JSX"],
+    "category": "React",
+    "short": "A JavaScript syntax extension that lets you write HTML-shaped expressions inside code; Babel compiles it to React.createElement calls.",
+    "long": "JSX isn't HTML — it's syntactic sugar over `React.createElement(type, props, ...children)`. That's why attributes are camelCase (`onClick`, `className`), expressions use `{}`, and a fragment (`<>...</>`) replaces a wrapper div when you need siblings.\n\nIt's optional — you can call `React.createElement` directly — but every production codebase uses JSX because component structure is dramatically more readable that way.",
+    "related": ["react-fiber"]
+  },
+  {
+    "slug": "abortcontroller",
+    "term": "AbortController",
+    "aliases": ["AbortController", "AbortSignal"],
+    "category": "Browser API",
+    "short": "Standard browser API for cancelling fetch requests and other async operations.",
+    "long": "`new AbortController()` gives you `signal` — pass it into `fetch(url, { signal })`. Calling `controller.abort()` rejects the in-flight request with an `AbortError`. The standard React pattern: create the controller in `useEffect`, return `() => controller.abort()` as cleanup so navigating away cancels stale requests.\n\nThis kills race conditions where an older response arrives after a newer one and overwrites the UI with stale data.",
+    "example": "useEffect(() => {\n  const ctrl = new AbortController();\n  fetch(`/api/search?q=${q}`, { signal: ctrl.signal })\n    .then((r) => r.json())\n    .then(setResults)\n    .catch(() => {});\n  return () => ctrl.abort();\n}, [q]);",
+    "related": ["use-effect", "race-conditions", "tanstack-query"]
+  },
+  {
+    "slug": "race-conditions",
+    "term": "race conditions",
+    "aliases": ["race conditions", "race condition"],
+    "category": "Async",
+    "short": "Bugs caused by multiple async operations completing in unexpected order.",
+    "long": "In a search-as-you-type box, request 1 (`'rea'`) might return after request 2 (`'react'`) finishes. Without protection, request 1's response overwrites the newer state with stale results.\n\nFixes: cancel older requests with `AbortController`, tag each request with an incrementing ID and discard responses that don't match the latest ID, or use a library like TanStack Query that handles this automatically through query keys and request deduplication.",
+    "related": ["abortcontroller", "tanstack-query"]
+  },
+  {
+    "slug": "memory-leak",
+    "term": "memory leak",
+    "aliases": ["memory leak", "memory leaks"],
+    "category": "Performance",
+    "short": "Memory the runtime can no longer reach but also can't free, usually because a closure or listener still holds a reference.",
+    "long": "Common culprits in React: `setInterval`/`setTimeout` not cleared on unmount, WebSocket or DOM event listeners attached but never removed, subscriptions to external stores not disposed. Every leaked listener pins its closure — and through that closure, every variable it captures, including the unmounted component's DOM nodes — preventing garbage collection.\n\nDiagnose by taking heap snapshots in Chrome DevTools across two known points (mount, unmount) and looking for components or DOM nodes that should be gone but aren't. Fix by returning a cleanup from every `useEffect` that opens a resource.",
+    "related": ["use-effect", "websockets", "garbage-collection", "heap-snapshot"]
+  },
+  {
+    "slug": "garbage-collection",
+    "term": "garbage collection",
+    "aliases": ["garbage collection", "GC"],
+    "category": "Runtime",
+    "short": "The JS engine's automatic process of freeing memory that nothing references anymore.",
+    "long": "V8 and other modern engines use generational, mark-sweep collectors. As long as anything reachable from the root (globals, open closures, the call stack) holds a reference to an object, GC keeps it. The classic JS leak isn't 'forgot to free' — it's 'still referenced by something I forgot about', usually a stale event listener or a long-lived array.",
+    "related": ["memory-leak"]
+  },
+  {
+    "slug": "heap-snapshot",
+    "term": "heap snapshot",
+    "aliases": ["heap snapshot", "Memory Heap Snapshot", "Heap Snapshots"],
+    "category": "Tooling",
+    "short": "A point-in-time capture of every object in the JS heap, taken from Chrome DevTools, used to track down leaks.",
+    "long": "Take one snapshot in a known good state (e.g., after navigating away from a feature). Take a second after exercising the suspect path again. Diff them — anything that grew should have been freed. The Comparison view tells you which constructor (`HTMLDivElement`, `WebSocket`, your component's `Detached DOM tree`) is accumulating, which usually points straight at the missing cleanup.",
+    "related": ["memory-leak", "garbage-collection"]
+  },
+  {
+    "slug": "boilerplate",
+    "term": "boilerplate",
+    "aliases": ["boilerplate"],
+    "category": "Software design",
+    "short": "Repetitive setup code that produces little signal per line — type constants, action creators, ceremonial wiring.",
+    "long": "Boilerplate isn't always bad — it can give you predictability and traceability — but every line is one more thing to read, maintain, and break during refactors. Tools that compress boilerplate (Redux Toolkit's `createSlice`, Zustand's single-hook store, Zod's schema-as-type) usually win when adoption rate matters more than ceremony.",
+    "related": ["redux", "redux-toolkit", "zustand"]
+  },
+  {
+    "slug": "semver",
+    "term": "Semantic Versioning (SemVer)",
+    "aliases": ["Semantic Versioning (SemVer)", "Semantic Versioning", "SemVer"],
+    "category": "Release engineering",
+    "short": "MAJOR.MINOR.PATCH versioning where MAJOR is bumped for breaking changes, MINOR for backwards-compatible features, and PATCH for fixes.",
+    "long": "Adopting SemVer is what lets a shared library serve many teams safely. Consumers can pin (`^1.2.0`) and trust that any 1.x update won't break them. When a breaking change is unavoidable, you bump the major and document the migration in a changelog.\n\nIn a monorepo you typically pair SemVer with Changesets or a release-please flow, so a single PR can declare exactly which packages get a major/minor/patch bump and the version files are written automatically at release time.",
+    "related": ["monorepo"]
+  },
+  {
+    "slug": "monorepo",
+    "term": "monorepo",
+    "aliases": ["monorepo", "monorepo architecture"],
+    "category": "Repo strategy",
+    "short": "A single repository hosting many packages or apps that can depend on each other in-place.",
+    "long": "Tools like pnpm workspaces, Turborepo, and Nx make monorepos practical at scale. The wins: atomic refactors across packages, one set of tooling (lint/test/build), and instant local linking — no `npm pack` dance to test a library change.\n\nThe trade-offs: CI gets bigger, you need a smart build cache to avoid rebuilding the world on every PR, and ownership boundaries have to be enforced with lint or codeowners since the code lives in one tree.",
+    "related": ["semver"]
+  },
+  {
+    "slug": "ast",
+    "term": "Abstract Syntax Tree (AST)",
+    "aliases": ["Abstract Syntax Tree (AST)", "Abstract Syntax Tree", "AST"],
+    "category": "Compilers",
+    "short": "A tree representation of structured data — code, schema, or UI layout — where each node is a typed construct.",
+    "long": "Compilers build ASTs by parsing source. Tools like ESLint and Babel walk an AST to lint or transform code. The same shape applies to UI: a zero-code workflow builder serializes the canvas as `{ type: 'Container', children: [{ type: 'Button', props: {...} }] }` — an AST of components, not HTML strings. The frontend engine renders the tree back into React components on load, so the backend can stay agnostic to the UI framework.",
+    "related": ["json-schema"]
+  },
+  {
+    "slug": "json-schema",
+    "term": "JSON Schema",
+    "aliases": ["JSON Schema", "JSON schema"],
+    "category": "Validation",
+    "short": "A vocabulary for describing the shape of JSON data — types, required fields, ranges, enums.",
+    "long": "JSON Schema files describe what valid data looks like. Tools then generate TypeScript types, Zod schemas, validation middleware, or form UIs from the same source of truth. In a schema-driven UI, the backend ships a JSON Schema describing a form; the frontend renders fields, validations, and conditional logic dynamically without any new component code.",
+    "related": ["zod", "ast"]
+  },
+  {
+    "slug": "zod",
+    "term": "Zod",
+    "aliases": ["Zod", "zod"],
+    "category": "Validation",
+    "short": "A TypeScript-first schema library that validates at runtime and infers static types from the same definition.",
+    "long": "Define a schema with `z.object({...})`, validate untrusted data with `.parse()` or `.safeParse()`, and derive the TS type with `type T = z.infer<typeof Schema>`. One source of truth for both compile-time and runtime safety.\n\nMost useful at trust boundaries: API responses, LLM JSON output, environment variables, form input. Anywhere TypeScript types alone can lie because the data crosses a wire.",
+    "example": "const Reply = z.object({\n  summary: z.string().min(20),\n  citations: z.array(z.string()).min(1),\n});\nconst parsed = Reply.safeParse(JSON.parse(modelOutput));\nif (!parsed.success) flagForReview();",
+    "related": ["typescript", "json-schema"]
+  },
+  {
+    "slug": "typescript",
+    "term": "TypeScript",
+    "aliases": ["TypeScript"],
+    "category": "Language",
+    "short": "Microsoft's typed superset of JavaScript that compiles down to JS while catching whole classes of bugs at compile time.",
+    "long": "TypeScript adds static types, generics, type inference, and structural typing on top of JavaScript. With `\"strict\": true`, `null`/`undefined` become real types you must opt into, and the compiler catches the most common runtime errors before they ever ship.\n\nIt doesn't enforce anything at runtime — types are erased at compile time — which is why pairing TS with Zod (or generated OpenAPI types) at trust boundaries is the standard pattern in production codebases.",
+    "related": ["zod"]
+  },
+  {
+    "slug": "next-js-app-router",
+    "term": "Next.js App Router",
+    "aliases": ["Next.js App Router", "App Router"],
+    "category": "Next.js",
+    "short": "Next.js 13+ routing model built on React Server Components, nested layouts, streaming, and server actions.",
+    "long": "Routes live under `app/` with file conventions: `page.tsx`, `layout.tsx`, `loading.tsx`, `error.tsx`. Components are Server Components by default — they render on the server, never ship JS to the client, and can `await` data sources directly. Add `'use client'` to opt into hooks and event handlers.\n\nThe payoff is dramatically smaller client bundles for content-heavy apps, plus first-class support for streaming, Suspense, server actions, and per-route fetch caching.",
+    "related": ["react-server-components", "ssr"]
+  },
+  {
+    "slug": "react-server-components",
+    "term": "React Server Components",
+    "aliases": ["React Server Components", "RSC", "Server Components"],
+    "category": "React",
+    "short": "Components that render on the server (or at build time) and never ship their code or dependencies to the client.",
+    "long": "RSCs let you keep heavy dependencies (markdown parsers, date libs, DB clients) entirely off the browser bundle. They can `await` data directly — no API route required. The constraint: no browser APIs, hooks, or event handlers. For interactivity, mark a child as a Client Component with `'use client'`; everything below it becomes hydratable as usual.",
+    "related": ["next-js-app-router", "ssr"]
+  },
+  {
+    "slug": "ssr",
+    "term": "SSR",
+    "aliases": ["SSR", "Server-Side Rendering", "server-side rendering"],
+    "category": "Rendering",
+    "short": "Rendering HTML on the server per request and sending fully-formed markup to the browser.",
+    "long": "SSR ships a real HTML page so the user sees content immediately (good LCP, SEO) before JS hydrates the page for interactivity. It costs server time per request, so it's best for personalized or frequently changing pages. For mostly-static content, prefer SSG; for semi-dynamic, ISR.",
+    "related": ["ssg", "isr", "csr", "hydration"]
+  },
+  {
+    "slug": "ssg",
+    "term": "SSG",
+    "aliases": ["SSG", "Static Site Generation", "static generation"],
+    "category": "Rendering",
+    "short": "Pre-rendering HTML at build time and serving it as static files from a CDN.",
+    "long": "SSG produces flat HTML during the build. Each request just pulls a file from the CDN — fastest possible response, lowest cost. Great for marketing pages, blogs, documentation. The downside is freshness: the only way to update content is a redeploy, unless you layer ISR on top.",
+    "related": ["ssr", "isr", "csr"]
+  },
+  {
+    "slug": "isr",
+    "term": "ISR",
+    "aliases": ["ISR", "Incremental Static Regeneration"],
+    "category": "Rendering",
+    "short": "Static pages that re-generate in the background after a configurable interval, without a full redeploy.",
+    "long": "ISR pairs SSG's speed with a freshness window. Set `revalidate: 60` and the next request after that window triggers a background rebuild — the user still sees the cached page instantly, and the next request gets the fresh one. Ideal for product listings, dashboards, gallery pages where minutes-old data is fine.",
+    "related": ["ssg", "ssr"]
+  },
+  {
+    "slug": "csr",
+    "term": "CSR",
+    "aliases": ["CSR", "Client-Side Rendering", "client-side rendering"],
+    "category": "Rendering",
+    "short": "The browser receives an empty HTML shell and JavaScript fetches and renders everything client-side.",
+    "long": "CSR is the old-school SPA model. The shell is small but the user waits for JS, then for data, before they see content. Acceptable for apps behind auth where SEO doesn't matter and the first paint can be a skeleton. For public pages, prefer SSR/SSG/ISR.",
+    "related": ["ssr", "ssg", "isr"]
+  },
+  {
+    "slug": "hydration",
+    "term": "hydration",
+    "aliases": ["hydration", "Hydration"],
+    "category": "React",
+    "short": "Attaching React event handlers and state to server-rendered HTML so it becomes interactive.",
+    "long": "After SSR or SSG sends HTML, the client downloads the JS bundle and 'hydrates' the DOM — re-running the components, attaching listeners, building the virtual DOM tree from scratch. Mismatches happen when the server and client render different markup (timezone-dependent dates, browser-only APIs read during render, random values). Fix the root cause inside `useEffect` or with `suppressHydrationWarning` only as a last resort.",
+    "related": ["ssr", "ssg", "react-server-components"]
+  },
+  {
+    "slug": "middleware-nextjs",
+    "term": "middleware.ts",
+    "aliases": ["middleware.ts", "Next.js middleware"],
+    "category": "Next.js",
+    "short": "Edge-runtime code that runs before the request reaches a page or route handler — auth redirects, rewrites, A/B variants.",
+    "long": "Middleware sits between the request and the route. It can read cookies and headers, rewrite the URL, redirect, or set response headers. It runs at the edge so it's fast and stateless — no Node APIs, no database access. Typical use cases: redirect unauthenticated users before any page renders, choose an A/B variant based on a cookie, gate premium routes with a feature flag, geo-redirect by country.",
+    "related": ["next-js-app-router"]
+  },
+  {
+    "slug": "react-flow",
+    "term": "React Flow",
+    "aliases": ["React Flow"],
+    "category": "Library",
+    "short": "A library for building node-based editors and visual workflows in React — drag-and-drop nodes, edges, mini-maps, controls.",
+    "long": "React Flow handles the graph rendering, viewport panning/zooming, and connection logic for a node-and-edge UI. You bring the node component types and the data; it handles the layout primitives. It's the practical alternative to building a custom SVG canvas for a workflow editor.",
+    "related": ["zustand", "ast"]
+  },
+  {
+    "slug": "module-federation",
+    "term": "Module Federation",
+    "aliases": ["Module Federation"],
+    "category": "Build tooling",
+    "short": "A Webpack 5 feature that lets independently deployed builds share code and components at runtime.",
+    "long": "A 'host' app declares which 'remotes' it consumes; each remote exposes specific modules. At runtime the host loads the remote's `remoteEntry.js` and pulls in the requested modules on demand. Shared dependencies (React, ReactDOM) are declared as singletons so you don't end up with two copies on the page.\n\nThe building block for microfrontends: independent teams deploy their slice on its own cadence, and the shell stitches them together.",
+    "related": ["microfrontends"]
+  },
+  {
+    "slug": "microfrontends",
+    "term": "microfrontends",
+    "aliases": ["microfrontends", "microfrontend", "microfrontend architecture"],
+    "category": "Architecture",
+    "short": "An architecture pattern where multiple independently deployed frontend modules are composed at runtime into a single product.",
+    "long": "Each microfrontend owns its own repo, build, and deployment pipeline. A shell app handles routing, auth, and shared providers. Module Federation, iframes, or Web Components are the typical composition layers.\n\nThe trade-off is real: you gain independent cadence at the cost of more runtime coordination, version-drift risk, and operational complexity. Worth it for large orgs where teams need to ship without coordinating; overkill for a single team.",
+    "related": ["module-federation"]
+  },
+  {
+    "slug": "web-workers",
+    "term": "Web Workers",
+    "aliases": ["Web Workers", "Web Worker"],
+    "category": "Browser API",
+    "short": "Background JavaScript threads with their own event loop, used to run CPU-heavy work without blocking the UI.",
+    "long": "A Web Worker runs in a separate thread, communicates with the main thread via `postMessage`, and has no DOM access. Use it for genuinely expensive work: parsing large blobs, computing alarms in a vitals stream, running a sandboxed test execution for a workflow preview. Anything that would otherwise tie up the main thread for >16ms and drop frames.",
+    "related": ["request-animation-frame"]
+  },
+  {
+    "slug": "request-animation-frame",
+    "term": "requestAnimationFrame",
+    "aliases": ["requestAnimationFrame", "rAF"],
+    "category": "Browser API",
+    "short": "Scheduling a callback to run on the browser's next paint frame — the right place to apply animation and visual updates.",
+    "long": "rAF batches visual work to the display refresh rate (typically 60 Hz), so you do 16ms of work per frame and the browser composites without jank. Useful for buffering high-frequency events (WebSocket messages, scroll handlers) and flushing them once per frame instead of on every event.",
+    "related": ["debouncing", "throttling", "web-workers"]
+  },
+  {
+    "slug": "debouncing",
+    "term": "debouncing",
+    "aliases": ["debouncing", "debounce"],
+    "category": "Async",
+    "short": "Wait for a pause in events before firing — ideal for search-as-you-type and 'finished editing' triggers.",
+    "long": "A debounced function delays execution until events stop arriving for N milliseconds. The classic example: `useDebounce(query, 300)` for a search box — you fetch only after the user stops typing, instead of one request per keystroke.",
+    "example": "function useDebounced<T>(value: T, delay = 300): T {\n  const [v, setV] = useState(value);\n  useEffect(() => {\n    const id = setTimeout(() => setV(value), delay);\n    return () => clearTimeout(id);\n  }, [value, delay]);\n  return v;\n}",
+    "related": ["throttling", "request-animation-frame"]
+  },
+  {
+    "slug": "throttling",
+    "term": "throttling",
+    "aliases": ["throttling", "throttle"],
+    "category": "Async",
+    "short": "Cap a function to at most one call per interval — ideal for scroll, resize, and high-frequency stream handlers.",
+    "long": "A throttled function runs at most once every N milliseconds even if invoked thousands of times in between. Use it for handlers driven by continuous input (scroll, resize, drag, WebSocket fire-hoses) where you want regular updates but not on every event.",
+    "related": ["debouncing", "request-animation-frame"]
+  },
+  {
+    "slug": "service-worker",
+    "term": "Service Worker",
+    "aliases": ["Service Worker", "Service Workers"],
+    "category": "Browser API",
+    "short": "A background script the browser keeps alive between sessions; intercepts fetch requests for caching, offline support, and push.",
+    "long": "Once registered, the Service Worker can intercept every network request from its scope. Combined with a strategy library like Workbox you get: Cache-First for static assets, Network-First with cache fallback for APIs, Stale-While-Revalidate for semi-dynamic data, and Background Sync for queuing offline writes that replay on reconnect.",
+    "related": ["pwa", "indexeddb"]
+  },
+  {
+    "slug": "pwa",
+    "term": "PWA",
+    "aliases": ["PWA", "Progressive Web App"],
+    "category": "Web platform",
+    "short": "A web app that meets a baseline of installability, offline support, and reliability — driven mainly by a manifest plus a Service Worker.",
+    "long": "A PWA is a regular web app plus a Service Worker, a Web App Manifest, and HTTPS. With those, the OS lets the user install it like a native app, and the Service Worker provides offline support and background sync. Useful for any app that runs in places with flaky connectivity.",
+    "related": ["service-worker", "indexeddb"]
+  },
+  {
+    "slug": "indexeddb",
+    "term": "IndexedDB",
+    "aliases": ["IndexedDB"],
+    "category": "Browser API",
+    "short": "A transactional, indexed key-value store in the browser, used for persisting structured data across sessions.",
+    "long": "IndexedDB is the persistent storage layer behind PWAs, offline queues, and any client-side cache larger than a few KB. Higher-level wrappers like Dexie or idb-keyval make it ergonomic — the raw API is event-based and verbose. Use it to queue offline mutations that replay on reconnect, cache large lookup tables, or persist editor state between sessions.",
+    "related": ["service-worker", "pwa"]
+  },
+  {
+    "slug": "presigned-url",
+    "term": "pre-signed URL",
+    "aliases": ["pre-signed URL", "pre-signed URLs", "presigned URL", "signed URL"],
+    "category": "Storage",
+    "short": "A short-lived URL signed by the backend that lets the client upload to (or download from) object storage directly, bypassing the app server.",
+    "long": "The browser asks your backend for a signed URL for a specific object key. The backend signs a `PUT` URL with a TTL (e.g., 5 minutes) and returns it. The browser uploads the file straight to the bucket — no bytes touch your Node/Next.js server. That sidesteps serverless function size and timeout limits and saves the bandwidth.\n\nThe download flow is the same in reverse: the backend hands out a signed `GET` URL when the user wants to view a private file.",
+    "related": ["cloudflare-r2", "amazon-s3"]
+  },
+  {
+    "slug": "cloudflare-r2",
+    "term": "Cloudflare R2",
+    "aliases": ["Cloudflare R2", "R2"],
+    "category": "Storage",
+    "short": "Cloudflare's object storage service, S3-API-compatible but with zero egress fees.",
+    "long": "R2 looks like S3 from the application's perspective — the same SDK calls work — but you pay nothing per GB downloaded. For workloads where the same files get served many times (image-heavy products, media-rich apps), the egress savings versus S3 are dramatic. Pair it with pre-signed URLs to keep file traffic off your Node server.",
+    "related": ["presigned-url", "amazon-s3", "cloudflare"]
+  },
+  {
+    "slug": "amazon-s3",
+    "term": "Amazon S3",
+    "aliases": ["Amazon S3", "S3"],
+    "category": "Storage",
+    "short": "AWS's object storage service — the de facto standard API for cloud blobs.",
+    "long": "S3 is the reference implementation everyone else (R2, MinIO, Backblaze B2) emulates. Best-in-class durability and tooling integration on AWS. The pain point compared to R2 is per-GB egress fees, which add up fast for media-heavy workloads.",
+    "related": ["cloudflare-r2", "presigned-url"]
+  },
+  {
+    "slug": "cloudflare",
+    "term": "Cloudflare",
+    "aliases": ["Cloudflare"],
+    "category": "Infrastructure",
+    "short": "A global edge network used for CDN, DDoS protection, WAF, edge compute (Workers), and storage (R2).",
+    "long": "Cloudflare's value is the edge presence — your assets and edge functions execute close to the user. CDN caching dramatically improves global load times, the WAF stops obvious attacks at the edge, and Workers let you run JS at the same edge for redirects, auth, A/B variants, and more. Pages handles frontend hosting; R2 handles object storage; Stream handles video.",
+    "related": ["cloudflare-r2"]
+  },
+  {
+    "slug": "webrtc",
+    "term": "WebRTC",
+    "aliases": ["WebRTC"],
+    "category": "Browser API",
+    "short": "A browser API for real-time peer-to-peer audio, video, and arbitrary data channels.",
+    "long": "WebRTC handles the encoding, ICE negotiation, and transport of media streams between peers. For a hosted voice assistant the same APIs (`getUserMedia`, `MediaRecorder`) capture mic input which is then streamed to a server over WebSocket — the WebRTC peer-to-peer flow isn't always needed, but the capture half of the API is.",
+    "related": ["websockets", "audiocontext", "web-audio-api"]
+  },
+  {
+    "slug": "audiocontext",
+    "term": "AudioContext",
+    "aliases": ["AudioContext"],
+    "category": "Browser API",
+    "short": "The Web Audio API's entry point — a graph of audio nodes used to play, mix, and process sound in the browser.",
+    "long": "Modern browsers refuse to start an `AudioContext` without a user gesture. That's why a kiosk or voice UI needs an explicit 'Tap to start' button: the click unlocks the context and you keep that same context alive for the rest of the session. From there you can pipe TTS streams, mic input, and visualizers through it without further gestures.",
+    "related": ["web-audio-api", "webrtc"]
+  },
+  {
+    "slug": "web-audio-api",
+    "term": "Web Audio API",
+    "aliases": ["Web Audio API"],
+    "category": "Browser API",
+    "short": "A browser audio framework — capture from mic, build processing graphs, play, visualize.",
+    "long": "Behind every voice UI in the browser. Capture with `getUserMedia` + `MediaStreamAudioSourceNode`, process or visualize with `AnalyserNode` or `AudioWorkletNode`, route to speakers through a `GainNode` and the destination. For VAD and barge-in detection the `AnalyserNode` is the simplest building block.",
+    "related": ["audiocontext", "webrtc"]
+  },
+  {
+    "slug": "twilio",
+    "term": "Twilio",
+    "aliases": ["Twilio"],
+    "category": "API service",
+    "short": "A communications platform for SMS, voice, video, and WhatsApp — exposed via REST APIs and webhooks.",
+    "long": "Twilio handles the carrier integration so you don't have to. Send an SMS or WhatsApp message with one API call; receive incoming messages via webhooks; stream phone-call audio over WebSocket using Programmable Voice. Common patterns: kiosk onboarding sends a signed upload link via WhatsApp; a voice IVR streams audio in real time to a transcription pipeline.",
+    "related": ["twilio-whatsapp"]
+  },
+  {
+    "slug": "twilio-whatsapp",
+    "term": "Twilio WhatsApp API",
+    "aliases": ["Twilio WhatsApp API", "WhatsApp Business API", "WhatsApp Business"],
+    "category": "API service",
+    "short": "WhatsApp Business messaging through Twilio — strict 24-hour session windows and pre-approved message templates outside that window.",
+    "long": "Inside the 24-hour window after the user last messaged you, you can send freeform replies. Outside it, you can only send pre-approved template messages — no exceptions. Frontend handling: detect 'session expired' from the API and surface a 'Re-open conversation' action that triggers the backend to send the template message, restarting the 24-hour window.",
+    "related": ["twilio"]
+  },
+  {
+    "slug": "gpt-4o-realtime",
+    "term": "GPT-4o-mini-realtime",
+    "aliases": ["GPT-4o-mini-realtime", "GPT-4o realtime", "GPT realtime"],
+    "category": "AI model",
+    "short": "OpenAI's low-latency multimodal model accessed over WebSocket for streaming voice and text in conversational UIs.",
+    "long": "The realtime API exchanges JSON events over a single WebSocket. The client sends mic audio frames; the server sends partial transcripts, model responses, and synthesized audio in real time. Built-in events for VAD, interruption ('barge-in'), and tool calls let you build natural turn-taking voice UIs without bolting STT and TTS together yourself.",
+    "related": ["websockets", "audiocontext", "llm", "vad"]
+  },
+  {
+    "slug": "gemini-vision",
+    "term": "Gemini Vision",
+    "aliases": ["Gemini Vision", "Gemini", "Google Gemini"],
+    "category": "AI model",
+    "short": "Google's multimodal model — accepts images and text, returns text or structured JSON.",
+    "long": "Useful for vision-to-data tasks: read a floor plan and return room boundaries, parse a receipt photo into line items, identify materials from a photograph. Best practice is to ask for strict JSON in the prompt and validate with Zod on the client, because vision LLMs occasionally return malformed JSON or stray markdown.",
+    "related": ["vlm", "llm", "zod"]
+  },
+  {
+    "slug": "llm",
+    "term": "LLM",
+    "aliases": ["LLM", "large language model", "Large Language Model"],
+    "category": "AI model",
+    "short": "A large language model — neural network trained on huge text corpora to generate text given a prompt.",
+    "long": "GPT-4, Claude, Gemini, Llama. Operate purely over tokens. They confidently produce wrong answers ('hallucinate'), so production systems wrap them with grounding (RAG), schema validation (Zod), confidence thresholds, and human-in-the-loop review steps for safety-critical outputs.",
+    "related": ["vlm", "rag", "prompt-injection"]
+  },
+  {
+    "slug": "vlm",
+    "term": "VLM",
+    "aliases": ["VLM", "Vision Language Model", "Vision-Language Model"],
+    "category": "AI model",
+    "short": "A multimodal model that understands both images and text — answer questions about a picture, extract structured data from a document image.",
+    "long": "Internally a VLM converts the image into patches, encodes each patch as a visual token, and feeds those into the same transformer as the text tokens. That's why prompts like 'describe what you see' or 'return the room boundaries as JSON' work the same way as text-only prompts.\n\nReal limitations: scale and dimensions are unreliable, hand-drawn or noisy images degrade output sharply, and region-specific symbols (architectural drawings, medical icons) often confuse models trained mostly on Western data.",
+    "related": ["llm", "gemini-vision"]
+  },
+  {
+    "slug": "rag",
+    "term": "RAG",
+    "aliases": ["RAG", "Retrieval-Augmented Generation"],
+    "category": "AI pattern",
+    "short": "Retrieval-Augmented Generation — fetch relevant context from a knowledge base, then have the LLM answer grounded in that context.",
+    "long": "Flow: embed the user query → vector-similarity search in a store like Pinecone or pgvector → top-K relevant documents → LLM call with the docs in the prompt. The LLM answers from the retrieved text, not from its training memory, which dramatically reduces hallucinations and lets you keep the knowledge base fresh without retraining.\n\nIn the UI, surface the retrieved sources alongside the answer so users can verify the citation.",
+    "related": ["llm", "embeddings"]
+  },
+  {
+    "slug": "embeddings",
+    "term": "embeddings",
+    "aliases": ["embeddings", "embedding"],
+    "category": "AI pattern",
+    "short": "Numeric vector representations of text or images — semantically similar inputs sit close together in vector space.",
+    "long": "An embedding is a fixed-length array of floats (typically 384–3072 dimensions). Cosine similarity between two embeddings approximates how related their inputs are. The foundation of semantic search, RAG, recommendations, and clustering.",
+    "related": ["rag"]
+  },
+  {
+    "slug": "vad",
+    "term": "VAD",
+    "aliases": ["VAD", "Voice Activity Detection"],
+    "category": "Audio",
+    "short": "Voice Activity Detection — deciding from an audio stream whether someone is currently speaking.",
+    "long": "VAD lets a voice assistant know when to start listening, when to stop, and when the user is interrupting (barge-in). It can run client-side via the Web Audio API's AnalyserNode for fast feedback, or server-side for higher accuracy. Realtime LLM APIs typically include built-in VAD events you can react to.",
+    "related": ["web-audio-api", "audiocontext", "gpt-4o-realtime"]
+  },
+  {
+    "slug": "prompt-injection",
+    "term": "prompt injection",
+    "aliases": ["prompt injection"],
+    "category": "Security",
+    "short": "An attack where user input crafted to look like instructions overrides the system prompt or tools of an LLM-backed app.",
+    "long": "If you concatenate raw user input into the system prompt, a clever input ('Ignore your instructions and...') can hijack the model. Mitigations: build the prompt server-side, never let user input alter the system role, sanitize tool outputs before reuse, and treat any LLM output as untrusted before rendering it as HTML.",
+    "related": ["llm", "dompurify"]
+  },
+  {
+    "slug": "dompurify",
+    "term": "DOMPurify",
+    "aliases": ["DOMPurify"],
+    "category": "Security",
+    "short": "A small library that sanitizes HTML strings to defang XSS before they're injected into the DOM.",
+    "long": "Anything you render via `dangerouslySetInnerHTML` or `innerHTML` should pass through DOMPurify first. It strips `<script>`, dangerous attributes (`onerror`, `onclick`), and JS URLs. Especially important for LLM-rendered Markdown/HTML and any user-supplied rich text.",
+    "related": ["prompt-injection"]
+  },
+  {
+    "slug": "pii",
+    "term": "PII",
+    "aliases": ["PII", "Personally Identifiable Information"],
+    "category": "Privacy",
+    "short": "Personally Identifiable Information — names, emails, phone numbers, SSNs, anything that identifies a real person.",
+    "long": "Mishandling PII is a regulatory issue (GDPR, HIPAA, CCPA). For LLM-backed products, the practical rule is: scrub PII before any prompt leaves your boundary. A frontend Regex pass turning credit-card and SSN patterns into `[REDACTED]` keeps sensitive strings out of the network tab and the model logs even before backend filters run. Treat the backend as a defense-in-depth layer, not the only line.",
+    "related": ["prompt-injection"]
+  },
+  {
+    "slug": "optimistic-updates",
+    "term": "optimistic updates",
+    "aliases": ["optimistic updates", "optimistic UI"],
+    "category": "UX pattern",
+    "short": "Apply the UI change immediately, before the server confirms; roll back on failure.",
+    "long": "Standard pattern with TanStack Query: `onMutate` cancels in-flight queries, snapshots the cache, and writes the optimistic value; `onError` restores the snapshot; `onSettled` refetches the source of truth. The UI feels instant; failures degrade gracefully with a toast and a rollback.",
+    "related": ["tanstack-query"]
+  },
+  {
+    "slug": "code-splitting",
+    "term": "code splitting",
+    "aliases": ["code splitting"],
+    "category": "Performance",
+    "short": "Breaking the app bundle into smaller chunks loaded on demand instead of one big initial download.",
+    "long": "`React.lazy(() => import('./Heavy'))` creates a chunk that's loaded only when the component is rendered. Combined with `<Suspense>` and a route-level lazy boundary, you cut initial bundle size dramatically — only the code the user actually sees gets shipped.",
+    "related": ["react-lazy", "suspense", "tree-shaking"]
+  },
+  {
+    "slug": "react-lazy",
+    "term": "React.lazy",
+    "aliases": ["React.lazy"],
+    "category": "React",
+    "short": "Defer loading a component's code until it's actually rendered, splitting it into its own bundle chunk.",
+    "long": "`const Heavy = React.lazy(() => import('./Heavy'))`. The first time `<Heavy />` renders, React downloads the chunk and shows the nearest `<Suspense fallback>` until it's ready. Pair with route-level boundaries for big wins on initial bundle size.",
+    "related": ["code-splitting", "suspense"]
+  },
+  {
+    "slug": "suspense",
+    "term": "Suspense",
+    "aliases": ["Suspense", "<Suspense>"],
+    "category": "React",
+    "short": "A React component that shows fallback UI while a child is loading (lazy chunk, server data, etc.).",
+    "long": "Wrap any sub-tree that might suspend (`React.lazy`, server-side data, RSC, third-party caches) in `<Suspense fallback={...}>`. While the child is unresolved, React renders the fallback. Lets you describe loading states declaratively at the boundary instead of weaving `isLoading` booleans through every component.",
+    "related": ["react-lazy", "code-splitting", "react-server-components"]
+  },
+  {
+    "slug": "tree-shaking",
+    "term": "tree shaking",
+    "aliases": ["tree shaking", "tree-shaking"],
+    "category": "Build tooling",
+    "short": "Eliminating unused exports from a module so they don't end up in the production bundle.",
+    "long": "Tree shaking only works for ES modules with statically analyzable imports. Default imports and CommonJS often defeat it — `import { format } from 'date-fns'` is shakeable, `import _ from 'lodash'` is not (use `lodash-es` plus named imports). Check the result with a bundle analyzer.",
+    "related": ["code-splitting"]
+  },
+  {
+    "slug": "memoization",
+    "term": "memoization",
+    "aliases": ["memoization", "memoized", "memoize"],
+    "category": "Performance",
+    "short": "Caching the result of an expensive computation so repeat calls return immediately.",
+    "long": "In React the everyday tools are `useMemo` (cache a value), `useCallback` (cache a function reference), and `React.memo` (skip a re-render when props are shallow-equal). Memoization isn't free — every cache check has a cost — so apply it after profiling, not preemptively.",
+    "related": ["use-memo", "use-callback", "react-memo"]
+  },
+  {
+    "slug": "virtualization",
+    "term": "virtualization",
+    "aliases": ["virtualization", "windowing", "virtualized"],
+    "category": "Performance",
+    "short": "Rendering only the visible subset of a list, keeping the DOM node count constant regardless of dataset size.",
+    "long": "Libraries like `react-window` and `@tanstack/react-virtual` measure the viewport, render only the visible rows plus a small overscan, and reuse DOM nodes as the user scrolls. Critical for any list past ~100 items and essential past 1000. Without it, scrolling a giant list pegs the main thread and drops to single-digit FPS.",
+    "related": ["react-memo"]
+  },
+  {
+    "slug": "core-web-vitals",
+    "term": "Core Web Vitals",
+    "aliases": ["Core Web Vitals", "Web Vitals"],
+    "category": "Performance",
+    "short": "Google's user-experience metrics: LCP, INP, CLS — measured in the field and used as SEO signals.",
+    "long": "Targets at the 75th percentile: LCP under 2.5s, INP under 200ms, CLS under 0.1. LCP is loading speed, INP is responsiveness to interactions, CLS is visual stability. They directly feed Google's ranking algorithm, so meeting them is both a UX and a business concern.",
+    "related": ["lcp", "inp", "cls", "lighthouse"]
+  },
+  {
+    "slug": "lcp",
+    "term": "LCP",
+    "aliases": ["LCP", "Largest Contentful Paint"],
+    "category": "Performance",
+    "short": "Largest Contentful Paint — when the largest visible element on the page finishes rendering. Target: under 2.5s.",
+    "long": "LCP measures perceived loading speed. Improvements: preload critical resources (`<link rel=\"preload\">`), serve modern image formats with `next/image`, use SSR/SSG to ship HTML earlier, prioritize the hero image with `priority`.",
+    "related": ["core-web-vitals", "inp", "cls"]
+  },
+  {
+    "slug": "inp",
+    "term": "INP",
+    "aliases": ["INP", "Interaction to Next Paint"],
+    "category": "Performance",
+    "short": "Interaction to Next Paint — the worst response time across user interactions in a session. Target: under 200ms.",
+    "long": "INP replaced FID in 2024 as the responsiveness metric. Improve it by cutting JS work on user input — defer non-critical effects with `useTransition` or `requestIdleCallback`, move expensive logic into a Web Worker, and avoid layout-thrashing reads/writes inside event handlers.",
+    "related": ["core-web-vitals", "lcp", "cls"]
+  },
+  {
+    "slug": "cls",
+    "term": "CLS",
+    "aliases": ["CLS", "Cumulative Layout Shift"],
+    "category": "Performance",
+    "short": "Cumulative Layout Shift — how much the page jumps around as it loads. Target: under 0.1.",
+    "long": "Caused by images without dimensions, ads injected mid-page, web fonts swapping in. Fixes: always set `width`/`height` on images and embeds, reserve space for ad slots, use `font-display: optional` or `next/font` to avoid the FOUT.",
+    "related": ["core-web-vitals", "lcp", "inp"]
+  },
+  {
+    "slug": "lighthouse",
+    "term": "Lighthouse",
+    "aliases": ["Lighthouse"],
+    "category": "Tooling",
+    "short": "Google's open-source page-quality auditor — runs Performance, Accessibility, SEO, and Best Practices checks.",
+    "long": "Built into Chrome DevTools and into the `lighthouse` CLI for CI. Useful as a sanity check, not as the source of truth — it runs in a synthetic environment, so always cross-reference with field data (Web Vitals, RUM) for real-user numbers.",
+    "related": ["core-web-vitals"]
+  },
+  {
+    "slug": "react-devtools-profiler",
+    "term": "React DevTools Profiler",
+    "aliases": ["React DevTools Profiler", "React DevTools", "React Profiler"],
+    "category": "Tooling",
+    "short": "Browser extension for recording React renders and seeing which components are slow and what triggered them.",
+    "long": "Hit Record, exercise the feature, hit Stop. The flame graph shows every render with duration; the ranked chart sorts by cost. Each render shows what props/state changed and whether it was forced. The single most useful tool for hunting unnecessary re-renders before reaching for memoization.",
+    "related": ["react-memo", "memoization"]
+  },
+  {
+    "slug": "framer-motion",
+    "term": "Framer Motion",
+    "aliases": ["Framer Motion"],
+    "category": "Library",
+    "short": "A React animation library — declarative `<motion.*>` components, gestures, layout animations, exit animations.",
+    "long": "Animate via `<motion.div animate={{ opacity: 1 }} />` or layout transitions with `<AnimatePresence>`. To keep animations smooth at 60 FPS, animate only `transform` and `opacity` (composited on the GPU); animating `width`, `height`, or `margin` triggers layout/repaint on every frame.",
+    "related": ["will-change", "gpu-compositing"]
+  },
+  {
+    "slug": "will-change",
+    "term": "will-change",
+    "aliases": ["will-change"],
+    "category": "CSS",
+    "short": "A CSS hint telling the browser to promote an element to its own GPU layer ahead of time, preparing for animation.",
+    "long": "`will-change: transform` lets the browser hand off the element's compositing to the GPU before the animation starts, so the first frame doesn't pay for the layer creation. Use sparingly — every promoted layer consumes GPU memory, and over-applying it can hurt performance instead of helping.",
+    "related": ["gpu-compositing", "framer-motion"]
+  },
+  {
+    "slug": "gpu-compositing",
+    "term": "GPU compositing",
+    "aliases": ["GPU compositing", "GPU hardware acceleration"],
+    "category": "Browser internals",
+    "short": "The browser handing off a layer's transform/opacity animation to the GPU, so the main thread doesn't have to repaint.",
+    "long": "Animating `transform` and `opacity` is GPU-cheap because the browser already has the layer on the GPU and just adjusts a matrix. Animating `width`, `height`, `top`, `left`, `margin` is CPU-expensive because each frame triggers layout (reflow) and paint on the main thread.",
+    "related": ["will-change", "framer-motion", "layout-thrashing"]
+  },
+  {
+    "slug": "layout-thrashing",
+    "term": "layout thrashing",
+    "aliases": ["layout thrashing", "thrashing"],
+    "category": "Browser internals",
+    "short": "Forcing the browser to recompute layout repeatedly inside a single frame by interleaving DOM reads and writes.",
+    "long": "Reading layout (`offsetHeight`, `getBoundingClientRect`) forces the browser to flush pending style/layout work. Writing right after invalidates it. Loop that and you get layout thrash — single frames that take tens of ms.\n\nFix: batch reads first, then writes; use `requestAnimationFrame` to schedule visual updates; and avoid layout-triggering reads inside scroll/resize handlers.",
+    "related": ["request-animation-frame", "gpu-compositing"]
+  },
+  {
+    "slug": "d3js",
+    "term": "D3.js",
+    "aliases": ["D3.js", "D3"],
+    "category": "Library",
+    "short": "A low-level data visualization toolkit — scales, axes, layouts, transitions — that you compose into custom charts.",
+    "long": "D3 is intentionally not a chart library; it gives you the primitives (scales, shape generators, force layouts) to build any visualization. The common React pattern is to let D3 own the math (compute scales, paths, layouts) and let React own the DOM, so you don't fight over who owns the SVG nodes.",
+    "related": ["throttling"]
+  },
+  {
+    "slug": "modernizr",
+    "term": "Modernizr",
+    "aliases": ["Modernizr"],
+    "category": "Tooling",
+    "short": "A feature-detection library that adds CSS classes to <html> based on what the browser supports.",
+    "long": "Modernizr was the standard tool in the IE6–IE10 era for serving graceful fallbacks. If `flexbox` is missing, fall back to a `display: table` layout; if `webp` is missing, serve a JPG. Far less relevant in 2026 — modern browsers are uniform enough that `@supports` and progressive enhancement usually cover it — but still seen in legacy codebases.",
+    "related": ["graceful-degradation"]
+  },
+  {
+    "slug": "graceful-degradation",
+    "term": "graceful degradation",
+    "aliases": ["graceful degradation"],
+    "category": "UX",
+    "short": "Designing so that when a feature isn't available (older browser, blocked permission, AI failure), the core experience still works.",
+    "long": "Examples: a CSS Grid layout falls back to floats on IE; a voice UI offers a text-input alternative; an AI summary widget that crashes still leaves the rest of the page usable. The opposite of 'all-or-nothing' — assume some piece will fail and build the fallback up front.",
+    "related": ["modernizr", "error-boundaries"]
+  },
+  {
+    "slug": "error-boundaries",
+    "term": "Error Boundaries",
+    "aliases": ["Error Boundaries", "error boundary"],
+    "category": "React",
+    "short": "React components that catch render-time errors in their subtree and render a fallback UI instead of unmounting the whole app.",
+    "long": "Class component (or library wrapper) implementing `componentDidCatch`/`getDerivedStateFromError`. Place granular boundaries around major features so a crash in the AI widget doesn't take down the whole patient dashboard. Report each catch to Sentry from the boundary; show a tight retry UI to the user.",
+    "related": ["graceful-degradation"]
+  },
+  {
+    "slug": "wcag",
+    "term": "WCAG",
+    "aliases": ["WCAG", "Web Content Accessibility Guidelines"],
+    "category": "Accessibility",
+    "short": "The W3C's accessibility standard — Level A, AA, AAA conformance criteria for the web.",
+    "long": "WCAG 2.1 AA is the bar most regulated industries (healthcare, government, banking) have to hit. Highlights: 4.5:1 contrast for body text, every interactive element keyboard-reachable, focus indicators visible, meaningful alt text, heading order, ARIA only where semantic HTML can't say it. Audit with axe DevTools; pair with manual screen-reader testing.",
+    "related": ["aria", "focus-trap", "semantic-html"]
+  },
+  {
+    "slug": "aria",
+    "term": "ARIA",
+    "aliases": ["ARIA", "aria"],
+    "category": "Accessibility",
+    "short": "Accessible Rich Internet Applications — attributes that expose UI semantics to assistive tech when native HTML can't.",
+    "long": "Use ARIA only when semantic HTML can't say what you mean (`<button>` already announces itself; a `<div role=\"button\">` shouldn't exist). Common patterns: `aria-expanded` on a custom dropdown, `aria-controls` linking trigger to panel, `aria-labelledby` for a custom modal title, `role=\"alert\"` for a live region. Bad ARIA is worse than none — incorrect roles confuse screen readers.",
+    "related": ["wcag", "focus-trap", "semantic-html"]
+  },
+  {
+    "slug": "focus-trap",
+    "term": "focus trap",
+    "aliases": ["focus trap", "trap focus"],
+    "category": "Accessibility",
+    "short": "Containing keyboard focus within an open modal or popover so screen readers don't escape into background content.",
+    "long": "When a modal opens: store the previously focused element, move focus to the modal, and intercept Tab/Shift+Tab to cycle within the modal's focusable elements only. On close, restore focus to the original trigger. Without this, users tab past the modal into the inert background, which is broken for everyone but especially for screen-reader users.",
+    "related": ["aria", "wcag"]
+  },
+  {
+    "slug": "semantic-html",
+    "term": "semantic HTML",
+    "aliases": ["semantic HTML"],
+    "category": "Accessibility",
+    "short": "Using HTML elements for what they actually mean — `<button>`, `<nav>`, `<main>`, `<h1>`–`<h6>` — instead of styled divs.",
+    "long": "The first and cheapest accessibility win. A real `<button>` is keyboard-focusable, announces itself to screen readers, supports Enter and Space, and inherits the right disabled semantics. A `<div onClick>` does none of that until you add ARIA, role, tabindex, and key handlers — and you'll forget one of them.",
+    "related": ["aria", "wcag"]
+  },
+  {
+    "slug": "tailwind",
+    "term": "Tailwind CSS",
+    "aliases": ["Tailwind CSS", "Tailwind"],
+    "category": "CSS",
+    "short": "A utility-first CSS framework — write classes like `flex items-center px-4` directly in markup, with a tiny static CSS file emitted at build.",
+    "long": "Tailwind ships a constrained design system (`tailwind.config.js`) and a JIT compiler that emits exactly the classes you used. Zero-runtime cost, no naming bikeshed, and the design tokens live in one place.\n\nAt scale: extract repeated combinations into components (don't copy class strings), use `clsx + tailwind-merge` for conditional classes without conflicts, and use `cva` (class-variance-authority) for typed multi-variant components.",
+    "related": ["cva", "css-grid", "flexbox"]
+  },
+  {
+    "slug": "cva",
+    "term": "cva",
+    "aliases": ["cva", "class-variance-authority"],
+    "category": "CSS tooling",
+    "short": "A tiny library for typed, multi-variant Tailwind component APIs — `cva('base', { variants: {...} })` returns a function that maps props to classes.",
+    "long": "Lets a `<Button intent=\"primary\" size=\"sm\" />` API have full TypeScript autocomplete and a single source of truth for which utilities apply to which variants. Replaces the brittle pattern of conditional template strings.",
+    "related": ["tailwind"]
+  },
+  {
+    "slug": "flexbox",
+    "term": "Flexbox",
+    "aliases": ["Flexbox", "flex"],
+    "category": "CSS",
+    "short": "A one-dimensional layout model — align and distribute items along a single axis (row or column).",
+    "long": "Best for component-level alignment: nav bars, button groups, card rows. Pair with CSS Grid (which handles two-dimensional layouts) for full pages. Older versions of IE never supported it well, which is what made the IE-era 'pixel-perfect' workflow so painful.",
+    "related": ["css-grid"]
+  },
+  {
+    "slug": "css-grid",
+    "term": "CSS Grid",
+    "aliases": ["CSS Grid", "Grid"],
+    "category": "CSS",
+    "short": "A two-dimensional CSS layout model — define rows and columns, then place items into them.",
+    "long": "`grid-template-columns: repeat(auto-fill, minmax(240px, 1fr))` gives you a responsive masonry-like layout in one declaration. Best for whole-page or whole-section layouts; combine with Flexbox inside cells for component-level alignment.",
+    "related": ["flexbox"]
+  },
+  {
+    "slug": "glassmorphism",
+    "term": "glassmorphism",
+    "aliases": ["glassmorphism"],
+    "category": "CSS",
+    "short": "A frosted-glass aesthetic built from `backdrop-filter: blur()`, semi-transparent backgrounds, and subtle borders.",
+    "long": "Looks great over rich imagery (e.g., AI-generated room renders) where you need overlays without obscuring the background. Browser support is now broad, but fall back to a solid semi-opaque background via `@supports not (backdrop-filter: blur(1px))` for older browsers and embedded webviews.",
+    "related": ["tailwind"]
+  },
+  {
+    "slug": "websocket-reconnect",
+    "term": "exponential backoff",
+    "aliases": ["exponential backoff"],
+    "category": "Reliability",
+    "short": "Retry with delays that double each time, with random jitter, to survive transient failures without overwhelming the server.",
+    "long": "Standard pattern for WebSocket reconnects, 429 handling, and any flaky network call. Start at ~250ms, double on each failure, cap at a few seconds, and add 0–250ms of jitter so a thundering herd of clients doesn't all retry on the same tick. Pair with a 'connection lost' banner so users know what's happening.",
+    "example": "async function callWithBackoff<T>(fn: () => Promise<T>, max = 5) {\n  let delay = 250;\n  for (let i = 0; i < max; i++) {\n    try { return await fn(); }\n    catch (e: any) {\n      if (e.status !== 429 || i === max - 1) throw e;\n      await new Promise((r) => setTimeout(r, delay + Math.random() * 250));\n      delay *= 2;\n    }\n  }\n  throw new Error('unreachable');\n}",
+    "related": ["websockets", "tanstack-query"]
+  },
+  {
+    "slug": "feature-flags",
+    "term": "feature flags",
+    "aliases": ["feature flags", "feature flag"],
+    "category": "Release engineering",
+    "short": "Runtime switches that decouple deployment from release — code can ship to main behind a flag without going live.",
+    "long": "A flag service (LaunchDarkly, Unleash, or a homegrown config) returns whether a user/account/segment should see a feature. Lets you ship continuously to main, dark-launch features for an internal audience, and roll out to enterprise clients independently. Evaluate at the edge or in the first API call so the UI doesn't shift after hydration.",
+    "related": ["middleware-nextjs"]
+  },
+  {
+    "slug": "rbac",
+    "term": "RBAC",
+    "aliases": ["RBAC", "role-based access control"],
+    "category": "Security",
+    "short": "Role-Based Access Control — gate features by the role a user holds, not by their identity.",
+    "long": "Model permissions as capabilities (e.g., `can_approve_prescription`). The auth token carries the user's roles; a `usePermission(cap)` hook checks them on the client to hide UI; the server independently enforces the same check on every API call. The frontend layer is a UX improvement; the real enforcement always lives on the server.",
+    "related": ["jwt", "feature-flags"]
+  },
+  {
+    "slug": "jwt",
+    "term": "JWT",
+    "aliases": ["JWT", "JSON Web Token"],
+    "category": "Auth",
+    "short": "A signed, base64-encoded token that carries claims (user ID, role, expiry) between client and server.",
+    "long": "JWTs are stateless: the server doesn't have to look the user up to verify, it just verifies the signature. Carry roles or capabilities in the claims so the frontend can read them for RBAC UI gating. Use short expiry plus a refresh token; never trust unsigned/none-alg tokens.",
+    "related": ["rbac"]
+  },
+  {
+    "slug": "vercel",
+    "term": "Vercel",
+    "aliases": ["Vercel"],
+    "category": "Hosting",
+    "short": "The first-class hosting platform for Next.js — zero-config deploys, per-PR previews, edge network, ISR built in.",
+    "long": "Built by the Next.js team. Every push gets an isolated preview URL; production deploys are atomic; ISR, image optimization, middleware, and server actions all just work. The trade-off versus self-hosting is cost and data-residency control — for most products the developer experience pays for itself.",
+    "related": ["next-js-app-router"]
+  },
+  {
+    "slug": "playwright",
+    "term": "Playwright",
+    "aliases": ["Playwright"],
+    "category": "Testing",
+    "short": "A cross-browser end-to-end testing framework — Chromium, Firefox, WebKit — with auto-waiting, parallel execution, and tracing.",
+    "long": "Modern alternative to Selenium and Cypress for E2E. Tests are written in TS/JS, run headless in CI, capture screenshots and traces on failure, and support component-level testing too. The standard choice for browser automation on new projects in 2024+.",
+    "related": ["vitest", "react-testing-library"]
+  },
+  {
+    "slug": "vitest",
+    "term": "Vitest",
+    "aliases": ["Vitest"],
+    "category": "Testing",
+    "short": "A Vite-native test runner — Jest-compatible API, ES modules out of the box, very fast watch mode.",
+    "long": "Vitest gives you the Jest API (`describe`, `it`, `expect`, mocks) but with native ESM support, sub-second startup, and excellent watch-mode incremental test selection. The default for new Vite/Next projects.",
+    "related": ["react-testing-library", "playwright"]
+  },
+  {
+    "slug": "react-testing-library",
+    "term": "React Testing Library",
+    "aliases": ["React Testing Library", "RTL"],
+    "category": "Testing",
+    "short": "A testing utility that pushes you to test components the way users interact with them — by accessible role, label, and text.",
+    "long": "Query the DOM the way assistive tech does (`getByRole`, `getByLabelText`, `getByText`). Avoid testing implementation details like internal state or component structure — those break on refactor without changing behaviour. Pair with Vitest or Jest as the runner and `user-event` for realistic interactions.",
+    "related": ["vitest", "playwright"]
+  },
+  {
+    "slug": "sentry",
+    "term": "Sentry",
+    "aliases": ["Sentry"],
+    "category": "Observability",
+    "short": "An error and performance monitoring service — captures uncaught exceptions, React render errors, and Web Vitals from production.",
+    "long": "Drop-in SDK that hooks into Error Boundaries, unhandled promise rejections, and the Web Vitals API. Source maps make stack traces readable; release tracking ties errors to the deploy that introduced them; alerts trigger on error-rate spikes. Foundational for any production frontend.",
+    "related": ["error-boundaries", "core-web-vitals"]
+  }
+]

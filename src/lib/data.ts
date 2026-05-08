@@ -1,4 +1,11 @@
-import type { DocTopic, InterviewQuestion, InterviewSegment, TechCategory } from "@/types";
+import type {
+  DocTopic,
+  InterviewQuestion,
+  InterviewSection,
+  InterviewSegment,
+  ResumeQuestion,
+  TechCategory,
+} from "@/types";
 import css from "@/data/docs/css3.json";
 import graphql from "@/data/docs/graphql.json";
 import html from "@/data/docs/html5.json";
@@ -20,6 +27,8 @@ import interviewsReactNext50 from "@/data/interviews-react-next-50.json";
 import interviewsJavascript50 from "@/data/interviews-javascript-50.json";
 import interviewsSeniorFe from "@/data/interviews-senior-fe.json";
 import interviewsFePatternsCombined from "@/data/interviews-fe-patterns-combined.json";
+import interviewsFrontendMnc100 from "@/data/interviews-frontend-mnc-100.json";
+import resumeQuestionsRaw from "@/data/resume-questions.json";
 import { enrichInterviewQuestion } from "@/lib/interviewContent";
 import { interviewSlug } from "@/lib/interviewDisplay";
 
@@ -48,6 +57,7 @@ const rawInterviews: InterviewQuestion[] = [
   ...(interviewsJavascript50 as InterviewQuestion[]),
   ...(interviewsSeniorFe as InterviewQuestion[]),
   ...(interviewsFePatternsCombined as InterviewQuestion[]),
+  ...(interviewsFrontendMnc100 as InterviewQuestion[]),
 ];
 
 export const allInterviews: InterviewQuestion[] = rawInterviews.map(enrichInterviewQuestion);
@@ -103,4 +113,132 @@ export function interviewsFiltered(
   const base = interviewsByTechnology(tech);
   if (segment === "All") return base;
   return base.filter((q) => normalizeInterviewSegment(q) === segment);
+}
+
+/**
+ * Curated interview sections — each renders as a separate page at
+ * /interview/section/[slug] with its own in-page search bar.
+ */
+export const INTERVIEW_SECTIONS: InterviewSection[] = [
+  {
+    slug: "react-core-concepts",
+    title: "React Core Concepts",
+    description:
+      "Virtual DOM, JSX, lifecycle, hooks, reconciliation, portals, Fiber, code splitting, and useMemo/useCallback trade-offs.",
+    technology: "React",
+  },
+  {
+    slug: "state-management",
+    title: "State Management",
+    description:
+      "Props vs state, Context vs Redux, RTK, Zustand, server state with TanStack Query, optimistic updates, and useReducer.",
+    technology: "React",
+  },
+  {
+    slug: "typescript-essentials",
+    title: "TypeScript Essentials",
+    description:
+      "interface vs type, typed props, generics, Zod at runtime, unknown vs any, utility types, discriminated unions, and type-safe hooks.",
+    technology: "TypeScript",
+  },
+  {
+    slug: "performance-optimization",
+    title: "Performance Optimization",
+    description:
+      "Profiling, bundle reduction, virtualization, image optimization, debounce/throttle, WebSocket render storms, Core Web Vitals, and infinite scroll.",
+    technology: "React",
+  },
+  {
+    slug: "ai-realtime-systems",
+    title: "AI & Real-Time Systems",
+    description:
+      "Voice assistants, hallucination control, document summarization, RAG, WebSocket lifecycle, streaming LLM UIs, and Twilio integration.",
+    technology: "General",
+  },
+  {
+    slug: "nextjs-ssr",
+    title: "Next.js & SSR",
+    description:
+      "App Router vs Pages Router, RSC, hydration, auth, middleware, multi-tenancy, env vars, ISR, fine-grained caching, and route handlers.",
+    technology: "Next.js",
+  },
+  {
+    slug: "system-design",
+    title: "Frontend System Design",
+    description:
+      "Workflow builders, real-time collaborative editors, monitoring dashboards, microfrontends, caching strategy, error boundaries, RBAC, offline support, and observability.",
+    technology: "General",
+  },
+  {
+    slug: "css-tailwind-uiux",
+    title: "CSS, Tailwind & UI/UX",
+    description:
+      "Units, Grid vs Flex, Tailwind at scale, glassmorphism, WCAG accessibility, responsive design, design systems, dark mode, and animation performance.",
+    technology: "CSS3",
+  },
+  {
+    slug: "tools-devops-workflow",
+    title: "Tools, DevOps & Workflow",
+    description:
+      "Git workflow, CI/CD, Docker, feature flags, testing strategy, monitoring, env config, Vercel vs self-host, ESLint/Prettier, and Cloudflare.",
+    technology: "General",
+  },
+  {
+    slug: "behavioural-leadership",
+    title: "Behavioural & Leadership",
+    description:
+      "Complex feature stories, technical disagreement, onboarding juniors, tech debt vs delivery, DX wins, incident response, growth, and responsible AI.",
+    technology: "General",
+  },
+];
+
+const sectionBySlug = new Map(INTERVIEW_SECTIONS.map((s) => [s.slug, s] as const));
+
+export function getInterviewSection(slug: string): InterviewSection | undefined {
+  return sectionBySlug.get(slug);
+}
+
+export function interviewsBySection(slug: string): InterviewQuestion[] {
+  return allInterviews.filter((q) => q.section === slug);
+}
+
+export function countInterviewsBySection(slug: string): number {
+  return interviewsBySection(slug).length;
+}
+
+/**
+ * Resume-driven questions — answered in the candidate's own voice. Powers
+ * the /resume-based page. Topics and projects are free-form strings (not
+ * tied to TechCategory) because they describe real situations from work.
+ */
+export const allResumeQuestions: ResumeQuestion[] = resumeQuestionsRaw as ResumeQuestion[];
+
+const resumeById = new Map(allResumeQuestions.map((q) => [q.id, q] as const));
+
+export function getResumeQuestionById(id: string): ResumeQuestion | undefined {
+  return resumeById.get(id);
+}
+
+/** Unique topic chips, in first-seen order. */
+export function resumeTopics(): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const q of allResumeQuestions) {
+    if (seen.has(q.topic)) continue;
+    seen.add(q.topic);
+    out.push(q.topic);
+  }
+  return out;
+}
+
+/** Unique projects (those that have a project), in first-seen order. */
+export function resumeProjects(): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const q of allResumeQuestions) {
+    if (!q.project || seen.has(q.project)) continue;
+    seen.add(q.project);
+    out.push(q.project);
+  }
+  return out;
 }

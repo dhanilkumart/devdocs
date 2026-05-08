@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { CodeBlock } from "@/components/docs/CodeBlock";
+import { QuestionSaveButton } from "@/components/interview/QuestionSaveButton";
+import { TechText } from "@/components/keyword/TechText";
 import type { InterviewQuestion } from "@/types";
 import { interviewSlug, resolveInterview } from "@/lib/interviewDisplay";
 import { allInterviews, getInterviewById } from "@/lib/data";
@@ -40,11 +42,17 @@ function formatBody(text: string) {
           return (
             <p key={i} className="flex gap-2">
               <span className="shrink-0 text-sky-600 dark:text-sky-400">•</span>
-              <span>{t.replace(/^[•-]\s*/, "")}</span>
+              <span>
+                <TechText text={t.replace(/^[•-]\s*/, "")} />
+              </span>
             </p>
           );
         }
-        return <p key={i}>{t}</p>;
+        return (
+          <p key={i}>
+            <TechText text={t} />
+          </p>
+        );
       })}
     </div>
   );
@@ -75,13 +83,16 @@ export function InterviewQuestionDetail({ q }: { q: InterviewQuestion }) {
       </nav>
 
       <header className="space-y-4 border-b border-zinc-200 pb-8 dark:border-zinc-800">
-        <div className="flex flex-wrap gap-2">
-          <span className="rounded-full bg-violet-100 px-3 py-1 text-xs font-medium text-violet-900 dark:bg-violet-950 dark:text-violet-200">
-            {q.technology}
-          </span>
-          <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
-            {q.level}
-          </span>
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="flex flex-wrap gap-2">
+            <span className="rounded-full bg-violet-100 px-3 py-1 text-xs font-medium text-violet-900 dark:bg-violet-950 dark:text-violet-200">
+              {q.technology}
+            </span>
+            <span className="rounded-full bg-zinc-100 px-3 py-1 text-xs font-medium text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
+              {q.level}
+            </span>
+          </div>
+          <QuestionSaveButton q={q} />
         </div>
         <h1 className="text-balance text-2xl font-semibold tracking-tight text-zinc-900 sm:text-3xl dark:text-zinc-50">
           {q.question}

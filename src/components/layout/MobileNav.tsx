@@ -7,7 +7,7 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/interview", label: "Interview" },
   { href: "/bookmarks", label: "Saved" },
-  { href: "/playground", label: "Play" },
+  { href: "/resume-based", label: "Resume" },
 ];
 
 export function MobileNav() {

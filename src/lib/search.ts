@@ -65,6 +65,22 @@ export function searchInterviews(query: string, limit = 20): FuseResult<Intervie
   return getFuseInterviews().search(q, { limit });
 }
 
+/** Build a fresh Fuse index over an arbitrary list of interview questions. */
+export function createInterviewIndex(items: InterviewQuestion[]): Fuse<InterviewQuestion> {
+  return new Fuse(items, fuseInterviewOptions);
+}
+
+/** Search a pre-built per-section index without touching the global one. */
+export function searchInterviewIndex(
+  index: Fuse<InterviewQuestion>,
+  query: string,
+  limit = 20,
+): FuseResult<InterviewQuestion>[] {
+  const q = query.trim();
+  if (!q) return [];
+  return index.search(q, { limit });
+}
+
 export type UnifiedHit =
   | { kind: "doc"; item: DocTopic; score: number }
   | { kind: "interview"; item: InterviewQuestion; score: number };

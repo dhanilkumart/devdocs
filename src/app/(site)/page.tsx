@@ -69,7 +69,7 @@ export default function HomePage() {
             { href: "/docs/graphql-queries-mutations", label: "GraphQL queries & mutations" },
             { href: "/docs/next-app-router", label: "Next.js App Router" },
             { href: "/interview", label: "All practice questions" },
-            { href: "/playground", label: "HTML/CSS/JS playground" },
+            { href: "/resume-based", label: "Resume-based interview answers" },
           ].map((item) => (
             <li key={item.href}>
               <Link href={item.href} className="text-sky-600 hover:underline dark:text-sky-400">

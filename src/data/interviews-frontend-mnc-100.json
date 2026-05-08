@@ -1,0 +1,1005 @@
+[
+  {
+    "id": "femnc-001",
+    "section": "react-core-concepts",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is the Virtual DOM and how does React use it?",
+    "answer": "The Virtual DOM is a lightweight in-memory representation of the real DOM. When state or props change, React creates a new Virtual DOM tree and diffs it with the previous one (reconciliation). Only the changed nodes are updated in the real DOM, making UI updates efficient and avoiding full re-renders. This is React's core performance strategy.",
+    "explanation": "The Virtual DOM is a lightweight in-memory representation of the real DOM. When state or props change, React creates a new Virtual DOM tree and diffs it with the previous one (reconciliation). Only the changed nodes are updated in the real DOM, making UI updates efficient and avoiding full re-renders. This is React's core performance strategy.",
+    "example": "// React diffs the old and new VDOM trees\n// then only patches changed real DOM nodes.\nfunction Counter() {\n  const [n, setN] = useState(0);\n  return <button onClick={() => setN(n + 1)}>{n}</button>;\n}",
+    "interviewTip": "Mention that reconciliation uses the Fiber architecture in React 16+, which enables incremental rendering and prioritization of updates."
+  },
+  {
+    "id": "femnc-002",
+    "section": "react-core-concepts",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is JSX and why is it used?",
+    "answer": "JSX is a syntax extension for JavaScript that allows writing HTML-like code inside JavaScript. Babel compiles it to React.createElement() calls. It makes component structure readable and intuitive. JSX is not required — you can use React.createElement directly — but JSX vastly improves developer experience and is the standard in every production codebase I've worked on.",
+    "explanation": "JSX is a syntax extension for JavaScript that allows writing HTML-like code inside JavaScript. Babel compiles it to React.createElement() calls. It makes component structure readable and intuitive. JSX is not required — you can use React.createElement directly — but JSX vastly improves developer experience and is the standard in every production codebase I've worked on.",
+    "example": "// JSX\nconst el = <button onClick={save}>Save</button>;\n\n// Compiles to\nconst el = React.createElement('button', { onClick: save }, 'Save');"
+  },
+  {
+    "id": "femnc-003",
+    "section": "react-core-concepts",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "Explain the React component lifecycle and how hooks map to it.",
+    "answer": "Class components had lifecycle methods: componentDidMount, componentDidUpdate, and componentWillUnmount. In functional components with hooks: useEffect with an empty dependency array replaces componentDidMount; useEffect with dependencies replaces componentDidUpdate; the cleanup function inside useEffect replaces componentWillUnmount. useState replaces this.state. This mapping helped me migrate legacy class components in the ZEOS platform to hooks gradually without breaking existing behaviour.",
+    "explanation": "Class components had lifecycle methods: componentDidMount, componentDidUpdate, and componentWillUnmount. In functional components with hooks: useEffect with an empty dependency array replaces componentDidMount; useEffect with dependencies replaces componentDidUpdate; the cleanup function inside useEffect replaces componentWillUnmount. useState replaces this.state. This mapping helped me migrate legacy class components in the ZEOS platform to hooks gradually without breaking existing behaviour.",
+    "example": "useEffect(() => {\n  const id = setInterval(tick, 1000);\n  return () => clearInterval(id); // cleanup = componentWillUnmount\n}, []); // [] = componentDidMount only"
+  },
+  {
+    "id": "femnc-004",
+    "section": "react-core-concepts",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is the difference between controlled and uncontrolled components?",
+    "answer": "A controlled component has its form value managed by React state — every input change goes through setState/useState, giving full control over validation and submission. An uncontrolled component stores its value in the DOM itself, accessed via ref. I prefer controlled components for enterprise forms because they make validation logic predictable and testable. Uncontrolled components are useful for file inputs or when integrating with non-React libraries.",
+    "explanation": "A controlled component has its form value managed by React state — every input change goes through setState/useState, giving full control over validation and submission. An uncontrolled component stores its value in the DOM itself, accessed via ref. I prefer controlled components for enterprise forms because they make validation logic predictable and testable. Uncontrolled components are useful for file inputs or when integrating with non-React libraries.",
+    "example": "// Controlled\n<input value={text} onChange={(e) => setText(e.target.value)} />\n\n// Uncontrolled\n<input ref={inputRef} defaultValue=\"hi\" />"
+  },
+  {
+    "id": "femnc-005",
+    "section": "react-core-concepts",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "How does React's reconciliation algorithm (Diffing) work?",
+    "answer": "React assumes two things during diffing: elements of different types produce different trees (so it rebuilds), and elements with the same key are stable across renders. It diffs the tree level by level (O(n) instead of O(n^3)). When rendering lists, the key prop is critical — it tells React which items were added, removed, or reordered. I've seen severe performance bugs in ZEOS caused by using array indexes as keys in dynamic, reorderable lists.",
+    "explanation": "React assumes two things during diffing: elements of different types produce different trees (so it rebuilds), and elements with the same key are stable across renders. It diffs the tree level by level (O(n) instead of O(n^3)). When rendering lists, the key prop is critical — it tells React which items were added, removed, or reordered. I've seen severe performance bugs in ZEOS caused by using array indexes as keys in dynamic, reorderable lists.",
+    "example": "{items.map((item) => (\n  <Row key={item.id} {...item} /> // stable key, NOT index\n))}"
+  },
+  {
+    "id": "femnc-006",
+    "section": "react-core-concepts",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What are React Portals and when would you use them?",
+    "answer": "Portals let you render a component's output into a different DOM node than its parent's — typically used for modals, tooltips, and dropdowns that need to escape overflow or z-index constraints of parent containers. You use ReactDOM.createPortal(children, domNode). On the AI-Kiosk project, I used portals for patient alert modals to ensure they rendered above the kiosk's full-screen layout.",
+    "explanation": "Portals let you render a component's output into a different DOM node than its parent's — typically used for modals, tooltips, and dropdowns that need to escape overflow or z-index constraints of parent containers. You use ReactDOM.createPortal(children, domNode). On the AI-Kiosk project, I used portals for patient alert modals to ensure they rendered above the kiosk's full-screen layout.",
+    "example": "import { createPortal } from 'react-dom';\n\nfunction Modal({ children }) {\n  return createPortal(children, document.getElementById('modal-root'));\n}"
+  },
+  {
+    "id": "femnc-007",
+    "section": "react-core-concepts",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "Explain the React Fiber architecture and how it enables concurrent rendering.",
+    "answer": "Fiber is React's reimplemented reconciliation engine introduced in React 16. It breaks rendering work into units (fibers) that can be paused, prioritized, resumed, or abandoned. This enables concurrent features like useTransition (mark updates as non-urgent), useDeferredValue (defer heavy rendering), and Suspense with streaming SSR. Before Fiber, rendering was synchronous and couldn't be interrupted — a slow tree would block the main thread. In the ZEOS platform with complex workflow graphs, useTransition helped keep the drag-and-drop canvas responsive during heavy re-renders.",
+    "explanation": "Fiber is React's reimplemented reconciliation engine introduced in React 16. It breaks rendering work into units (fibers) that can be paused, prioritized, resumed, or abandoned. This enables concurrent features like useTransition (mark updates as non-urgent), useDeferredValue (defer heavy rendering), and Suspense with streaming SSR. Before Fiber, rendering was synchronous and couldn't be interrupted — a slow tree would block the main thread.",
+    "example": "const [isPending, startTransition] = useTransition();\n\nfunction onFilterChange(value) {\n  startTransition(() => setFilter(value)); // non-urgent\n}"
+  },
+  {
+    "id": "femnc-008",
+    "section": "react-core-concepts",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is the difference between useEffect and useLayoutEffect?",
+    "answer": "useEffect runs asynchronously after the browser has painted — it's the right choice for data fetching, subscriptions, and most side effects. useLayoutEffect runs synchronously after DOM mutations but before the browser paints — use it when you need to read layout measurements (like getBoundingClientRect) and then update state or style before the user sees anything, preventing visual flickers. I used useLayoutEffect in the GoodHomes visualization platform to measure container dimensions before positioning 3D canvas elements.",
+    "explanation": "useEffect runs asynchronously after the browser has painted. useLayoutEffect runs synchronously after DOM mutations but before the browser paints — use it when you need to read layout measurements and update state before the user sees the next paint, preventing flickers.",
+    "example": "useLayoutEffect(() => {\n  const rect = ref.current.getBoundingClientRect();\n  setHeight(rect.height); // applied before paint\n}, []);"
+  },
+  {
+    "id": "femnc-009",
+    "section": "react-core-concepts",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "How do you implement code splitting and lazy loading in a large React application?",
+    "answer": "React provides React.lazy() with Suspense for component-level code splitting. Combined with dynamic import(), each lazy component becomes a separate bundle chunk loaded on demand. At the route level, I wrap each page component in React.lazy and use a Suspense boundary with a skeleton loader. On ZEOS, splitting the workflow builder, dashboard, and admin modules reduced the initial bundle by ~60%, significantly improving time-to-interactive for enterprise users on managed networks.",
+    "explanation": "React.lazy() + Suspense splits code at the component boundary; dynamic import() makes each lazy component its own chunk. Wrap routes in lazy() with a Suspense boundary that shows a skeleton until the chunk arrives. Real impact at scale: ZEOS initial bundle dropped ~60%.",
+    "example": "const Workflow = React.lazy(() => import('./Workflow'));\n\n<Suspense fallback={<Skeleton />}>\n  <Workflow />\n</Suspense>"
+  },
+  {
+    "id": "femnc-010",
+    "section": "react-core-concepts",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "Explain how React's useCallback and useMemo work and when NOT to use them.",
+    "answer": "useMemo memoizes a computed value, recomputing only when dependencies change. useCallback memoizes a function reference, useful when passing callbacks to memoized children. However, overuse is a common anti-pattern — memoization has its own cost (memory + comparison on every render). I only apply them when: (1) a child is wrapped in React.memo and receives the function as a prop, (2) a computation is genuinely expensive (e.g., filtering thousands of records), or (3) profiling confirms unnecessary re-renders. Premature memoization adds complexity without benefit.",
+    "explanation": "useMemo caches a value, useCallback caches a function reference. Both have a cost (the comparison runs on every render). Use them only when you've measured a real win: an expensive computation, a memoized child receiving a function prop, or a profiler-confirmed re-render storm.",
+    "example": "const filtered = useMemo(\n  () => rows.filter((r) => r.name.includes(q)),\n  [rows, q],\n);\n\nconst onSelect = useCallback((id) => setSelectedId(id), []);"
+  },
+  {
+    "id": "femnc-011",
+    "section": "state-management",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is the difference between props and state?",
+    "answer": "Props are read-only inputs passed from a parent component — they flow downward and cannot be modified by the child. State is internal, mutable data managed by the component itself — changes to state trigger re-renders. Props allow parent-to-child communication; for child-to-parent communication, you pass a callback function as a prop. For sibling communication, state is lifted to the nearest common ancestor or moved to a global store.",
+    "explanation": "Props are read-only inputs from parent to child. State is internal, mutable data owned by a component; updating state schedules a re-render. Sibling communication usually means lifting state up to a common ancestor or moving it to a global store.",
+    "example": "function Parent() {\n  const [open, setOpen] = useState(false);\n  return <Child open={open} onToggle={() => setOpen((v) => !v)} />;\n}"
+  },
+  {
+    "id": "femnc-012",
+    "section": "state-management",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "When would you use Context API vs Redux?",
+    "answer": "Context API is great for low-frequency global data like theme, locale, or authenticated user info. It's not optimized for high-frequency updates — every consumer re-renders when context value changes, which can cause performance issues. Redux with useSelector is optimized with selective subscriptions, making it better for complex, frequently updated shared state. On ZEOS, I used Context for the current user session and Redux Toolkit for the workflow canvas state which changed on every node drag.",
+    "explanation": "Context = low-frequency global data (theme, locale, user). Every consumer re-renders on context change, so it's a poor fit for hot state. Redux with useSelector subscribes selectively, which scales for high-frequency updates like a drag canvas.",
+    "example": "// Low-frequency: context\nconst { user } = useContext(SessionContext);\n\n// High-frequency: redux selector\nconst nodes = useSelector((s) => s.canvas.nodes);"
+  },
+  {
+    "id": "femnc-013",
+    "section": "state-management",
+    "technology": "Redux",
+    "level": "Intermediate",
+    "question": "How does Redux Toolkit differ from classic Redux?",
+    "answer": "Redux Toolkit (RTK) eliminates boilerplate: createSlice auto-generates action creators and reducers together; createAsyncThunk handles async operations cleanly; createEntityAdapter normalizes data. RTK also uses Immer under the hood, so reducers can use \"mutating\" syntax that's actually immutable. Classic Redux required manual action type constants, separate action creators, switch-case reducers, and middleware setup. I migrated a legacy Redux codebase in ZEOS to RTK, reducing state management code by ~40%.",
+    "explanation": "RTK bundles slice creation, async thunks, entity normalization, and Immer-backed mutating syntax. Classic Redux meant manual action type strings, hand-written switch reducers, and lots of glue code. Migration to RTK on ZEOS dropped state code ~40%.",
+    "example": "const userSlice = createSlice({\n  name: 'user',\n  initialState: { name: '' },\n  reducers: {\n    setName(state, action) { state.name = action.payload; },\n  },\n});"
+  },
+  {
+    "id": "femnc-014",
+    "section": "state-management",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "Why did you choose Zustand for some state on ZEOS and how does it work?",
+    "answer": "Zustand is a minimal state library using a single hook. You define a store with create(), specifying state and actions together. Components subscribe to slices of the store — only subscribed components re-render on change. I chose Zustand for module-level ephemeral state (e.g., a specific form's draft values, a panel's expanded/collapsed status) because it avoided Redux boilerplate for small, contained state. It colocates state closer to the feature without polluting the global Redux store.",
+    "explanation": "Zustand exposes a single hook per store. Components subscribe to slices — only subscribed parts re-render on change. It's ideal for feature-scoped ephemeral state (draft form values, panel toggles) where Redux would feel heavy.",
+    "example": "const usePanel = create((set) => ({\n  open: false,\n  toggle: () => set((s) => ({ open: !s.open })),\n}));\n\nconst open = usePanel((s) => s.open);"
+  },
+  {
+    "id": "femnc-015",
+    "section": "state-management",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "How do you handle server state vs client state, and where does TanStack Query fit?",
+    "answer": "Client state is UI-driven (modals open/closed, selected tabs). Server state is async, often stale, and has complex lifecycle (loading, error, success, refetching). TanStack Query treats server state as a cache with a configurable staleness window. It handles background refetching, cache invalidation, optimistic updates, and pagination out of the box. This removes the need to manually manage loading/error booleans and redundant fetch calls in Redux. On the AI-Kiosk patient dashboard, TanStack Query's useInfiniteQuery managed paginated patient history efficiently.",
+    "explanation": "Client state lives in the UI; server state is a remote cache with its own lifecycle (stale, loading, refetching). TanStack Query owns that lifecycle: stale time, background refetch, invalidation, optimistic updates, pagination — so you stop hand-rolling loading/error booleans inside Redux.",
+    "example": "const { data, isLoading } = useQuery({\n  queryKey: ['patients', page],\n  queryFn: () => api.fetchPatients(page),\n  staleTime: 30_000,\n});"
+  },
+  {
+    "id": "femnc-016",
+    "section": "state-management",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "Explain how you'd implement optimistic updates in a React application.",
+    "answer": "Optimistic updates update the UI immediately before the server confirms, then roll back on failure. With TanStack Query, you use the onMutate callback to cancel in-flight queries, snapshot the current cache, and apply the optimistic update. onError restores the snapshot. onSettled refetches the server data. I implemented this on ZEOS for workflow node creation — the node appeared on the canvas instantly, and only a subtle error toast appeared if the save failed, keeping the experience fluid.",
+    "explanation": "Optimistic updates apply the UI change before the server confirms, then roll back on failure. With TanStack Query: onMutate cancels in-flight queries, snapshots the cache, and writes the optimistic value; onError restores the snapshot; onSettled refetches.",
+    "example": "useMutation({\n  mutationFn: addNode,\n  onMutate: async (next) => {\n    await qc.cancelQueries(['nodes']);\n    const prev = qc.getQueryData(['nodes']);\n    qc.setQueryData(['nodes'], (old) => [...old, next]);\n    return { prev };\n  },\n  onError: (_err, _next, ctx) => qc.setQueryData(['nodes'], ctx.prev),\n  onSettled: () => qc.invalidateQueries(['nodes']),\n});"
+  },
+  {
+    "id": "femnc-017",
+    "section": "state-management",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "How would you manage complex interdependent form state in React?",
+    "answer": "For complex forms (multi-step, conditional fields, cross-field validation), I use React Hook Form (RHF) with Zod for schema validation. RHF uses uncontrolled inputs with register for performance — only changed fields trigger re-renders. Zod schemas act as the single source of truth for validation rules. For interdependent fields (e.g., \"end date must be after start date\"), I use Zod's refine or superRefine. On the AI-Kiosk patient onboarding system, I managed a 15-field registration form this way with dynamic section visibility based on patient type.",
+    "explanation": "React Hook Form with Zod is my default. RHF uses uncontrolled inputs through register, so only the changed field re-renders. Zod owns validation including cross-field rules through refine/superRefine.",
+    "example": "const schema = z.object({\n  start: z.date(),\n  end: z.date(),\n}).refine((v) => v.end > v.start, { message: 'End must be after start', path: ['end'] });\n\nconst form = useForm({ resolver: zodResolver(schema) });"
+  },
+  {
+    "id": "femnc-018",
+    "section": "state-management",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is prop drilling and how do you solve it?",
+    "answer": "Prop drilling is passing data through multiple intermediate components that don't use it themselves, just to reach a deeply nested child. It makes code brittle — any component in the chain must be updated if the data shape changes. Solutions include: React Context (for global/app-level data), component composition (restructuring so the consumer is rendered closer to the source), or a global state manager like Redux or Zustand. I generally try composition first before reaching for Context or Redux.",
+    "explanation": "Prop drilling = props threaded through middle components only to reach a deep child. Fixes: composition (children prop or render-as-children), Context for app-wide data, or a global store. Try composition first.",
+    "example": "// Composition wins: pass the rendered child instead of threading props\n<Layout sidebar={<UserPanel user={user} />}>\n  <Page />\n</Layout>"
+  },
+  {
+    "id": "femnc-019",
+    "section": "state-management",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "How does React's useReducer differ from useState and when should you prefer it?",
+    "answer": "useReducer is preferable when state transitions are complex, interdependent, or need to be described as explicit actions. It takes a reducer function (state, action) => newState and a dispatch function. This mirrors Redux patterns and makes state logic testable in isolation. I use useReducer when a single feature has 3+ related state variables that change together (e.g., a data table with sorting, filtering, and pagination state), as useState for each leads to race conditions and scattered update logic.",
+    "explanation": "useReducer is useState's older sibling for complex transitions. Reducers describe state changes as explicit actions, are easy to unit-test, and prevent the race conditions you get from juggling 3+ related useStates that update together.",
+    "example": "function reducer(state, action) {\n  switch (action.type) {\n    case 'sort': return { ...state, sort: action.payload, page: 1 };\n    case 'filter': return { ...state, filter: action.payload, page: 1 };\n    default: return state;\n  }\n}\n\nconst [s, dispatch] = useReducer(reducer, init);"
+  },
+  {
+    "id": "femnc-020",
+    "section": "state-management",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "How do you prevent unnecessary re-renders in a component tree?",
+    "answer": "Strategies: wrap pure functional components in React.memo to skip re-renders if props haven't changed; use useCallback for stable function references passed to memoized children; use useMemo for expensive derived values; split large context into smaller ones so consumers only subscribe to what they need; use useSelector with selectors in Redux to subscribe to minimal state slices. I profile first using React DevTools before applying any of these — premature optimization adds complexity without always improving performance.",
+    "explanation": "Toolbox: React.memo on pure children, stable callbacks with useCallback, derived values with useMemo, smaller contexts, narrow selectors. Profile first — premature memoization adds noise without measurable wins.",
+    "example": "const Row = React.memo(function Row({ item, onPick }) {\n  return <button onClick={() => onPick(item.id)}>{item.label}</button>;\n});\n\nconst onPick = useCallback((id) => setSel(id), []);"
+  },
+  {
+    "id": "femnc-021",
+    "section": "typescript-essentials",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "What is the difference between interface and type in TypeScript?",
+    "answer": "Both define object shapes, but interface supports declaration merging (useful for extending library types) and is generally preferred for public API contracts. type is more flexible — it can define unions, intersections, tuples, and mapped types, which interface cannot. In React projects, I use interface for component props (they may need extending) and type for union types, utility types, and complex type expressions. In practice, either works for most cases.",
+    "explanation": "Both describe shapes. interface supports declaration merging and reads naturally for public contracts. type is more flexible — unions, intersections, tuples, mapped types. In React I tend to use interface for props and type for unions and utility expressions.",
+    "example": "interface ButtonProps { label: string; onClick(): void }\n\ntype Status = { kind: 'idle' } | { kind: 'loading' } | { kind: 'error'; message: string };"
+  },
+  {
+    "id": "femnc-022",
+    "section": "typescript-essentials",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "How do you type React component props, including children?",
+    "answer": "I define a Props interface with explicit types for each prop. For children, I use React.ReactNode (accepts anything renderable) or React.ReactElement (only React elements). I avoid React.FC for components with generic props because it causes inference issues — I prefer explicit function signatures. For optional props, I use ? and provide sensible defaults via destructuring. For event handlers, I use typed events like React.ChangeEvent<HTMLInputElement>.",
+    "explanation": "Define an explicit Props interface. Use React.ReactNode for free-form children, React.ReactElement when you need a single element. Skip React.FC — it breaks generic inference. Type events with React.ChangeEvent<HTMLInputElement> and friends.",
+    "example": "interface CardProps {\n  title: string;\n  onSelect?: (id: string) => void;\n  children: React.ReactNode;\n}\n\nfunction Card({ title, children, onSelect }: CardProps) { /* ... */ }"
+  },
+  {
+    "id": "femnc-023",
+    "section": "typescript-essentials",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What are TypeScript generics and how do you use them in React?",
+    "answer": "Generics allow writing reusable code that works across types while maintaining type safety. In React, they're useful for reusable components like a <List<T>> that renders any data type, or custom hooks like useFetch<T> that return typed data. I used generics in ZEOS to type a universal data-transfer module that passed typed payloads between workflow nodes — the generic parameter constrained the payload shape based on the node type, catching schema mismatches at compile time.",
+    "explanation": "Generics let one component or hook work over many types while keeping inference accurate. Common cases: <List<T>> renderers, useFetch<T>() hooks, and typed transport modules.",
+    "example": "function useFetch<T>(url: string): { data: T | null; error: Error | null } { /* ... */ }\n\nconst { data } = useFetch<User>('/api/me');"
+  },
+  {
+    "id": "femnc-024",
+    "section": "typescript-essentials",
+    "technology": "TypeScript",
+    "level": "Advanced",
+    "question": "How do you use Zod with TypeScript for runtime type safety at API boundaries?",
+    "answer": "TypeScript types exist only at compile time — they're erased at runtime. API responses can differ from what you expect. Zod defines schemas that validate data at runtime and automatically infer TypeScript types using z.infer<typeof schema>. I parse every API response through a Zod schema. If validation fails (unexpected field, wrong type), Zod throws a detailed error. This pattern caught several backend schema changes in the AI-Kiosk system before they caused UI crashes in production.",
+    "explanation": "TS types vanish at runtime, so API responses can lie. Zod schemas validate at runtime and produce a TS type via z.infer. Parse every response — backend schema drift becomes a clear, actionable error instead of a UI crash.",
+    "example": "const Patient = z.object({ id: z.string(), name: z.string(), age: z.number() });\ntype Patient = z.infer<typeof Patient>;\n\nconst p: Patient = Patient.parse(await res.json());"
+  },
+  {
+    "id": "femnc-025",
+    "section": "typescript-essentials",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What is unknown vs any in TypeScript and why does it matter?",
+    "answer": "any disables type checking entirely — TypeScript trusts you and provides no safety. unknown is the type-safe alternative — you must narrow the type (via typeof, instanceof, or a type guard) before using it. I use unknown for API responses and external data until I've validated them. any is a last resort, and I flag its use in code reviews because it silently removes all downstream type safety.",
+    "explanation": "any turns off the type checker for everything that flows from the value. unknown forces you to narrow before you use it. Default to unknown for external data; treat any as a code smell to call out in review.",
+    "example": "function handle(value: unknown) {\n  if (typeof value === 'string') {\n    value.toUpperCase(); // narrowed\n  }\n}"
+  },
+  {
+    "id": "femnc-026",
+    "section": "typescript-essentials",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "Explain TypeScript utility types you commonly use in React projects.",
+    "answer": "Most commonly used: Partial<T> (all props optional — useful for update payloads), Required<T> (all props required), Pick<T, K> (extract a subset of type props), Omit<T, K> (exclude specific props), Record<K, V> (typed key-value maps), ReturnType<typeof fn> (infer hook or function return types), and NonNullable<T> (remove null/undefined). On ZEOS, I used Omit extensively to derive form types from API response types by removing server-computed fields.",
+    "explanation": "Daily-driver utility types: Partial, Required, Pick, Omit, Record, ReturnType, NonNullable. Big win in real codebases: derive a form type from an API response with Omit instead of duplicating it.",
+    "example": "type ApiUser = { id: string; name: string; createdAt: string };\ntype UserForm = Omit<ApiUser, 'id' | 'createdAt'>;"
+  },
+  {
+    "id": "femnc-027",
+    "section": "typescript-essentials",
+    "technology": "TypeScript",
+    "level": "Advanced",
+    "question": "How do you handle discriminated unions in TypeScript for component rendering?",
+    "answer": "A discriminated union uses a shared literal property (discriminant) to narrow types. For example, a Status type with { status: 'loading' } | { status: 'success', data: T } | { status: 'error', message: string }. In a component, I switch on status — TypeScript narrows the type in each branch, so data is only accessible in the success branch. This eliminates defensive null checks and makes impossible states unrepresentable. I used this pattern extensively in AI-Kiosk's patient data loading states.",
+    "explanation": "A literal discriminant property makes invalid states unrepresentable. Switch on the discriminant and TS narrows automatically inside each branch — no more defensive optional chaining or null checks.",
+    "example": "type Status<T> = { tag: 'loading' } | { tag: 'success'; data: T } | { tag: 'error'; message: string };\n\nfunction View({ s }: { s: Status<User> }) {\n  switch (s.tag) {\n    case 'loading': return <Spinner />;\n    case 'success': return <Profile user={s.data} />; // narrowed\n    case 'error': return <Error msg={s.message} />;\n  }\n}"
+  },
+  {
+    "id": "femnc-028",
+    "section": "typescript-essentials",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "What is strictNullChecks and why should it be enabled?",
+    "answer": "With strictNullChecks enabled, null and undefined are not assignable to other types unless explicitly included in the union (e.g., string | null). This forces developers to handle null cases explicitly rather than assuming a value exists, eliminating an entire class of runtime errors (Cannot read properties of null). It's the single most impactful TypeScript setting. I enable it in every project by using \"strict\": true in tsconfig.json.",
+    "explanation": "With strictNullChecks, null and undefined become real types you must opt into. That single flag eliminates the most common runtime error in JS — \"Cannot read properties of null\". Always enable it via \"strict\": true.",
+    "example": "// tsconfig.json\n{\n  \"compilerOptions\": {\n    \"strict\": true\n  }\n}"
+  },
+  {
+    "id": "femnc-029",
+    "section": "typescript-essentials",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "How do you type API responses and shared data models in a large codebase?",
+    "answer": "I centralize shared types in a types/ directory or a dedicated @types package in a monorepo. API response types are either generated from OpenAPI specs (using tools like openapi-typescript) or manually defined and paired with Zod schemas for runtime validation. I co-locate domain types close to the feature that owns them and re-export from a barrel file. This prevents type duplication and ensures a single source of truth across the frontend.",
+    "explanation": "Centralize shared types in a /types directory or a workspace package. Generate API types from OpenAPI when possible; otherwise pair Zod schemas with z.infer. Co-locate domain types with the feature that owns them and re-export through a barrel.",
+    "example": "// packages/types/src/index.ts\nexport type { Patient } from './patient';\nexport type { Visit } from './visit';\n\n// Then anywhere\nimport type { Patient } from '@org/types';"
+  },
+  {
+    "id": "femnc-030",
+    "section": "typescript-essentials",
+    "technology": "TypeScript",
+    "level": "Advanced",
+    "question": "Explain how you'd write a type-safe custom hook in TypeScript.",
+    "answer": "A type-safe custom hook explicitly types its parameters and return value. If the hook returns a tuple, I use as const to preserve the literal types and prevent TypeScript from widening them to a union array. I use generics to make hooks like useLocalStorage<T> work with any type. Return types are either inferred (for simple cases) or explicitly declared (for complex or overloaded hooks). I document each hook's contract with a JSDoc comment for IDE intellisense.",
+    "explanation": "Type the inputs explicitly and use generics where the value type isn't fixed. For tuple returns, end with `as const` so TS preserves positions instead of widening. Add JSDoc — the IDE tooltip is part of the API.",
+    "example": "function useLocalStorage<T>(key: string, initial: T) {\n  const [value, setValue] = useState<T>(() => read<T>(key) ?? initial);\n  useEffect(() => write(key, value), [key, value]);\n  return [value, setValue] as const;\n}"
+  },
+  {
+    "id": "femnc-031",
+    "section": "performance-optimization",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What tools do you use to profile React application performance?",
+    "answer": "React DevTools Profiler is my first stop — it shows render duration per component, ranked by cost, and highlights what triggered each render. Chrome DevTools Performance tab captures CPU flame graphs for identifying long tasks and layout thrashing. Lighthouse audits Core Web Vitals (LCP, CLS, FID/INP). For bundle analysis, I use webpack-bundle-analyzer or Vite's rollup-plugin-visualizer to find oversized dependencies. I always profile before optimizing — assumptions about bottlenecks are usually wrong.",
+    "explanation": "React DevTools Profiler for component-level cost. Chrome DevTools Performance for long tasks and layout thrash. Lighthouse for Core Web Vitals. webpack-bundle-analyzer or rollup-plugin-visualizer for bundle weight. Always measure before optimizing.",
+    "example": "// vite.config.ts\nimport { visualizer } from 'rollup-plugin-visualizer';\n\nexport default defineConfig({\n  plugins: [visualizer({ filename: 'stats.html', open: true })],\n});"
+  },
+  {
+    "id": "femnc-032",
+    "section": "performance-optimization",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "How do you reduce the initial bundle size of a React application?",
+    "answer": "Strategies I've applied: route-level code splitting with React.lazy; tree-shaking by using named imports instead of default imports from large libraries; replacing heavy libraries (e.g., moment.js → date-fns); dynamic imports for non-critical features; setting up externals in Webpack for CDN-loaded libraries; and auditing dependencies with bundlephobia.com before adding new ones. On ZEOS, these steps reduced the initial bundle from ~2.8MB to ~900KB gzipped.",
+    "explanation": "Route-level lazy splitting, named imports for tree-shaking, swap heavy libraries (moment → date-fns), dynamic import for cold features, externals for CDN libs, audit on bundlephobia before adopting. Concrete: ZEOS dropped from 2.8MB to ~900KB gzipped.",
+    "example": "// Tree-shake friendly\nimport { format } from 'date-fns';\n\n// Lazy: pay for it only when needed\nconst Charts = React.lazy(() => import('./Charts'));"
+  },
+  {
+    "id": "femnc-033",
+    "section": "performance-optimization",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is virtualization and when should you use it?",
+    "answer": "Virtualization (or windowing) renders only the visible subset of a large list, keeping the DOM node count constant regardless of data size. Libraries like react-window or @tanstack/react-virtual implement this. I use virtualization whenever a list exceeds ~100 items. On the AI-Kiosk pharmacy module, a scrollable medication list of 2,000+ items caused severe scroll jank — implementing react-window with a fixed-height row dropped render time from 800ms to under 50ms.",
+    "explanation": "Virtualization renders only visible rows, keeping DOM size constant regardless of dataset. Use it past ~100 items. On AI-Kiosk a 2,000-row medication list went from 800ms to <50ms render after switching to react-window.",
+    "example": "import { FixedSizeList } from 'react-window';\n\n<FixedSizeList height={600} itemCount={meds.length} itemSize={48} width=\"100%\">\n  {({ index, style }) => <Row style={style} med={meds[index]} />}\n</FixedSizeList>"
+  },
+  {
+    "id": "femnc-034",
+    "section": "performance-optimization",
+    "technology": "Next.js",
+    "level": "Advanced",
+    "question": "How do you handle image optimization in a Next.js application?",
+    "answer": "Next.js provides the <Image> component which automatically serves modern formats (WebP/AVIF), lazy loads by default, prevents layout shift with width/height props, and serves correctly sized images via its built-in image optimization API. I configure remotePatterns in next.config.js for external image sources. For critical above-the-fold images, I use priority prop to preload. On the GoodHomes platform, switching to next/image for AI-generated interior renders improved LCP from 4.2s to 1.8s.",
+    "explanation": "next/image gives you WebP/AVIF, lazy loading, layout-shift-free reservations from width/height, and per-request resizing. Configure remotePatterns for external sources; use priority for above-the-fold. GoodHomes LCP went 4.2s → 1.8s after this swap.",
+    "example": "import Image from 'next/image';\n\n<Image src=\"/hero.jpg\" alt=\"\" width={1280} height={720} priority />"
+  },
+  {
+    "id": "femnc-035",
+    "section": "performance-optimization",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "Explain the difference between debouncing and throttling and when you'd use each.",
+    "answer": "Debouncing delays execution until after a pause in events — ideal for search inputs where you want to wait until the user stops typing before firing an API call. Throttling limits execution to once per interval — ideal for scroll/resize handlers where you want regular updates but not on every pixel change. I use lodash.debounce or a custom useDebounce hook for search, and requestAnimationFrame or throttle for scroll-driven animations. Both prevent excessive renders and API calls.",
+    "explanation": "Debounce waits for a pause in events (good for search-as-you-type). Throttle caps to one call per interval (good for scroll/resize). Both keep the main thread breathable and reduce wasted network/render work.",
+    "example": "function useDebounced<T>(value: T, delay = 300): T {\n  const [v, setV] = useState(value);\n  useEffect(() => {\n    const id = setTimeout(() => setV(value), delay);\n    return () => clearTimeout(id);\n  }, [value, delay]);\n  return v;\n}"
+  },
+  {
+    "id": "femnc-036",
+    "section": "performance-optimization",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "How do you optimize WebSocket-driven UIs to prevent render storms?",
+    "answer": "WebSocket messages can arrive faster than React can render. My strategies: batch incoming messages using a ref-buffered queue that flushes on animation frames (requestAnimationFrame); normalize messages into a store (Redux/Zustand) and let components subscribe selectively; use React.memo on message items so unchanged records don't re-render; and debounce store updates when message throughput is very high. On the AI-Kiosk real-time vitals display, buffering WebSocket events and flushing every 100ms eliminated visual flickering.",
+    "explanation": "Buffer incoming events in a ref-backed queue and flush on rAF (or every N ms). Normalize messages into a store and let components subscribe to small slices. Memoize row components. On AI-Kiosk vitals, a 100ms flush window erased the flicker entirely.",
+    "example": "const buffer = useRef<Event[]>([]);\nuseEffect(() => {\n  socket.on('vitals', (e) => { buffer.current.push(e); });\n  const id = setInterval(() => {\n    if (!buffer.current.length) return;\n    store.applyBatch(buffer.current);\n    buffer.current = [];\n  }, 100);\n  return () => clearInterval(id);\n}, []);"
+  },
+  {
+    "id": "femnc-037",
+    "section": "performance-optimization",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What are Core Web Vitals and how do they affect frontend decisions?",
+    "answer": "Core Web Vitals are Google's user-experience metrics: LCP (Largest Contentful Paint — loading performance, target <2.5s), INP (Interaction to Next Paint — responsiveness, target <200ms), and CLS (Cumulative Layout Shift — visual stability, target <0.1). They directly affect SEO ranking on Google. LCP improvements: preload critical resources, optimize images, use SSR/SSG. INP improvements: reduce JS execution time, defer non-critical work. CLS improvements: reserve space for images/ads, avoid injecting content above existing content.",
+    "explanation": "LCP (load <2.5s), INP (interaction <200ms), CLS (layout shift <0.1). They feed Google search ranking. LCP: preload, optimize images, SSR/SSG. INP: cut JS work, defer non-critical effects. CLS: reserve space and avoid injecting content above the fold.",
+    "example": "<link rel=\"preload\" as=\"image\" href=\"/hero.avif\" />\n<img src=\"/hero.avif\" width={1280} height={720} alt=\"\" />"
+  },
+  {
+    "id": "femnc-038",
+    "section": "performance-optimization",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "How do you handle memory leaks in React components?",
+    "answer": "Common sources: setInterval or setTimeout not cleared on unmount; WebSocket or EventEmitter subscriptions not removed; async operations updating state after unmount. I always return cleanup functions from useEffect. For async operations, I use an isMounted ref flag or AbortController to cancel fetch requests. On the AI-Kiosk WebSocket integration, missing cleanup caused memory to grow by ~50MB per hour — adding the cleanup function to useEffect resolved it completely.",
+    "explanation": "Usual suspects: timers not cleared, subscriptions not removed, async setState firing after unmount. Always return a cleanup from useEffect; cancel fetches with AbortController. On AI-Kiosk a missing socket cleanup cost ~50MB/hour until it was added.",
+    "example": "useEffect(() => {\n  const ctrl = new AbortController();\n  fetch('/api/me', { signal: ctrl.signal })\n    .then((r) => r.json())\n    .then(setUser)\n    .catch(() => {});\n  return () => ctrl.abort();\n}, []);"
+  },
+  {
+    "id": "femnc-039",
+    "section": "performance-optimization",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "Explain how you'd implement infinite scrolling with TanStack Query.",
+    "answer": "useInfiniteQuery fetches pages incrementally. You provide a getNextPageParam function that extracts the cursor/page number from each page's response. The hook returns data.pages (all fetched pages) and fetchNextPage. I use an IntersectionObserver on a sentinel element at the list's bottom — when it enters the viewport, it triggers fetchNextPage. I also implement a threshold of ~200px before the actual bottom to preload the next page before the user reaches the end, making scrolling feel seamless.",
+    "explanation": "useInfiniteQuery streams pages — give it a getNextPageParam that extracts the cursor from each response. Trigger fetchNextPage from an IntersectionObserver on a sentinel ~200px above the bottom so the next page loads before the user gets there.",
+    "example": "const q = useInfiniteQuery({\n  queryKey: ['rows'],\n  queryFn: ({ pageParam }) => api.fetch({ cursor: pageParam }),\n  initialPageParam: null,\n  getNextPageParam: (last) => last.nextCursor ?? undefined,\n});"
+  },
+  {
+    "id": "femnc-040",
+    "section": "performance-optimization",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "What is the difference between SSR, SSG, ISR, and CSR in Next.js and when do you use each?",
+    "answer": "CSR (Client-Side Rendering): HTML is blank, JS fetches data in the browser — good for dashboards behind auth. SSR (Server-Side Rendering): HTML rendered per request with fresh data — good for personalized or frequently updated pages. SSG (Static Site Generation): HTML built at build time — best for marketing pages, blogs. ISR (Incremental Static Regeneration): SSG pages that re-generate in the background after a revalidate interval — best of both worlds for semi-dynamic content like product pages. I used SSG + ISR for GoodHomes' public gallery pages and SSR for logged-in project dashboards.",
+    "explanation": "CSR: empty HTML, fetch in the browser. SSR: HTML per request, fresh data. SSG: HTML at build time. ISR: SSG that revalidates in the background. Pick based on freshness vs cacheability: SSG/ISR for marketing/galleries, SSR for personalized pages, CSR for app dashboards behind auth.",
+    "example": "// Next.js App Router fetch with ISR-style revalidation\nconst res = await fetch('https://api/example/products', { next: { revalidate: 60 } });"
+  },
+  {
+    "id": "femnc-041",
+    "section": "ai-realtime-systems",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "How did you architect the real-time voice assistant in AI-Kiosk?",
+    "answer": "The architecture uses WebRTC/WebSocket for audio streaming, GPT-4o-mini-realtime for transcription and response generation, and Twilio for telephony integration. The React frontend manages audio capture via the Web Audio API, streams PCM chunks to the backend over WebSocket, and receives streamed text/audio responses. State machine pattern handled conversation turns (idle → listening → processing → speaking) to prevent overlapping states. Turn detection used VAD (voice activity detection) on the server side.",
+    "explanation": "WebRTC/WebSocket for audio in, GPT-4o-mini-realtime for STT + responses, Twilio for telephony. The React client captures via Web Audio API, ships PCM chunks over WS, and renders the streamed reply. A state machine (idle → listening → processing → speaking) keeps turns from overlapping; VAD lives on the server.",
+    "example": "// Skeleton of the conversation state machine\nconst [state, setState] = useState<'idle'|'listening'|'processing'|'speaking'>('idle');\nuseEffect(() => {\n  socket.on('partial', () => setState('processing'));\n  socket.on('audio', () => setState('speaking'));\n  socket.on('end', () => setState('idle'));\n}, []);",
+    "interviewTip": "Emphasize the 40% reduction in manual data entry — this is a concrete, business-level impact metric that resonates with MNC interviewers."
+  },
+  {
+    "id": "femnc-042",
+    "section": "ai-realtime-systems",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "How do you handle hallucinations and accuracy issues when integrating LLMs in a healthcare context?",
+    "answer": "Hallucinations in healthcare are safety-critical. My approach: constrained system prompts that restrict the model to specific tasks and vocabulary; retrieval-augmented generation (RAG) to ground responses in the patient's actual records rather than model memory; output parsing with validation schemas to reject structurally invalid responses; confidence thresholds where uncertain outputs are flagged for human review rather than displayed directly; and comprehensive logging of all model interactions for audit and retraining.",
+    "explanation": "Constrained system prompts limit the surface. RAG grounds answers in real records, not model memory. Validate outputs against a schema and reject structurally invalid responses. Flag low-confidence answers for human review. Log every interaction for audit and retraining.",
+    "example": "const Reply = z.object({\n  summary: z.string().min(20),\n  confidence: z.number().min(0).max(1),\n  citations: z.array(z.string()).min(1),\n});\nconst parsed = Reply.safeParse(JSON.parse(modelOutput));\nif (!parsed.success || parsed.data.confidence < 0.7) flagForReview();"
+  },
+  {
+    "id": "femnc-043",
+    "section": "ai-realtime-systems",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Explain how you integrated AI document summarization in the clinical workflow.",
+    "answer": "Patient histories are uploaded as PDFs or pulled from the EMR system. The backend extracts text and sends it to the LLM with a medical summarization prompt that specifies output structure (chief complaint, relevant history, current medications, allergies). The React frontend receives the structured JSON summary and renders it in a card layout during the consultation. I cached summaries per patient visit to avoid redundant API calls and added a \"regenerate\" option for physicians who wanted a fresh summary.",
+    "explanation": "Backend extracts text from PDFs/EMR and asks the LLM for a structured JSON summary (chief complaint, history, meds, allergies). The React UI renders that JSON as cards. Cache per visit; expose a regenerate action for fresh runs.",
+    "example": "type Summary = {\n  chiefComplaint: string;\n  history: string;\n  medications: string[];\n  allergies: string[];\n};\n\nconst { data } = useQuery({\n  queryKey: ['summary', visitId],\n  queryFn: () => api.summarize(visitId),\n  staleTime: 1000 * 60 * 30,\n});"
+  },
+  {
+    "id": "femnc-044",
+    "section": "ai-realtime-systems",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is RAG (Retrieval-Augmented Generation) and how would you implement it in a React-backed product?",
+    "answer": "RAG enhances LLM responses by retrieving relevant context from a knowledge base before generation. The flow: user query → embedding generation → vector similarity search (e.g., Pinecone, pgvector) → top-k relevant documents retrieved → documents + query sent to LLM. On the frontend, I'd display retrieved source citations alongside the AI response for transparency. The React UI would show a loading state during retrieval and generation separately (two distinct phases), giving users accurate feedback on what's happening.",
+    "explanation": "RAG = retrieve, then generate. User query → embedding → vector search (Pinecone, pgvector) → top-k docs → LLM call with those docs as context. The UI should reveal both phases (retrieving / generating) and show source citations alongside the answer.",
+    "example": "// Server flow\nconst emb = await embed(query);\nconst docs = await vectorDb.search(emb, { topK: 5 });\nconst answer = await llm.complete({ prompt: build(query, docs) });\nreturn { answer, sources: docs.map((d) => d.url) };"
+  },
+  {
+    "id": "femnc-045",
+    "section": "ai-realtime-systems",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "How do you manage WebSocket state across React component unmounts and remounts?",
+    "answer": "I lift the WebSocket connection to a stable context or a singleton module outside React's component tree. The connection is established once and shared via Context or Zustand. Components subscribe to message streams via hooks that add/remove listeners without opening new connections. When a component unmounts, only its listener is removed — the underlying connection persists. This pattern was essential on the AI-Kiosk kiosk display, where screen transitions would otherwise close and reopen connections, causing 2-3 second reconnection gaps.",
+    "explanation": "Move the socket out of React. Open it once in a singleton module or top-level context; components subscribe through hooks that add/remove only listeners. Unmounting a screen no longer tears down the connection — saved 2–3s reconnection gaps on the AI-Kiosk display.",
+    "example": "// socket.ts (module singleton)\nlet socket: WebSocket | null = null;\nexport function getSocket() {\n  if (!socket) socket = new WebSocket(URL);\n  return socket;\n}\n\nexport function useSocketEvent<T>(event: string, handler: (msg: T) => void) {\n  useEffect(() => {\n    const sock = getSocket();\n    const fn = (e: MessageEvent) => handler(JSON.parse(e.data));\n    sock.addEventListener(event, fn);\n    return () => sock.removeEventListener(event, fn);\n  }, [event, handler]);\n}"
+  },
+  {
+    "id": "femnc-046",
+    "section": "ai-realtime-systems",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "How would you implement streaming LLM responses in a React UI?",
+    "answer": "The backend sends a streaming HTTP response (Server-Sent Events or chunked transfer). On the React side, I use fetch with response.body.getReader() to read chunks as they arrive. Each chunk is appended to a state string, causing the text to appear token by token. I use a useRef buffer to batch small chunks and update state every ~50ms using requestAnimationFrame to avoid excessive re-renders per token. A blinking cursor CSS animation indicates active streaming.",
+    "explanation": "Stream over SSE or chunked HTTP. On the client, use fetch + response.body.getReader(); buffer chunks in a ref and flush to state every ~50ms with rAF so you don't re-render per token. A blinking cursor CSS animation makes the streaming feel intentional.",
+    "example": "const reader = (await fetch('/api/chat')).body!.getReader();\nconst dec = new TextDecoder();\nlet buf = '';\nwhile (true) {\n  const { value, done } = await reader.read();\n  if (done) break;\n  buf += dec.decode(value);\n  flushSoon(buf);\n}"
+  },
+  {
+    "id": "femnc-047",
+    "section": "ai-realtime-systems",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What security considerations apply when building AI features accessible to end users?",
+    "answer": "Key considerations: prompt injection (users crafting inputs that override system prompts — mitigated by server-side prompt construction, never concatenating raw user input into system prompts); output sanitization (LLM responses rendered as HTML need DOMPurify); rate limiting per user to prevent abuse; PII scrubbing before sending data to third-party model APIs; audit logging of all AI interactions for compliance; and clear UI disclosure that responses are AI-generated, especially in healthcare.",
+    "explanation": "Prompt injection: build prompts on the server, never concatenate raw input into system instructions. Sanitize HTML output with DOMPurify. Rate-limit per user. Scrub PII before third-party calls. Log every interaction for audit. Disclose AI-generated content clearly.",
+    "example": "import DOMPurify from 'dompurify';\n\n<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(answerHtml) }} />"
+  },
+  {
+    "id": "femnc-048",
+    "section": "ai-realtime-systems",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "How did the ROVER platform ensure AI feature deployment didn't introduce compliance risks?",
+    "answer": "ROVER was built on Vizru's low-code ecosystem with a layered security model. AI capabilities were exposed as governed connectors — each AI action required explicit permission grants in the platform's role system. Model API keys were stored in a secrets manager, never in client code. Data leaving the corporate boundary was logged and subject to data classification rules. The frontend enforced capability restrictions via feature flags tied to the user's role, so unauthorized users never even saw AI entry points in the UI.",
+    "explanation": "Treat AI capabilities as governed connectors with explicit permission grants. Keys live in a secrets manager. Outbound data is classified and logged at the boundary. The frontend hides AI entry points via role-bound feature flags so unauthorized users never see them.",
+    "example": "function AiAction({ children }: { children: React.ReactNode }) {\n  const can = useCapability('ai.invoke');\n  if (!can) return null;\n  return <>{children}</>;\n}"
+  },
+  {
+    "id": "femnc-049",
+    "section": "ai-realtime-systems",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How do you handle API rate limits when integrating with external AI services in a production application?",
+    "answer": "I implement an exponential backoff retry mechanism with jitter for transient rate limit errors (HTTP 429). For predictable high-volume use cases, I use a request queue with concurrency limits. Responses are aggressively cached — identical prompts within a session window return cached results. I also implement user-facing feedback: a subtle \"processing\" indicator for delayed responses rather than showing errors for temporary throttling. On ZEOS, I added a Redis-based request queue to batch AI enhancement requests from multiple concurrent users.",
+    "explanation": "Backoff with jitter on 429s. Front-load with a server-side request queue and concurrency limit. Cache identical prompts inside a session window. Show a soft processing indicator instead of an error during transient throttling.",
+    "example": "async function callWithBackoff<T>(fn: () => Promise<T>, max = 5) {\n  let delay = 250;\n  for (let i = 0; i < max; i++) {\n    try { return await fn(); }\n    catch (e: any) {\n      if (e.status !== 429 || i === max - 1) throw e;\n      await new Promise((r) => setTimeout(r, delay + Math.random() * 250));\n      delay *= 2;\n    }\n  }\n  throw new Error('unreachable');\n}"
+  },
+  {
+    "id": "femnc-050",
+    "section": "ai-realtime-systems",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "Explain how Twilio's WhatsApp API works in your patient onboarding flow in detail.",
+    "answer": "When a patient registers at the kiosk, the backend creates a session and triggers a Twilio WhatsApp Business API message to the patient's phone number. The message contains a secure, time-limited deep link to an upload portal. The patient uploads their documents (ID, insurance card) via a mobile-optimized React page. Twilio's webhook notifies the backend on message delivery/read status, which the kiosk UI reflects in real time via WebSocket. Edge cases handled: non-WhatsApp fallback to SMS, upload failure retries, link expiry (15-minute TTL), and opt-out compliance.",
+    "explanation": "Kiosk creates a session → backend asks Twilio to send a WhatsApp message with a signed, time-limited upload link → patient uploads on a mobile React page → Twilio webhooks update delivery/read state → kiosk UI mirrors that over WebSocket. Edge cases: SMS fallback, retries, 15-min link TTL, opt-out compliance.",
+    "example": "// Server: send onboarding link\nawait twilio.messages.create({\n  from: 'whatsapp:+1...',\n  to: `whatsapp:${patient.phone}`,\n  body: `Upload documents: ${signedUrl(patient.id, '15m')}`,\n});"
+  },
+  {
+    "id": "femnc-051",
+    "section": "nextjs-ssr",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "How does the Next.js App Router differ from the Pages Router?",
+    "answer": "The App Router (Next.js 13+) uses React Server Components by default — components render on the server and send minimal HTML/JS to the client. It supports nested layouts, streaming, and server actions. The Pages Router uses traditional SSR/SSG with getServerSideProps/getStaticProps and client components only. App Router's RSC model dramatically reduces client-side JS for content-heavy apps. I've used both — Pages Router for existing projects and App Router for new ones where RSC's performance benefits justify the learning curve.",
+    "explanation": "App Router (13+) defaults to React Server Components, with nested layouts, streaming, and server actions. Pages Router uses getServerSideProps/getStaticProps and is client-only on the boundary. RSC dramatically shrinks client JS on content-heavy apps.",
+    "example": "// app/page.tsx — runs on the server, no client bundle\nexport default async function Page() {\n  const data = await db.posts.list();\n  return <Posts data={data} />;\n}"
+  },
+  {
+    "id": "femnc-052",
+    "section": "nextjs-ssr",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "What are React Server Components (RSC) and what problems do they solve?",
+    "answer": "RSCs execute on the server (or at build time) and never ship their code to the client — only the rendered HTML. This means: large dependencies (markdown parsers, date libraries, database clients) used in RSCs don't inflate the client bundle; server-only data access (direct DB queries, file reads) without API routes; and zero hydration cost for static content. The key constraint: RSCs cannot use browser APIs, event handlers, or hooks. Client interactivity requires explicit \"use client\" components that are still hydrated normally.",
+    "explanation": "RSCs run on the server and never ship code to the client. Heavy deps (markdown, DB clients) stay off the client bundle, you can query DBs directly without an API route, and static content costs zero hydration. They can't touch browser APIs, hooks, or events — that's where 'use client' islands come in.",
+    "example": "// app/posts/page.tsx — Server Component\nimport { db } from '@/lib/db';\nexport default async function Posts() {\n  const rows = await db.posts.list();\n  return <PostList rows={rows} />; // PostList may be 'use client' if interactive\n}"
+  },
+  {
+    "id": "femnc-053",
+    "section": "nextjs-ssr",
+    "technology": "Next.js",
+    "level": "Advanced",
+    "question": "How does Next.js handle hydration and what causes hydration mismatches?",
+    "answer": "Hydration is the process of attaching React event handlers to server-rendered HTML. Next.js sends static HTML first (fast First Contentful Paint), then hydrates it with the client bundle. Mismatches occur when server-rendered HTML differs from the initial client render — common causes: rendering dates/times without timezone normalization, browser-only APIs accessed during render (localStorage, window), and random values generated differently server vs client. Mismatches cause visual flickering and React warnings. I use suppressHydrationWarning sparingly and fix root causes with useEffect for client-only values.",
+    "explanation": "Hydration attaches event handlers to server HTML. Mismatches happen when client and server render different markup: timezone-sensitive dates, browser-only APIs (localStorage/window), random values. Fix the root cause in useEffect; reach for suppressHydrationWarning only as a last resort.",
+    "example": "function Now() {\n  const [time, setTime] = useState<string>('');\n  useEffect(() => setTime(new Date().toLocaleTimeString()), []);\n  return <span suppressHydrationWarning>{time}</span>;\n}"
+  },
+  {
+    "id": "femnc-054",
+    "section": "nextjs-ssr",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "How do you handle authentication in a Next.js application?",
+    "answer": "I use NextAuth.js (Auth.js) for authentication — it handles OAuth providers, JWT sessions, and database sessions with adapters. Session data is available server-side in Server Components and API Routes via getServerSession. For route protection, I use middleware (middleware.ts) to redirect unauthenticated users at the edge before any page renders. For fine-grained authorization (role-based access), I check roles in the session and conditionally render features. Client-side, I use the useSession hook for reactive session state.",
+    "explanation": "Auth.js (NextAuth) handles providers, JWT/database sessions, and adapters. Read sessions on the server with getServerSession; protect routes at the edge with middleware.ts. RBAC = check roles inside the session. On the client, useSession exposes reactive session state.",
+    "example": "// middleware.ts\nexport { auth as middleware } from '@/auth';\nexport const config = { matcher: ['/dashboard/:path*'] };"
+  },
+  {
+    "id": "femnc-055",
+    "section": "nextjs-ssr",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "What is the Next.js middleware.ts file and what can you do with it?",
+    "answer": "middleware.ts runs at the Edge (before the request reaches the page/API route) and can read/modify requests and responses. Use cases: authentication redirects (redirect unauthenticated users to login before the page even begins rendering), A/B testing (serve different page variants based on cookies), geolocation-based redirects, rate limiting, and request logging. It's very fast (Edge runtime, no cold starts) but limited — it can't use Node.js APIs or access databases directly. I used it on GoodHomes to enforce auth before premium visualization features.",
+    "explanation": "middleware.ts runs at the Edge before page or route handlers. Use it for auth redirects, A/B variants by cookie, geo redirects, rate limiting, request logging. No Node APIs or DB access — it has to stay fast.",
+    "example": "import { NextResponse } from 'next/server';\nexport function middleware(req) {\n  const token = req.cookies.get('session')?.value;\n  if (!token && req.nextUrl.pathname.startsWith('/premium')) {\n    return NextResponse.redirect(new URL('/login', req.url));\n  }\n}"
+  },
+  {
+    "id": "femnc-056",
+    "section": "nextjs-ssr",
+    "technology": "Next.js",
+    "level": "Advanced",
+    "question": "How would you implement multi-tenancy in a Next.js application?",
+    "answer": "There are two common patterns. Subdomain-based: companyA.app.com and companyB.app.com — middleware reads the hostname, identifies the tenant, and injects tenant context into the request. Path-based: /companyA/dashboard — simpler but exposes tenant IDs in URLs. Tenant-specific data is isolated via tenant ID filtering on every database query. I'd implement a TenantContext provider that reads from middleware-injected headers. On ZEOS (which served Fortune-level clients), tenant isolation was enforced at both the middleware and database query layers.",
+    "explanation": "Two patterns: subdomain (companyA.app.com) or path-prefix (/companyA/...). Middleware resolves the tenant and injects it as a request header; a TenantContext provider reads it. Real isolation lives at the DB query layer — every read filters by tenant ID.",
+    "example": "// middleware.ts\nconst host = req.headers.get('host') ?? '';\nconst tenant = host.split('.')[0];\nconst res = NextResponse.next();\nres.headers.set('x-tenant', tenant);\nreturn res;"
+  },
+  {
+    "id": "femnc-057",
+    "section": "nextjs-ssr",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "How do you handle environment variables securely in Next.js?",
+    "answer": "Next.js distinguishes between server-only variables (prefixed without NEXT_PUBLIC_ — never sent to the browser) and public variables (NEXT_PUBLIC_ prefix — safe to expose). I keep API keys, database connection strings, and secrets as server-only variables. I validate all environment variables at startup using a Zod schema (env.mjs pattern) — the app fails fast with a clear error if required variables are missing, rather than failing silently at runtime. I never commit .env files and use platform secrets management (Vercel, Azure Key Vault) for production.",
+    "explanation": "Server-only variables stay private; only NEXT_PUBLIC_-prefixed vars reach the browser. Validate them at boot with a Zod schema (env.mjs) so the app refuses to start with missing config. Real secrets live in Vercel / Azure Key Vault / similar — never in .env files in git.",
+    "example": "// env.mjs\nimport { z } from 'zod';\nexport const env = z.object({\n  DATABASE_URL: z.string().url(),\n  NEXT_PUBLIC_API_URL: z.string().url(),\n}).parse(process.env);"
+  },
+  {
+    "id": "femnc-058",
+    "section": "nextjs-ssr",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "What is Incremental Static Regeneration (ISR) and how does it work?",
+    "answer": "ISR allows statically generated pages to update after deployment without a full rebuild. You set revalidate: N (seconds) in generateStaticParams or fetch options. After the interval, the next request triggers a background regeneration — the user still sees the stale page immediately (no wait), and subsequent users get the fresh page. It's ideal for product listings, blog posts, or any semi-dynamic content. I used ISR on GoodHomes' portfolio gallery — rooms regenerated every 60 seconds to reflect new AI-generated previews without constant rebuilds.",
+    "explanation": "ISR keeps SSG pages alive between deploys. Set revalidate to N seconds; the next request after that window triggers a background regeneration while serving the stale page instantly. Perfect for product listings, blog posts, gallery feeds.",
+    "example": "// fetch with ISR window\nconst res = await fetch('https://api/example/rooms', { next: { revalidate: 60 } });"
+  },
+  {
+    "id": "femnc-059",
+    "section": "nextjs-ssr",
+    "technology": "Next.js",
+    "level": "Advanced",
+    "question": "How do you implement fine-grained caching in Next.js App Router?",
+    "answer": "App Router has four caching layers: Request Memoization (deduplicates identical fetch calls in a single render pass), Data Cache (persists fetch responses across requests, controlled by fetch options like cache: 'force-cache' or next.revalidate), Full Route Cache (caches static route output), and Router Cache (client-side cache of RSC payloads). I selectively opt routes out of caching with export const dynamic = 'force-dynamic' for real-time data, and use granular fetch cache options to mix static and dynamic data within a single page.",
+    "explanation": "Four layers: Request Memoization (dedup within one render), Data Cache (across requests via fetch options or revalidate), Full Route Cache (static route output), Router Cache (RSC payloads on the client). Mix per-fetch cache options to combine static and dynamic data on the same page; opt out for real-time routes with export const dynamic = 'force-dynamic'.",
+    "example": "export const dynamic = 'force-dynamic';\n\nconst hot = await fetch('/api/live', { cache: 'no-store' });\nconst cold = await fetch('/api/about', { next: { revalidate: 3600 } });"
+  },
+  {
+    "id": "femnc-060",
+    "section": "nextjs-ssr",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "How do you set up API routes in Next.js and when would you use them vs a separate backend?",
+    "answer": "Next.js API routes (or Route Handlers in App Router) are serverless functions co-located with the frontend — great for BFF (Backend for Frontend) patterns: proxying third-party APIs to hide credentials, lightweight data transformations, and webhook handlers (e.g., Twilio webhooks on AI-Kiosk). I use them when the logic is tightly coupled to the frontend and deployment simplicity matters. For heavy business logic, auth-sensitive operations, or shared services across multiple clients, a separate dedicated backend is cleaner and more scalable.",
+    "explanation": "App Router Route Handlers act as a BFF: hide third-party credentials, do light reshape, accept webhooks. Use them when the logic is tightly coupled to the frontend. Reach for a dedicated backend when logic is heavy, auth-sensitive, or shared across multiple clients.",
+    "example": "// app/api/twilio/webhook/route.ts\nexport async function POST(req: Request) {\n  const body = await req.formData();\n  await handleStatus(body);\n  return new Response('ok');\n}"
+  },
+  {
+    "id": "femnc-061",
+    "section": "system-design",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "Design the frontend architecture for a zero-code workflow builder like ZEOS.",
+    "answer": "Core components: a drag-and-drop canvas (React Flow or custom SVG engine with useDrag/useDrop), a node registry mapping node types to React components, a Redux store holding the workflow DAG as normalized entities (nodes + edges), and a JSON serializer for persistence. Each node has an input/output schema — validated with Zod when connections are made. Undo/redo implemented via command pattern (action history stack). The preview/test-run mode sandboxes execution in a Web Worker. Module federation allows independent teams to ship new node types without redeploying the canvas shell.",
+    "explanation": "Drag-and-drop canvas (React Flow or custom SVG), a node registry mapping node types to React components, Redux holding the DAG as normalized {nodes, edges}, and a JSON serializer. Connections validate against Zod node schemas. Undo/redo via a command-pattern action stack. Test runs go to a Web Worker. Module Federation lets teams ship new node types without redeploying the shell.",
+    "example": "// Normalized DAG slice\ntype State = {\n  nodes: Record<string, Node>;\n  edges: Record<string, Edge>;\n  history: Command[];\n  future: Command[];\n};"
+  },
+  {
+    "id": "femnc-062",
+    "section": "system-design",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "How would you design a real-time collaborative document editor in React?",
+    "answer": "Collaboration requires operational transformation (OT) or CRDTs (Conflict-free Replicated Data Types) to merge concurrent edits. Libraries like Yjs (CRDT-based) with a WebSocket provider handle this. The React integration uses Yjs's awareness protocol for presence (cursor positions, user colors). The editor (e.g., TipTap backed by ProseMirror) binds to a Yjs document — changes propagate via WebSocket to all connected clients. Offline edits are queued and merged on reconnect. Persistent storage uses a Yjs-compatible backend or periodic snapshots.",
+    "explanation": "OT or CRDTs merge concurrent edits — Yjs (CRDT) is the modern default. Use a WebSocket provider for transport and Yjs awareness for presence. TipTap/ProseMirror binds to the Y.Doc; offline edits queue and merge on reconnect. Persist via a Yjs-compatible backend or periodic snapshots.",
+    "example": "import * as Y from 'yjs';\nimport { WebsocketProvider } from 'y-websocket';\n\nconst doc = new Y.Doc();\nconst provider = new WebsocketProvider('wss://collab', 'doc-1', doc);\nconst yText = doc.getText('body');"
+  },
+  {
+    "id": "femnc-063",
+    "section": "system-design",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "Design the frontend for a hospital real-time patient monitoring dashboard for 50+ beds.",
+    "answer": "Architecture: WebSocket connection to a bed-stream server multiplexed by ward. State: Zustand store normalized by bed ID — each bed's latest vitals object replaced atomically. UI: a virtualized grid of bed cards (react-window's FixedSizeGrid), each subscribing to its specific bed slice. Alerts: threshold evaluation in a Web Worker to avoid blocking renders. Stale data indicator: a timestamp check every second marks beds as \"stale\" if no update received in 30s. Disconnection handling: exponential backoff reconnect with a global offline banner.",
+    "explanation": "Single WebSocket multiplexed per ward. Zustand store normalized by bed ID; each card subscribes to its own slice. Render the grid through react-window's FixedSizeGrid. Run threshold/alarm logic in a Web Worker. Mark beds stale if no update in 30s. Reconnect with exponential backoff and a global offline banner.",
+    "example": "const useBeds = create<Record<string, Vitals>>((set) => ({}));\nfunction Bed({ id }: { id: string }) {\n  const v = useBeds((s) => s[id]);\n  return <Card vitals={v} stale={Date.now() - v.t > 30_000} />;\n}"
+  },
+  {
+    "id": "femnc-064",
+    "section": "system-design",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "How would you build a microfrontend architecture for the ZEOS platform?",
+    "answer": "I'd use Module Federation (Webpack 5) to allow independently deployed frontend modules (workflow builder, dashboard, admin, analytics) to share code and be composed at runtime. A shell application handles routing, authentication, and shared providers (theme, user context). Each microfrontend exposes its entry component and declares its shared dependencies (React, ReactDOM) as singletons to prevent version conflicts. CI/CD pipelines deploy each module independently. The trade-off is added complexity — I'd only adopt this for teams large enough that separate deployment cadences provide genuine value.",
+    "explanation": "Webpack Module Federation. A shell app owns routing, auth, theme. Each remote (workflow, dashboard, admin, analytics) exposes an entry and declares React/ReactDOM as singletons to avoid duplicate copies. Each pipeline deploys independently. Only worth the complexity at team size where independent cadence pays off.",
+    "example": "// next.config.js (shell)\nconst { NextFederationPlugin } = require('@module-federation/nextjs-mf');\n\nmodule.exports = {\n  webpack(config) {\n    config.plugins.push(new NextFederationPlugin({\n      name: 'shell',\n      remotes: { workflow: 'workflow@https://wf/_next/static/chunks/remoteEntry.js' },\n      shared: { react: { singleton: true }, 'react-dom': { singleton: true } },\n    }));\n    return config;\n  },\n};"
+  },
+  {
+    "id": "femnc-065",
+    "section": "system-design",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "Design a frontend caching strategy for an application with mixed real-time and historical data.",
+    "answer": "Tiered strategy: real-time data (vitals, chat messages) — no cache, always fresh from WebSocket; semi-dynamic data (patient profiles, medication lists) — TanStack Query with 5-minute stale time and background refetch; static reference data (drug database, procedure codes) — aggressive caching with 24-hour TTL and service worker pre-caching; user-generated content (reports, summaries) — optimistic cache with invalidation on mutation. This ensures the UI feels instant for browsing historical data while real-time streams remain accurate.",
+    "explanation": "Tiered cache: real-time = no cache, WebSocket-driven; semi-dynamic = TanStack Query with ~5-min stale time and background refetch; static reference = 24h TTL plus service-worker precache; user-generated = optimistic cache invalidated on mutation. Browsing feels instant; real-time stays correct.",
+    "example": "useQuery({ queryKey: ['drugs'], queryFn: api.drugs, staleTime: 24 * 60 * 60 * 1000 });\nuseQuery({ queryKey: ['patient', id], queryFn: () => api.patient(id), staleTime: 5 * 60 * 1000 });"
+  },
+  {
+    "id": "femnc-066",
+    "section": "system-design",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "How do you approach frontend error boundaries and graceful degradation?",
+    "answer": "React Error Boundaries catch render-time errors in their subtree and render a fallback UI. I place granular error boundaries around major features — if the AI summary widget crashes, the rest of the patient dashboard still works. Each boundary reports to an error monitoring service (Sentry). For async errors (fetch failures), I use TanStack Query's onError callbacks and display inline error states with retry actions. Graceful degradation means the core workflow (patient registration) functions even if AI enhancements fail.",
+    "explanation": "Place fine-grained Error Boundaries around major features so a crash in one widget doesn't take down the page. Report to Sentry from the boundary. Handle async errors via TanStack Query's onError with inline retry. Core workflows (registration) must keep working when AI extras fail.",
+    "example": "<ErrorBoundary fallback={<WidgetError />} onError={(e) => Sentry.captureException(e)}>\n  <AiSummary patientId={id} />\n</ErrorBoundary>"
+  },
+  {
+    "id": "femnc-067",
+    "section": "system-design",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "How do you structure a large React project's folder and file layout?",
+    "answer": "I use feature-based structure: each feature directory contains its components, hooks, types, API calls, and tests co-located. Shared code (UI primitives, utilities, global types) lives in a shared/ or lib/ directory. Barrel files (index.ts) expose the public API of each feature. This structure scales with team size — teams own features end-to-end without stepping on each other. Configuration files (routing, store setup, providers) live in app/. I avoid organizing by type (all components together, all hooks together) — it breaks down at scale.",
+    "explanation": "Organize by feature, not by type. Each feature folder owns its components, hooks, types, API, and tests. Cross-cutting code lives in shared/ or lib/. Each feature exposes a small public API via an index.ts barrel. Scales because teams own features end-to-end.",
+    "example": "src/\n  features/\n    patients/\n      api.ts\n      components/\n      hooks/\n      types.ts\n      index.ts\n  shared/\n    ui/\n    utils/\n  app/\n    providers.tsx\n    router.tsx"
+  },
+  {
+    "id": "femnc-068",
+    "section": "system-design",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "How would you implement role-based access control (RBAC) in a React frontend?",
+    "answer": "RBAC on the frontend is UX-layer security — real enforcement must be server-side. That said, proper frontend RBAC prevents unauthorized UI rendering and improves UX. I define a permissions model as a set of capabilities (e.g., can_view_patient, can_approve_prescription). The current user's roles/permissions come from the auth token. A usePermission('can_approve_prescription') hook checks this. Components use it to conditionally render actions. Route-level protection happens in Next.js middleware. On ROVER, I built a React permission hook that read from JWT claims and conditionally rendered AI features.",
+    "explanation": "Frontend RBAC is a UX layer; the server is the source of truth. Model permissions as capabilities (can_view_patient, can_approve_prescription) carried in the auth token. usePermission(name) hides actions; route protection happens in middleware. On ROVER this hook drove every AI entry point.",
+    "example": "function usePermission(cap: string) {\n  const claims = useAuthClaims();\n  return claims.caps?.includes(cap) ?? false;\n}\n\nfunction ApproveButton() {\n  const can = usePermission('can_approve_prescription');\n  return can ? <Button>Approve</Button> : null;\n}"
+  },
+  {
+    "id": "femnc-069",
+    "section": "system-design",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How do you handle offline support in a web application?",
+    "answer": "Progressive Web App techniques: a Service Worker (via Workbox) intercepts fetch requests and serves cached responses when offline. I define caching strategies per resource type: Cache-First for static assets, Network-First for API calls (falling back to cache), and Stale-While-Revalidate for semi-dynamic data. For write operations, I use a background sync queue — mutations made offline are queued and replayed when connectivity is restored. IndexedDB stores offline-queued operations persistently across page reloads.",
+    "explanation": "PWA pattern: a Service Worker (Workbox) intercepts fetches. Cache-First for assets, Network-First for APIs (fallback cache), Stale-While-Revalidate for semi-dynamic data. Writes go into a background sync queue backed by IndexedDB so they survive reload and replay on reconnect.",
+    "example": "// workbox config\nrouting.registerRoute(\n  ({ request }) => request.destination === 'image',\n  new strategies.CacheFirst({ cacheName: 'imgs' }),\n);"
+  },
+  {
+    "id": "femnc-070",
+    "section": "system-design",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "How would you build a frontend observability system for a production React application?",
+    "answer": "Four pillars: Error tracking (Sentry — captures uncaught exceptions, React render errors via Error Boundaries, and custom error events); Performance monitoring (Web Vitals API + Sentry or Datadog RUM — tracks LCP, INP, CLS per page); User session recording (optional, privacy-controlled — tools like LogRocket); and Custom metrics (analytics events for business KPIs — feature usage, conversion funnels). I instrument API call durations, WebSocket connection stability, and streaming completion rates as custom metrics. Alerts trigger on error rate spikes or performance degradation.",
+    "explanation": "Four pillars: errors (Sentry, including Error Boundaries), performance (Web Vitals + Datadog RUM), session recording (LogRocket, privacy-gated), business metrics (custom events). Instrument API duration, WebSocket stability, streaming completion. Alert on error-rate spikes and Web Vitals regressions.",
+    "example": "import { onLCP, onINP, onCLS } from 'web-vitals';\n\nonLCP((m) => analytics.track('web-vitals', { name: 'LCP', value: m.value }));\nonINP((m) => analytics.track('web-vitals', { name: 'INP', value: m.value }));\nonCLS((m) => analytics.track('web-vitals', { name: 'CLS', value: m.value }));"
+  },
+  {
+    "id": "femnc-071",
+    "section": "css-tailwind-uiux",
+    "technology": "CSS3",
+    "level": "Beginner",
+    "question": "What is the difference between em, rem, px, %, vw, and vh in CSS?",
+    "answer": "px is absolute. em is relative to the element's own font size (compounds with nesting). rem is relative to the root (html) font size — my preferred unit for typography and spacing because it respects user accessibility settings. % is relative to the parent element's dimension. vw/vh are relative to the viewport width/height — useful for full-screen layouts. In Tailwind, spacing units map to rem by default, which is why Tailwind-based UIs naturally support browser font size preferences.",
+    "explanation": "px = absolute. em = relative to own font size (compounds). rem = relative to root font size — best for type and spacing because it respects user prefs. % = relative to parent dimension. vw/vh = relative to viewport. Tailwind defaults to rem-based spacing, which is why Tailwind UIs scale with user font size.",
+    "example": "/* Tailwind defaults to rem under the hood */\n.p-4 { padding: 1rem; } /* = 16px when html font-size is 16px */"
+  },
+  {
+    "id": "femnc-072",
+    "section": "css-tailwind-uiux",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "How does CSS Grid differ from Flexbox and when do you use each?",
+    "answer": "Flexbox is one-dimensional — it aligns items along a single axis (row or column), ideal for navigation bars, button groups, and card rows. CSS Grid is two-dimensional — it controls both rows and columns simultaneously, ideal for full page layouts, dashboards, and image galleries. I use Flexbox for component-level alignment and Grid for page/section layout. They complement each other — a Grid layout can contain Flexbox components. On GoodHomes' gallery page, I used CSS Grid for the responsive masonry-like image layout.",
+    "explanation": "Flexbox is one-dimensional (row or column) — ideal for navs, button groups, card rows. Grid is two-dimensional — best for whole page layouts, dashboards, galleries. Use them together: Grid for the page, Flex for components inside cells.",
+    "example": ".gallery {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));\n  gap: 16px;\n}"
+  },
+  {
+    "id": "femnc-073",
+    "section": "css-tailwind-uiux",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "Explain how you use Tailwind CSS effectively in a large React project.",
+    "answer": "Tailwind's utility-first approach scales well when you: extract repeated utility combinations into reusable components rather than copying class strings; use the cn() utility (clsx + tailwind-merge) for conditional classes without conflicts; configure the design system in tailwind.config.js (custom colors, spacing, fonts) to ensure brand consistency; and use component variants with cva (class-variance-authority) for multi-variant components like buttons. I've found Tailwind drastically reduces CSS file size and eliminates naming bikeshedding in teams.",
+    "explanation": "Extract repeated utility combos into components, not duplicated class strings. Use cn() (clsx + tailwind-merge) so conditional classes don't conflict. Lock design tokens in tailwind.config. Build multi-variant components (Button, Badge) with cva. Tailwind kills the naming debate and the CSS bundle stays tiny.",
+    "example": "import { cva } from 'class-variance-authority';\n\nconst button = cva('rounded-lg font-medium', {\n  variants: {\n    intent: { primary: 'bg-sky-600 text-white', ghost: 'bg-transparent text-zinc-900' },\n    size: { sm: 'px-3 py-1.5 text-sm', md: 'px-4 py-2 text-base' },\n  },\n  defaultVariants: { intent: 'primary', size: 'md' },\n});"
+  },
+  {
+    "id": "femnc-074",
+    "section": "css-tailwind-uiux",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "What is glassmorphism and how did you implement it on GoodHomes?",
+    "answer": "Glassmorphism creates a frosted-glass effect using backdrop-filter: blur(Npx), semi-transparent backgrounds (rgba or bg-white/20 in Tailwind), and a subtle border (border border-white/30). On GoodHomes, the interior visualization overlay panels used glassmorphism to maintain the premium aesthetic without obscuring the AI-generated room renders behind them. The key implementation challenge was browser support — I added @supports (backdrop-filter: blur(1px)) fallbacks with solid semi-opaque backgrounds for unsupported browsers.",
+    "explanation": "Frosted-glass effect via backdrop-filter: blur(N), a translucent background (bg-white/20), and a subtle border. Add an @supports fallback that uses a solid semi-opaque background for browsers without backdrop-filter — critical for older Safari and embedded webviews.",
+    "example": ".panel {\n  background: rgba(255, 255, 255, 0.2);\n  border: 1px solid rgba(255, 255, 255, 0.3);\n  backdrop-filter: blur(12px);\n}\n@supports not (backdrop-filter: blur(1px)) {\n  .panel { background: rgba(255, 255, 255, 0.85); }\n}"
+  },
+  {
+    "id": "femnc-075",
+    "section": "css-tailwind-uiux",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How do you ensure WCAG accessibility compliance in your web applications?",
+    "answer": "Core practices: semantic HTML (correct use of <button>, <nav>, <main>, <h1>-<h6>); sufficient color contrast (minimum 4.5:1 for normal text, 3:1 for large text — verified with axe DevTools); all interactive elements keyboard-navigable with visible focus indicators; images with meaningful alt attributes; ARIA roles/labels only where semantic HTML is insufficient; focus management in modals (trap focus, restore on close). At Sesame Technologies, I ensured all 150+ client websites met WCAG 2.1 AA compliance.",
+    "explanation": "Use semantic HTML first. Hit 4.5:1 contrast for body text. Make every control reachable by keyboard with a visible focus ring. Provide meaningful alt text. Add ARIA only when semantic HTML can't say it. Trap focus in modals and restore it on close.",
+    "example": "<button\n  className=\"focus-visible:ring-2 focus-visible:ring-sky-500\"\n  aria-label=\"Close dialog\"\n  onClick={close}\n>\n  ×\n</button>"
+  },
+  {
+    "id": "femnc-076",
+    "section": "css-tailwind-uiux",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "How do you implement responsive design beyond just mobile/desktop breakpoints?",
+    "answer": "I design with a fluid-first approach: fluid typography using clamp(), fluid spacing using CSS custom properties that scale with viewport. Container queries (now well-supported) let components respond to their own container size rather than the viewport — critical for reusable components that appear in different layout contexts. I also consider pointer types (@media (hover: hover)) to adjust touch targets for mobile and avoid hover-only interactions. Tailwind's responsive prefixes (sm:, md:) are a starting point, not the full solution.",
+    "explanation": "Fluid-first: clamp() for typography, CSS variables for spacing, container queries so components respond to their container instead of the viewport. Use @media (hover: hover) to skip hover-only UX on touch devices. Tailwind sm:/md: are the start, not the whole story.",
+    "example": "h1 { font-size: clamp(1.5rem, 1rem + 2vw, 2.5rem); }\n\n@container (min-width: 480px) {\n  .card { grid-template-columns: 1fr 1fr; }\n}"
+  },
+  {
+    "id": "femnc-077",
+    "section": "css-tailwind-uiux",
+    "technology": "CSS3",
+    "level": "Advanced",
+    "question": "How do you approach design system implementation in React with Tailwind?",
+    "answer": "I establish a design token layer in tailwind.config.js mapping semantic names to values (e.g., color.brand.primary, spacing.section). Component variants are defined using cva (class-variance-authority) which creates typed variant APIs. Compound components pattern handles complex components like Select, Modal, or Tabs that have multiple sub-components. I document with Storybook — each component has stories for all variants and states. The design system lives in a shared package consumed by all product streams, with a changelogs for breaking changes.",
+    "explanation": "Tokens live in tailwind.config (semantic color/spacing names). Variant APIs come from cva. Compound components (Select.Trigger / Select.Item) handle complex UIs. Document everything in Storybook. Ship the system as a versioned package with a changelog.",
+    "example": "// tailwind.config.ts\nexport default {\n  theme: {\n    extend: {\n      colors: { brand: { primary: '#0EA5E9', surface: '#FAFAFA' } },\n      spacing: { section: '4rem' },\n    },\n  },\n};"
+  },
+  {
+    "id": "femnc-078",
+    "section": "css-tailwind-uiux",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "What is CSS-in-JS and why did you choose Tailwind over it?",
+    "answer": "CSS-in-JS (styled-components, emotion) co-locates styles with components in JavaScript — great for dynamic styles based on props. The trade-off is runtime overhead (style injection), larger bundles, and no static CSS extraction in some configurations. Tailwind generates a minimal static CSS file at build time — zero runtime cost. For enterprise applications like ZEOS where performance matters and the design system is pre-defined, Tailwind's utility classes and design constraints make it faster to build and easier to maintain across multiple developers than CSS-in-JS.",
+    "explanation": "CSS-in-JS co-locates styles with components and supports prop-driven styling, but pays a runtime cost (style injection) and bigger bundles. Tailwind emits a tiny static CSS file at build time — no runtime. For a design-system-driven enterprise app, Tailwind's constraints actually accelerate teams.",
+    "example": "// Tailwind: zero-runtime, design-system-friendly\n<button className=\"rounded-lg bg-sky-600 px-4 py-2 text-white\" />"
+  },
+  {
+    "id": "femnc-079",
+    "section": "css-tailwind-uiux",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "How do you handle dark mode in a React + Tailwind application?",
+    "answer": "Tailwind's darkMode: 'class' strategy applies dark styles when a dark class is on the html element. I store the user's preference in localStorage and respect prefers-color-scheme as the initial default. A ThemeProvider React context manages the active theme and applies/removes the dark class. Tailwind's dark: prefix variants handle all color inversions at the component level. I also use CSS custom properties for complex dynamic theming (e.g., charts and canvas elements that need runtime color values).",
+    "explanation": "Use Tailwind's darkMode: 'class', toggle a 'dark' class on <html>. Persist the preference in localStorage and seed it from prefers-color-scheme. Use CSS custom properties for runtime-driven theming where dark: variants don't reach (charts, canvas).",
+    "example": "// Toggle\ndocument.documentElement.classList.toggle('dark', isDark);\nlocalStorage.setItem('theme', isDark ? 'dark' : 'light');\n\n// Component\n<div className=\"bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100\" />"
+  },
+  {
+    "id": "femnc-080",
+    "section": "css-tailwind-uiux",
+    "technology": "CSS3",
+    "level": "Intermediate",
+    "question": "Explain how CSS animations and transitions can impact performance and how to optimize them.",
+    "answer": "Animating top, left, width, height, or margin triggers layout recalculation (reflow) on every frame — very expensive. Only transform and opacity are composited on the GPU without triggering reflow or repaint — always prefer these for animations. I use will-change: transform to promote animated elements to their own GPU layer (sparingly — it consumes GPU memory). On GoodHomes' UI with premium animations, switching from left/top transitions to transform: translate() eliminated jank on mid-range devices.",
+    "explanation": "Animating top/left/width/height triggers layout (reflow) every frame. Only transform and opacity are GPU-composited and free of reflow/repaint. Use will-change: transform to promote layers — sparingly, since each layer costs GPU memory.",
+    "example": "/* Bad — reflows */\n.menu { transition: left 200ms; }\n\n/* Good — GPU composited */\n.menu { transition: transform 200ms; transform: translateX(0); }\n.menu.closed { transform: translateX(-100%); }"
+  },
+  {
+    "id": "femnc-081",
+    "section": "tools-devops-workflow",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How do you manage Git workflows in a team with multiple concurrent feature streams?",
+    "answer": "I use trunk-based development with short-lived feature branches (1-3 day lifespan max). Feature flags decouple deployment from release — incomplete features can merge to main without going live. Pull requests require at least one review and must pass CI (lint, type check, tests) before merge. I use conventional commits (feat:, fix:, refactor:) for automated changelogs. On ZEOS with 5+ concurrent streams, this prevented the merge conflicts and long-running branch divergence that plagued GitFlow in large teams.",
+    "explanation": "Trunk-based development with 1–3 day feature branches. Feature flags decouple deploy from release so incomplete features can ship to main behind a switch. CI gates every PR (lint, type check, tests) and conventional commits feed the changelog. Beats GitFlow at 5+ streams.",
+    "example": "# Conventional commits\nfeat(workflow): add node validation\nfix(canvas): prevent drag jitter on safari\nrefactor(store): extract selectors"
+  },
+  {
+    "id": "femnc-082",
+    "section": "tools-devops-workflow",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is your CI/CD setup and what checks do you run in the pipeline?",
+    "answer": "On GitLab CI / Azure DevOps, my pipeline stages: (1) Install & cache dependencies; (2) Lint (ESLint, Prettier check); (3) Type check (tsc --noEmit); (4) Unit/integration tests (Vitest); (5) Build (ensures no build errors); (6) E2E tests on staging (Playwright); (7) Deploy to staging; (8) Manual approval gate for production. Failed checks block merges. I've added bundle size checks using bundlewatch to prevent accidental regressions in bundle size.",
+    "explanation": "Stages: install → lint → tsc --noEmit → Vitest → build → Playwright on staging → deploy staging → manual gate → prod. Block merges on any failure. Add bundlewatch so a bundle-size regression also fails the build.",
+    "example": "# .github/workflows/ci.yml (sketch)\njobs:\n  ci:\n    steps:\n      - run: pnpm i\n      - run: pnpm lint\n      - run: pnpm tsc --noEmit\n      - run: pnpm test\n      - run: pnpm build\n      - run: pnpm bundlewatch"
+  },
+  {
+    "id": "femnc-083",
+    "section": "tools-devops-workflow",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How do you use Docker in a frontend development context?",
+    "answer": "I use Docker to ensure environment consistency across team members and CI. A multi-stage Dockerfile: stage 1 installs dependencies and builds the app; stage 2 copies only the build output into a minimal nginx image. This produces a small production image (~50MB vs 600MB+ with node_modules). Docker Compose provides local development with the frontend, backend, and database running together. On ZEOS, Docker ensured that the \"works on my machine\" problem was eliminated — the CI environment exactly matched local development.",
+    "explanation": "Multi-stage Dockerfile: build stage installs deps and produces /dist; runtime stage copies /dist into a minimal nginx image (~50MB vs 600MB+). docker-compose runs frontend + backend + DB together for local dev. CI uses the exact same image.",
+    "example": "FROM node:20-alpine AS build\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci\nCOPY . .\nRUN npm run build\n\nFROM nginx:1.27-alpine\nCOPY --from=build /app/dist /usr/share/nginx/html"
+  },
+  {
+    "id": "femnc-084",
+    "section": "tools-devops-workflow",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How do you use feature flags in a frontend application?",
+    "answer": "Feature flags decouple code deployment from feature release. I use a flag service (LaunchDarkly, Unleash, or a simple config from the backend) with a React useFeatureFlag('flag-name') hook. Flags can be boolean, multivariate (A/B testing), or user-targeted (rollout to 10% of users). Flag evaluations happen at the edge or in the first API call to avoid layout shift. On ZEOS, I used feature flags to release new AI capabilities to individual enterprise clients independently before broad rollout.",
+    "explanation": "Flags decouple deploy from release. Use LaunchDarkly/Unleash (or your own) and a useFeatureFlag(name) hook. Flags can be boolean, multivariate, or user-targeted. Evaluate at the edge or in the first API call so the UI doesn't shift after hydration.",
+    "example": "function NewCanvas() {\n  const enabled = useFeatureFlag('new-canvas');\n  return enabled ? <CanvasV2 /> : <CanvasV1 />;\n}"
+  },
+  {
+    "id": "femnc-085",
+    "section": "tools-devops-workflow",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is your approach to writing and organizing tests in a React application?",
+    "answer": "Testing pyramid for frontend: many unit tests for utility functions and pure logic; integration tests for component behavior using React Testing Library (RTL) — testing user interactions, not implementation details; fewer, targeted E2E tests with Playwright for critical user journeys (patient registration, workflow creation). I avoid testing implementation details (internal state, component structure) — tests should break when behavior changes, not when code is refactored. I co-locate test files next to the code they test (Component.test.tsx).",
+    "explanation": "Pyramid: many unit tests on pure logic, integration tests with React Testing Library for component behavior, a small focused set of Playwright E2E tests for critical journeys. Test behavior, not internals — tests should break on behavior changes, not refactors. Co-locate test files with source.",
+    "example": "test('submits the form when valid', async () => {\n  render(<RegisterForm />);\n  await user.type(screen.getByLabelText(/email/i), 'a@b.com');\n  await user.click(screen.getByRole('button', { name: /sign up/i }));\n  expect(await screen.findByText(/welcome/i)).toBeInTheDocument();\n});"
+  },
+  {
+    "id": "femnc-086",
+    "section": "tools-devops-workflow",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "How do you approach monitoring and alerting for a React application in production?",
+    "answer": "I instrument the application with Sentry (errors + performance), set up custom dashboards in Datadog or Grafana for business metrics, and configure alerts on: error rate exceeding 1% of sessions, Core Web Vitals degradation (P75 LCP >3s), API error rates from the BFF layer, and WebSocket disconnection rates. For the AI-Kiosk, I added custom metrics for AI response latency and voice session completion rate — these were business-critical KPIs reviewed in weekly engineering reviews.",
+    "explanation": "Instrument with Sentry for errors + perf, Datadog/Grafana for business metrics. Alert on: error rate >1% of sessions, P75 LCP >3s, BFF error rates, WebSocket disconnect rates. Custom KPIs (AI response latency, voice session completion) belong in the same dashboard reviewed weekly.",
+    "example": "Sentry.init({\n  dsn: env.NEXT_PUBLIC_SENTRY_DSN,\n  tracesSampleRate: 0.1,\n  beforeSend(evt) { return scrubPII(evt); },\n});"
+  },
+  {
+    "id": "femnc-087",
+    "section": "tools-devops-workflow",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "How do you handle environment-specific configuration in a frontend application?",
+    "answer": "Next.js and Vite both support .env, .env.local, .env.development, .env.production files with clear precedence. I validate all required environment variables at startup with a Zod schema — the build fails fast if any required variable is missing. Secrets are never in .env files committed to version control — they're injected at build time by the CI/CD platform (Vercel environment variables, Azure DevOps variable groups). Public variables (API URLs, feature flag keys) are safe in .env.production and committed.",
+    "explanation": "Use Next.js / Vite's layered .env files. Validate required vars at startup with a Zod schema so the build fails fast. Real secrets live in the CI/CD platform (Vercel env, Azure variable groups) — never in committed .env files.",
+    "example": "// env.ts\nimport { z } from 'zod';\nexport const env = z.object({\n  NEXT_PUBLIC_API_URL: z.string().url(),\n  STRIPE_SECRET_KEY: z.string().min(1),\n}).parse(process.env);"
+  },
+  {
+    "id": "femnc-088",
+    "section": "tools-devops-workflow",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "What is your experience with Vercel and how does it differ from self-hosting a Next.js app?",
+    "answer": "Vercel is the first-class platform for Next.js — zero-config deployments, automatic preview deployments per PR, built-in CDN, Edge Network for middleware/ISR, and native support for all Next.js features (ISR, Server Actions, image optimization). Self-hosting on a Node.js server or Docker gives more control over infrastructure costs and data residency, but requires manual setup for ISR, image optimization, and edge caching. For GoodHomes and ZEOS modules, I deployed on Vercel — the developer experience and performance out-of-the-box justified it.",
+    "explanation": "Vercel is the first-class Next.js platform: zero-config deploys, per-PR previews, edge network for middleware and ISR, native image optimization. Self-host on Node/Docker for cost and data-residency control, but you have to wire ISR, image optim, and edge caching yourself.",
+    "example": "# vercel deploy\nvercel --prod"
+  },
+  {
+    "id": "femnc-089",
+    "section": "tools-devops-workflow",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How do you set up ESLint and Prettier for a large React/TypeScript project?",
+    "answer": "I use eslint-config-next (or @typescript-eslint + eslint-plugin-react + eslint-plugin-react-hooks for non-Next projects), with eslint-plugin-jsx-a11y for accessibility checks. Prettier handles formatting — I integrate it as an ESLint plugin to avoid conflicts. Rules are configured in .eslintrc.json and enforced in CI — PRs with lint errors don't merge. I also use Husky + lint-staged to run lint and format checks as a pre-commit hook, catching issues before they reach CI. This setup is non-negotiable for teams of 3+.",
+    "explanation": "eslint-config-next (or @typescript-eslint + eslint-plugin-react + react-hooks) plus eslint-plugin-jsx-a11y. Prettier as a plugin so the two don't fight. CI blocks merges on lint errors; Husky + lint-staged catches them at commit time.",
+    "example": "// .eslintrc.json (sketch)\n{\n  \"extends\": [\n    \"next/core-web-vitals\",\n    \"plugin:jsx-a11y/recommended\",\n    \"prettier\"\n  ],\n  \"plugins\": [\"jsx-a11y\"]\n}"
+  },
+  {
+    "id": "femnc-090",
+    "section": "tools-devops-workflow",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is Cloudflare and how have you used it in your projects?",
+    "answer": "Cloudflare is a CDN, DDoS protection, and edge computing platform. I've used it for: CDN caching of static assets (dramatically improving global load times), DDoS protection for public-facing applications, Cloudflare Pages for frontend hosting, and Cloudflare Workers for edge-computed redirects and A/B testing. On ZEOS, Cloudflare's CDN cached static module assets globally, reducing load times for international enterprise users from 4s to under 1s. Cloudflare's WAF also provided an additional security layer for the enterprise-grade platform.",
+    "explanation": "Cloudflare = global CDN + DDoS protection + edge compute. Use it for asset caching, WAF, Pages hosting, and Workers for edge redirects or A/B variants. On ZEOS, asset caching cut international load times from 4s to <1s.",
+    "example": "// Cloudflare Worker: A/B variant\nexport default {\n  fetch(req) {\n    const variant = Math.random() < 0.5 ? 'A' : 'B';\n    const res = new Response(`Variant ${variant}`);\n    res.headers.append('Set-Cookie', `variant=${variant}; Path=/`);\n    return res;\n  },\n};"
+  },
+  {
+    "id": "femnc-091",
+    "section": "behavioural-leadership",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Tell me about the most technically complex feature you've built and how you approached it.",
+    "answer": "The real-time voice assistant in AI-Kiosk was the most complex. Challenges: synchronizing audio streaming state with React UI state; handling interruptions (user speaking while the assistant is responding); maintaining conversation context across turns; and ensuring sub-500ms perceived latency. I approached it with a state machine (XState) for conversation turns, Web Audio API for client-side VAD, and careful WebSocket lifecycle management. I started with a working prototype in 3 days and iteratively refined latency and reliability over 3 weeks of clinical testing.",
+    "explanation": "The AI-Kiosk real-time voice assistant. Hard parts: syncing audio streaming with React UI state, handling user interruptions mid-response, holding conversation context across turns, keeping perceived latency under 500ms. XState modeled turns; Web Audio handled client-side VAD. Prototype in 3 days, then 3 weeks tuning latency and reliability in clinical settings.",
+    "example": "// XState turn machine (sketch)\ncreateMachine({\n  id: 'turn',\n  initial: 'idle',\n  states: {\n    idle: { on: { USER_SPEAKING: 'listening' } },\n    listening: { on: { USER_DONE: 'processing' } },\n    processing: { on: { READY: 'speaking' } },\n    speaking: { on: { USER_INTERRUPT: 'listening', DONE: 'idle' } },\n  },\n});",
+    "interviewTip": "Use STAR format. The \"Result\" here is the 40% reduction in manual data entry — always land on business impact."
+  },
+  {
+    "id": "femnc-092",
+    "section": "behavioural-leadership",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Describe a time you disagreed with a technical decision. How did you handle it?",
+    "answer": "On ZEOS, the initial architecture used Redux for all state including ephemeral UI state (hover effects, tooltip visibility), causing unnecessary complexity and store bloat. I disagreed but respected the original decision. I documented my concerns with concrete examples — components with 20+ lines of Redux boilerplate for simple toggle state — and proposed a hybrid approach at the next architecture review. The team adopted it. I've learned that disagreements land better with data and a concrete alternative, not just criticism.",
+    "explanation": "On ZEOS, Redux owned even ephemeral UI state. I documented concrete examples (20+ lines of Redux boilerplate for a toggle), proposed a hybrid (Redux for shared, useState/Zustand for ephemeral), brought it to architecture review, and the team adopted it. Disagreement lands when you bring data and a concrete alternative.",
+    "example": "// Lesson framed for the conversation\n// 1. Acknowledge the original choice\n// 2. Show measured pain (boilerplate, perf, bugs)\n// 3. Propose a hybrid that preserves the wins of the original"
+  },
+  {
+    "id": "femnc-093",
+    "section": "behavioural-leadership",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How do you onboard a new junior developer onto a complex React codebase?",
+    "answer": "My onboarding approach: (1) Architecture walkthrough — draw the data flow from API to UI, not just show folders; (2) Pair programming on a real (small) task in the first week rather than reading documentation; (3) Identify a first independent task with clear acceptance criteria and a test to verify it; (4) Code review as a teaching tool — I explain the \"why\" behind feedback, not just request changes; (5) Encourage questions publicly in team channels so others benefit. Good onboarding halves the time to productivity and reduces early turnover.",
+    "explanation": "Walk the data flow, not just the folder tree. Pair on a real (small) task in week one. Hand them a first independent task with crisp acceptance criteria and a test. Use code review as a teaching tool. Push questions into public channels so others benefit too.",
+    "example": "// First-week task template\n// Goal: implement <UserBadge /> component using the existing Avatar primitive\n// Acceptance: shows initials when no image, accessible label, jest test for both states"
+  },
+  {
+    "id": "femnc-094",
+    "section": "behavioural-leadership",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How do you balance technical debt against feature delivery pressure?",
+    "answer": "I track technical debt explicitly — a maintained backlog with estimated impact (performance, maintainability, security risk) and effort. In sprint planning, I advocate for a 20% allocation to debt reduction — this is easier to get buy-in for than a \"refactoring sprint.\" I also use the boy scout rule: leave code cleaner than you found it on every feature branch. On ZEOS, a performance debt item (unvirtualized lists) was costing sales demos — framing it as a revenue risk, not a tech concern, got it prioritized immediately.",
+    "explanation": "Maintain an explicit debt backlog with impact and effort. Negotiate ~20% per sprint instead of asking for 'a refactoring sprint'. Boy-scout rule on every feature branch. When debt blocks revenue (e.g., demo perf), reframe it as a revenue risk to get fast buy-in.",
+    "example": "// Debt ticket template\n// Title: virtualize patient grid\n// Impact: scroll jank in sales demos (revenue risk)\n// Effort: 1.5 days\n// Risk if delayed: continued enterprise demo escalations"
+  },
+  {
+    "id": "femnc-095",
+    "section": "behavioural-leadership",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Tell me about a time you significantly improved developer experience for your team.",
+    "answer": "On ZEOS, the shared component library had no documentation and required reading source code to understand usage. I introduced Storybook: every component got stories covering all variants and states, with interactive controls. I also wrote a contributing guide and automated component scaffolding with a plop template. Within a month, new feature delivery involving shared components became 30% faster (measured by PR cycle time) and the number of \"how do I use X component\" Slack questions dropped by ~70%.",
+    "explanation": "Brought Storybook to a previously undocumented component library — every component got stories for all variants and states. Wrote a contributing guide and automated scaffolding with plop. Outcome: 30% faster PR cycle for shared-component work and ~70% fewer 'how do I use X' Slack questions.",
+    "example": "// Plop scaffolding entry\nplop.setGenerator('component', {\n  description: 'New shared component',\n  prompts: [{ type: 'input', name: 'name', message: 'Component name' }],\n  actions: [\n    { type: 'add', path: 'src/{{name}}/{{name}}.tsx', templateFile: 'plop/component.hbs' },\n    { type: 'add', path: 'src/{{name}}/{{name}}.stories.tsx', templateFile: 'plop/stories.hbs' },\n  ],\n});"
+  },
+  {
+    "id": "femnc-096",
+    "section": "behavioural-leadership",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How do you handle a situation where a critical production bug is discovered on a Friday afternoon?",
+    "answer": "Immediate triage: reproduce in a non-production environment, assess impact (how many users affected, is it a data integrity issue or a UI glitch?), and communicate status to stakeholders immediately — no surprises. If the fix is straightforward and testable, I fix, test, and deploy. If complex, I assess if a feature flag can disable the affected area as a hotfix while the proper fix is prepared. I document the incident timeline, root cause, and prevention measures — blameless post-mortems make teams better. On AI-Kiosk, a production WebSocket crash on deployment day was resolved in 45 minutes using this approach.",
+    "explanation": "Reproduce off-prod, size the blast radius, communicate status to stakeholders immediately. Straightforward fix → ship it. Complex fix → flip a feature flag to mute the area while the real fix is prepared. Always run a blameless post-mortem with timeline, root cause, and prevention. On AI-Kiosk this took a 45-minute prod WebSocket crash from blocker to resolved.",
+    "example": "// Incident channel template\n// Status: investigating | mitigated | resolved\n// Impact: ~X% of users, feature Y\n// Mitigation: flag 'live-vitals' OFF while fix is prepared\n// ETA: <time>"
+  },
+  {
+    "id": "femnc-097",
+    "section": "behavioural-leadership",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Where do you see yourself in 5 years as a frontend engineer?",
+    "answer": "I want to grow into a Principal or Staff-level Frontend Engineer role — not necessarily managing people, but owning the technical direction of frontend systems at an architecture level. I'm particularly interested in the intersection of AI and frontend — building systems that are genuinely intelligent rather than just wrapping AI APIs. I also want to contribute to open-source projects in the React ecosystem. The depth I've built in AI-integrated frontend (AI-Kiosk, ROVER, GoodHomes) positions me well for this trajectory in an MNC context.",
+    "explanation": "Principal/Staff Frontend track — owning architecture and direction without necessarily managing people. Specifically the AI × frontend space: systems that are intelligent end-to-end, not just API wrappers. Plus open-source contributions in the React ecosystem.",
+    "example": "// Personal growth plan (sketch)\n// 2026: lead architecture of one product stream end-to-end\n// 2027: present at a conference on AI-integrated frontend\n// 2028: contribute a meaningful PR to a top-10 React ecosystem package"
+  },
+  {
+    "id": "femnc-098",
+    "section": "behavioural-leadership",
+    "technology": "General",
+    "level": "Beginner",
+    "question": "How do you stay current with rapidly evolving frontend technologies?",
+    "answer": "I follow the RFC (Request for Comment) process for React and Next.js — it gives early visibility into upcoming changes. I track GitHub releases for libraries I use (TanStack, Zustand, Tailwind). I build side projects to experiment with new patterns before applying them at work — GoodHomes was partly a vehicle to experiment with AI image generation APIs and glassmorphism design patterns. I engage with the community via Twitter/X, the Next.js Discord, and occasional conference talks. I'm deliberate about adoption — new doesn't mean better.",
+    "explanation": "Follow RFCs for React/Next, watch GitHub releases for the libs you actually use, ship side projects to learn new patterns before they hit work code, stay engaged with the community (Discord, conferences). Adopt deliberately — new ≠ better.",
+    "example": "// Reading list rhythm\n// Weekly: RFCs (React, Next.js), GitHub releases for TanStack/Zustand/Tailwind\n// Monthly: build/extend a side project that exercises one new pattern\n// Quarterly: write up what stuck and what didn't"
+  },
+  {
+    "id": "femnc-099",
+    "section": "behavioural-leadership",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "How do you contribute to cross-functional collaboration between frontend, backend, and design?",
+    "answer": "I treat API contracts as a shared artifact — I initiate early API design discussions (not just consume what the backend delivers). I use OpenAPI/Swagger specs to generate TypeScript types, ensuring frontend and backend stay in sync. With designers, I work in Figma early, flagging technically complex interactions before they're finalized. I participate in design critiques and offer implementation feedback — e.g., \"this animation requires a layout change that will cause reflow, here's a CSS transform alternative.\" This prevents expensive late-stage rework.",
+    "explanation": "Treat the API contract as a shared artifact — design it together, then generate TS types from OpenAPI so both sides stay honest. Sit in early Figma reviews and flag perf-sensitive interactions before they ship to design QA. Cheap to fix early, expensive to fix late.",
+    "example": "// Generate types from OpenAPI\n# package.json scripts\n\"types:api\": \"openapi-typescript ./openapi.yaml -o ./src/types/api.ts\""
+  },
+  {
+    "id": "femnc-100",
+    "section": "behavioural-leadership",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "What is your philosophy on building AI-powered products responsibly?",
+    "answer": "AI-powered products carry an obligation beyond functional correctness — they affect real people's decisions. My philosophy: transparency (users should know when they're interacting with AI-generated content, especially in healthcare); human oversight (AI should augment, not replace, clinical judgment — I build explicit review steps into AI-driven workflows); failure gracefully (AI features degrade to manual alternatives, they don't silently fail); and continuous evaluation (model outputs should be monitored in production, not just tested in development). On AI-Kiosk, every AI-generated prescription summary included a \"verify with physician\" prompt — a small design choice with significant patient safety implications.",
+    "explanation": "Four principles. Transparency: tell users when content is AI. Human oversight: AI augments judgment, never replaces it — bake explicit review steps into the workflow. Graceful failure: AI features degrade to manual paths instead of silently failing. Continuous evaluation: monitor outputs in production, not just dev. On AI-Kiosk every AI summary carried a 'verify with physician' prompt — small UI, major safety implication.",
+    "example": "<Banner tone=\"info\">\n  This summary was generated by AI. Verify with the attending physician before prescribing.\n</Banner>"
+  }
+]
