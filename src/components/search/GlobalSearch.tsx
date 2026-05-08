@@ -3,9 +3,73 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { searchAll } from "@/lib/search";
+import { searchAll, type UnifiedHit } from "@/lib/search";
 import { useRecentSearches } from "@/hooks/useRecentSearches";
-import { interviewSlug } from "@/lib/interviewDisplay";
+import { getInterviewCardBlurb, interviewSlug } from "@/lib/interviewDisplay";
+
+function hitHref(hit: UnifiedHit): string {
+  switch (hit.kind) {
+    case "page":
+      return hit.item.path;
+    case "doc":
+      return `/docs/${hit.item.id}`;
+    case "interview":
+      return `/question/${interviewSlug(hit.item)}`;
+    case "resume":
+      return `/resume-based#resume-q-${hit.item.id}`;
+    case "glossary":
+      return `/keyword/${hit.item.slug}`;
+    case "section":
+      return `/interview/section/${hit.item.slug}`;
+  }
+}
+
+function hitMeta(hit: UnifiedHit): string {
+  switch (hit.kind) {
+    case "page":
+      return "Page";
+    case "doc":
+      return `Topic - ${hit.item.category}`;
+    case "interview":
+      return `Interview - ${hit.item.technology} - ${hit.item.level}`;
+    case "resume":
+      return hit.item.project ? `Resume - ${hit.item.topic} - ${hit.item.project}` : `Resume - ${hit.item.topic}`;
+    case "glossary":
+      return hit.item.category ? `Keyword - ${hit.item.category}` : "Keyword";
+    case "section":
+      return `Section - ${hit.item.technology}`;
+  }
+}
+
+function hitTitle(hit: UnifiedHit): string {
+  switch (hit.kind) {
+    case "page":
+    case "doc":
+    case "section":
+      return hit.item.title;
+    case "interview":
+    case "resume":
+      return hit.item.question;
+    case "glossary":
+      return hit.item.term;
+  }
+}
+
+function hitSummary(hit: UnifiedHit): string {
+  switch (hit.kind) {
+    case "page":
+    case "doc":
+      return hit.item.summary;
+    case "section":
+      return hit.item.description;
+    case "interview":
+      return getInterviewCardBlurb(hit.item);
+    case "resume":
+      return hit.item.short ?? hit.item.answer;
+    case "glossary":
+      return hit.item.short;
+  }
+}
 
 export function GlobalSearch() {
   const router = useRouter();
@@ -47,9 +111,10 @@ export function GlobalSearch() {
       if (hits.length > 0) {
         const first = hits[0];
         pushRecent(query.trim());
-        if (first.kind === "doc") router.push(`/docs/${first.item.id}`);
-        else router.push(`/question/${interviewSlug(first.item)}`);
-      } else goSearchPage();
+        router.push(hitHref(first));
+      } else {
+        goSearchPage();
+      }
       setOpen(false);
     }
     if (e.key === "Escape") setOpen(false);
@@ -58,19 +123,24 @@ export function GlobalSearch() {
   return (
     <div ref={wrapRef} className="relative w-full max-w-xl">
       <label htmlFor="global-search" className="sr-only">
-        Search documentation and interviews
+        Search the entire app
       </label>
       <div className="relative">
         <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" aria-hidden>
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
           </svg>
         </span>
         <input
           id="global-search"
           type="search"
           autoComplete="off"
-          placeholder="Search topics, tags, interview questions…"
+          placeholder="Search the entire app..."
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -121,40 +191,22 @@ export function GlobalSearch() {
             <p className="p-4 text-sm text-zinc-500">No matches. Try another keyword or browse the sidebar.</p>
           )}
 
-          {hits.map((h) =>
-            h.kind === "doc" ? (
-              <Link
-                key={`d-${h.item.id}`}
-                href={`/docs/${h.item.id}`}
-                role="option"
-                className="flex flex-col gap-0.5 border-b border-zinc-50 px-4 py-3 last:border-0 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800"
-                onClick={() => {
-                  pushRecent(debounced);
-                  setOpen(false);
-                }}
-              >
-                <span className="text-xs font-medium text-sky-600 dark:text-sky-400">Topic · {h.item.category}</span>
-                <span className="font-medium text-zinc-900 dark:text-zinc-50">{h.item.title}</span>
-                <span className="line-clamp-2 text-xs text-zinc-500">{h.item.summary}</span>
-              </Link>
-            ) : (
-              <Link
-                key={`i-${h.item.id}`}
-                href={`/question/${interviewSlug(h.item)}`}
-                role="option"
-                className="flex flex-col gap-0.5 border-b border-zinc-50 px-4 py-3 last:border-0 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800"
-                onClick={() => {
-                  pushRecent(debounced);
-                  setOpen(false);
-                }}
-              >
-                <span className="text-xs font-medium text-violet-600 dark:text-violet-400">
-                  Interview · {h.item.technology} · {h.item.level}
-                </span>
-                <span className="font-medium text-zinc-900 dark:text-zinc-50">{h.item.question}</span>
-              </Link>
-            ),
-          )}
+          {hits.map((h) => (
+            <Link
+              key={`${h.kind}-${hitHref(h)}`}
+              href={hitHref(h)}
+              role="option"
+              className="flex flex-col gap-0.5 border-b border-zinc-50 px-4 py-3 last:border-0 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800"
+              onClick={() => {
+                pushRecent(debounced);
+                setOpen(false);
+              }}
+            >
+              <span className="text-xs font-medium text-sky-600 dark:text-sky-400">{hitMeta(h)}</span>
+              <span className="font-medium text-zinc-900 dark:text-zinc-50">{hitTitle(h)}</span>
+              <span className="line-clamp-2 text-xs text-zinc-500">{hitSummary(h)}</span>
+            </Link>
+          ))}
 
           {debounced.trim() && hits.length > 0 && (
             <button
