@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ResumeBasedClient } from "./ResumeBasedClient";
-import { allResumeQuestions, resumeProjects, resumeTopics } from "@/lib/data";
+import { allResumeQuestions } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Resume Based — DevDocs",
@@ -10,8 +10,6 @@ export const metadata: Metadata = {
 
 export default function ResumeBasedPage() {
   const items = allResumeQuestions;
-  const topics = resumeTopics();
-  const projects = resumeProjects();
 
   return (
     <div className="space-y-8 pb-12">
@@ -29,7 +27,7 @@ export default function ResumeBasedPage() {
         </p>
       </header>
 
-      <ResumeBasedClient items={items} topics={topics} projects={projects} />
+      <ResumeBasedClient items={items} />
     </div>
   );
 }

@@ -139,10 +139,6 @@ export function ResumeSearch({ items, onResults }: Props) {
                 }}
                 className="flex w-full flex-col gap-0.5 border-b border-zinc-50 px-4 py-3 text-left last:border-0 hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-800"
               >
-                <span className="text-xs font-medium text-violet-600 dark:text-violet-400">
-                  {q.topic}
-                  {q.project ? ` · ${q.project}` : ""}
-                </span>
                 <span className="font-medium text-zinc-900 dark:text-zinc-50">{q.question}</span>
               </button>
             ))
