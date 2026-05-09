@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     template: "%s · DevDocs AI",
   },
   description:
-    "Centralized curated docs and interview prep for JavaScript, React, TypeScript, Next.js, HTML, CSS, GraphQL, and DevOps.",
+    "Centralized curated docs and interview prep for JavaScript, React, TypeScript, Next.js, HTML, CSS, GraphQL, DevOps, and Git.",
 };
 
 export default function RootLayout({

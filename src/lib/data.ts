@@ -16,6 +16,7 @@ import react from "@/data/docs/react.json";
 import redux from "@/data/docs/redux.json";
 import typescript from "@/data/docs/typescript.json";
 import devops from "@/data/docs/devops.json";
+import git from "@/data/docs/git.json";
 import interviews from "@/data/interviews.json";
 import fe100a from "@/data/interviews-fe100-a.json";
 import fe100b from "@/data/interviews-fe100-b.json";
@@ -48,6 +49,7 @@ export const allDocs: DocTopic[] = [
   ...(css as DocTopic[]),
   ...(graphql as DocTopic[]),
   ...(devops as DocTopic[]),
+  ...(git as DocTopic[]),
 ];
 
 const rawInterviews: InterviewQuestion[] = [
@@ -96,6 +98,7 @@ export const CATEGORIES: TechCategory[] = [
   "CSS3",
   "GraphQL",
   "DevOps",
+  "GIT",
 ];
 
 /** Includes topics like behavioral / Agile that have no doc sidebar section */

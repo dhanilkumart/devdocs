@@ -1,0 +1,453 @@
+[
+  {
+    "id": "git-overview-cheatsheet",
+    "title": "Git command overview",
+    "category": "GIT",
+    "tags": ["git", "commands", "cheatsheet", "overview"],
+    "summary": "A human-friendly map of the Git commands you use most often: create, inspect, stage, commit, branch, sync, undo, and recover.",
+    "content": "## How to think about Git\n\nGit is a history tracker for your code. It watches a folder, records snapshots as commits, and lets you move between versions safely.\n\n## The four everyday areas\n\nWorking tree: the files you are editing right now.\n\nStaging area: the files selected for the next commit.\n\nLocal repository: your committed history on your machine.\n\nRemote repository: shared history on GitHub, GitLab, Azure Repos, or another server.\n\n## Most common command flow\n\nYou edit files, check status, stage changes, commit them, then push the commit to a remote branch.\n\n## Core commands by purpose\n\nStart: `git init`, `git clone`.\n\nInspect: `git status`, `git diff`, `git log`, `git show`.\n\nSave: `git add`, `git commit`.\n\nBranch: `git branch`, `git switch`, `git checkout`.\n\nSync: `git fetch`, `git pull`, `git push`.\n\nUndo: `git restore`, `git reset`, `git revert`.\n\nRecover: `git reflog`, `git stash`.\n\n## Interview line\n\nGit is not just for saving code. It is how teams review, share, rollback, and understand changes.",
+    "code_examples": [
+      {
+        "title": "Daily flow",
+        "language": "bash",
+        "code": "git status\ngit add src/app.js\ngit commit -m \"Add search UI\"\ngit push origin feature/search-ui"
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-setup-config",
+    "title": "Setup and configuration",
+    "category": "GIT",
+    "tags": ["git config", "setup", "identity", "aliases"],
+    "summary": "Configure your name, email, default branch, editor, line endings, and shortcuts before you start using Git heavily.",
+    "content": "## Why setup matters\n\nEvery commit records an author name and email. If your Git identity is wrong, your commits may show under the wrong account in GitHub or GitLab.\n\n## Global vs local config\n\nGlobal config applies to all repositories on your machine. Local config applies only to the current repository.\n\n## Important settings\n\nSet your name and email, choose your default branch name, and configure useful aliases. On Windows, line ending settings can also matter because teams may use different operating systems.\n\n## Helpful commands\n\n`git config --list` shows active config.\n\n`git config --global user.name \"Your Name\"` sets your name globally.\n\n`git config --global user.email \"you@example.com\"` sets your email globally.\n\n`git config --global init.defaultBranch main` makes new repos start with `main`.\n\n## Interview line\n\nBefore collaborating, make sure Git identity and branch defaults are configured correctly.",
+    "code_examples": [
+      {
+        "title": "Basic setup",
+        "language": "bash",
+        "code": "git config --global user.name \"Ada Lovelace\"\ngit config --global user.email \"ada@example.com\"\ngit config --global init.defaultBranch main\ngit config --list"
+      },
+      {
+        "title": "Useful aliases",
+        "language": "bash",
+        "code": "git config --global alias.st status\ngit config --global alias.co checkout\ngit config --global alias.br branch\ngit config --global alias.lg \"log --oneline --graph --decorate --all\""
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-init-clone",
+    "title": "init and clone",
+    "category": "GIT",
+    "tags": ["git init", "git clone", "repository"],
+    "summary": "`git init` creates a new repository in an existing folder; `git clone` copies an existing remote repository.",
+    "content": "## git init\n\nUse `git init` when you already have a folder and want Git to start tracking it. It creates a hidden `.git` folder that stores repository history.\n\n## git clone\n\nUse `git clone` when the repository already exists somewhere else. Clone downloads the files and the Git history.\n\n## Human difference\n\n`init` means: start history here.\n\n`clone` means: bring an existing history here.\n\n## Common mistake\n\nDo not run `git init` inside a folder that is already a clone unless you know exactly what you are doing. You may create nested repositories and confuse tooling.",
+    "code_examples": [
+      {
+        "title": "Start a new repository",
+        "language": "bash",
+        "code": "mkdir my-app\ncd my-app\ngit init"
+      },
+      {
+        "title": "Clone an existing repository",
+        "language": "bash",
+        "code": "git clone https://github.com/org/project.git\ncd project"
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-status-add-commit",
+    "title": "status, add, and commit",
+    "category": "GIT",
+    "tags": ["git status", "git add", "git commit", "staging"],
+    "summary": "`git status` tells you what changed, `git add` stages files, and `git commit` saves a snapshot.",
+    "content": "## git status\n\nThis is the command you should run constantly. It tells you which files changed, which files are staged, and which branch you are on.\n\n## git add\n\n`git add` moves changes into the staging area. Staging means: these are the exact changes I want in my next commit.\n\n## git commit\n\n`git commit` saves the staged changes as a named point in history. A good commit message explains the reason for the change, not just the file names.\n\n## Human workflow\n\nThink of staging like packing a box. Committing is sealing the box and writing a label on it.\n\n## Common mistake\n\nDo not blindly run `git add .` if you have not checked status. You may accidentally commit logs, env files, build output, or unrelated edits.",
+    "code_examples": [
+      {
+        "title": "Stage and commit selected files",
+        "language": "bash",
+        "code": "git status\ngit add src/components/Search.tsx\ngit add src/lib/search.ts\ngit commit -m \"Add global search\""
+      },
+      {
+        "title": "Stage everything intentionally",
+        "language": "bash",
+        "code": "git status\ngit add .\ngit commit -m \"Update dashboard layout\""
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-diff-log-show",
+    "title": "diff, log, and show",
+    "category": "GIT",
+    "tags": ["git diff", "git log", "git show", "history"],
+    "summary": "Use these commands to inspect what changed before committing and understand existing history.",
+    "content": "## git diff\n\n`git diff` shows unstaged changes. `git diff --staged` shows what is already staged for the next commit.\n\n## git log\n\n`git log` shows commit history. Use `--oneline` for a compact view and `--graph` to see branches and merges visually.\n\n## git show\n\n`git show` displays one commit: message, metadata, and file changes.\n\n## Human habit\n\nBefore committing, run `git diff` and `git diff --staged`. It is like proofreading your change before sharing it.\n\n## Common mistake\n\nIf `git diff` shows nothing, it might mean your changes are already staged. Check `git diff --staged`.",
+    "code_examples": [
+      {
+        "title": "Inspect changes",
+        "language": "bash",
+        "code": "git diff\ngit diff --staged"
+      },
+      {
+        "title": "Read history",
+        "language": "bash",
+        "code": "git log --oneline --graph --decorate --all\ngit show HEAD\ngit show abc123"
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-branch-switch-checkout",
+    "title": "branch, switch, and checkout",
+    "category": "GIT",
+    "tags": ["git branch", "git switch", "git checkout", "branches"],
+    "summary": "Branches let you work on features separately; `git switch` moves between branches and `git branch` manages them.",
+    "content": "## What a branch is\n\nA branch is a movable name pointing to a commit. When you commit on a branch, that branch moves forward.\n\n## git branch\n\nUse `git branch` to list, create, rename, and delete branches.\n\n## git switch\n\nUse `git switch` to move between branches. It is newer and clearer than using `checkout` for everything.\n\n## git checkout\n\n`git checkout` is older and can switch branches, restore files, or check out commits. It still appears in many tutorials, but `switch` and `restore` are clearer for daily work.\n\n## Common mistake\n\nAlways check your current branch before committing. Many accidental commits happen on `main` because someone forgot to switch.",
+    "code_examples": [
+      {
+        "title": "Create and switch branches",
+        "language": "bash",
+        "code": "git branch\ngit switch -c feature/login\ngit switch main"
+      },
+      {
+        "title": "Rename and delete branches",
+        "language": "bash",
+        "code": "git branch -m old-name new-name\ngit branch -d feature/login"
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-remote-fetch-pull-push",
+    "title": "remote, fetch, pull, and push",
+    "category": "GIT",
+    "tags": ["git remote", "git fetch", "git pull", "git push", "sync"],
+    "summary": "These commands connect your local repo with shared remote repositories and move commits between them.",
+    "content": "## git remote\n\nA remote is a saved shortcut to another repository, usually named `origin`. It points to GitHub, GitLab, Azure Repos, or another Git server.\n\n## git fetch\n\n`git fetch` downloads remote history but does not change your working branch. It is a safe way to see what changed remotely.\n\n## git pull\n\n`git pull` downloads remote changes and immediately integrates them into your current branch. It is basically fetch plus merge, or fetch plus rebase depending on config.\n\n## git push\n\n`git push` uploads your local commits to a remote branch.\n\n## Human rule\n\nFetch is look. Pull is bring into my branch. Push is share my commits.",
+    "code_examples": [
+      {
+        "title": "Check and sync remotes",
+        "language": "bash",
+        "code": "git remote -v\ngit fetch origin\ngit pull origin main\ngit push origin feature/login"
+      },
+      {
+        "title": "Set upstream on first push",
+        "language": "bash",
+        "code": "git push -u origin feature/login"
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-merge-rebase",
+    "title": "merge and rebase",
+    "category": "GIT",
+    "tags": ["git merge", "git rebase", "history", "branches"],
+    "summary": "Merge combines branches with a merge commit; rebase moves your commits on top of another branch for a linear history.",
+    "content": "## git merge\n\nMerge combines another branch into your current branch. It preserves the fact that two lines of work came together.\n\n## git rebase\n\nRebase takes your commits and replays them on top of another branch. It can make history cleaner and easier to read.\n\n## Which one should you use?\n\nUse merge when you want to preserve branch history or when team policy prefers merge commits.\n\nUse rebase to update your feature branch with the latest main branch before opening or updating a pull request.\n\n## Important safety rule\n\nDo not rebase shared branches unless your team agrees. Rebasing rewrites commit history, which can confuse teammates who already pulled that branch.",
+    "code_examples": [
+      {
+        "title": "Merge main into current branch",
+        "language": "bash",
+        "code": "git switch feature/login\ngit fetch origin\ngit merge origin/main"
+      },
+      {
+        "title": "Rebase feature branch on main",
+        "language": "bash",
+        "code": "git switch feature/login\ngit fetch origin\ngit rebase origin/main"
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-conflict-resolution",
+    "title": "Conflict resolution",
+    "category": "GIT",
+    "tags": ["merge conflicts", "conflicts", "git merge", "git rebase"],
+    "summary": "Conflicts happen when Git cannot automatically combine changes; you fix the files, mark them resolved, and continue.",
+    "content": "## Why conflicts happen\n\nA conflict happens when two branches change the same part of a file differently, or when one branch deletes a file another branch edits.\n\n## What Git does\n\nGit stops and marks the conflicting file. You open the file, choose the correct final content, remove conflict markers, then stage the resolved file.\n\n## Merge conflict flow\n\nDuring a merge, fix the file, run tests if needed, stage it, then commit the merge.\n\n## Rebase conflict flow\n\nDuring a rebase, fix the file, stage it, then run `git rebase --continue`.\n\n## Human advice\n\nDo not panic. A conflict is Git asking you to make a decision it cannot safely make alone.",
+    "code_examples": [
+      {
+        "title": "Resolve during merge",
+        "language": "bash",
+        "code": "git status\n# edit conflicted files\ngit add src/app.js\ngit commit"
+      },
+      {
+        "title": "Resolve during rebase",
+        "language": "bash",
+        "code": "git status\n# edit conflicted files\ngit add src/app.js\ngit rebase --continue"
+      },
+      {
+        "title": "Abort if needed",
+        "language": "bash",
+        "code": "git merge --abort\ngit rebase --abort"
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-restore-reset-revert",
+    "title": "restore, reset, and revert",
+    "category": "GIT",
+    "tags": ["git restore", "git reset", "git revert", "undo"],
+    "summary": "These are Git's main undo tools: restore files, move branch pointers, or create a new commit that reverses an old one.",
+    "content": "## git restore\n\nUse `git restore` to discard changes in files or unstage files. It is usually the safest daily undo command.\n\n## git reset\n\nUse `git reset` to move the current branch pointer. `--soft` keeps changes staged, `--mixed` keeps changes unstaged, and `--hard` discards changes. Be very careful with `--hard`.\n\n## git revert\n\nUse `git revert` when the commit is already shared. It creates a new commit that undoes another commit, so history stays safe for teammates.\n\n## Simple rule\n\nPrivate local commit? Reset can be okay.\n\nShared commit? Prefer revert.\n\nUncommitted file change? Use restore.\n\n## Safety warning\n\n`git reset --hard` can delete local work. Run `git status` first and make sure you really want to throw changes away.",
+    "code_examples": [
+      {
+        "title": "Restore file changes",
+        "language": "bash",
+        "code": "git restore src/app.js\ngit restore --staged src/app.js"
+      },
+      {
+        "title": "Reset last local commit but keep changes",
+        "language": "bash",
+        "code": "git reset --soft HEAD~1"
+      },
+      {
+        "title": "Revert a shared commit",
+        "language": "bash",
+        "code": "git revert abc123"
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-stash",
+    "title": "stash",
+    "category": "GIT",
+    "tags": ["git stash", "temporary changes", "work in progress"],
+    "summary": "`git stash` temporarily shelves uncommitted changes so you can switch branches or pull cleanly.",
+    "content": "## What stash does\n\nStash is like putting your unfinished work into a temporary drawer. Your working tree becomes clean, and you can bring the changes back later.\n\n## When to use it\n\nUse stash when you are halfway through work and need to switch branches, pull changes, or quickly fix something else.\n\n## pop vs apply\n\n`git stash pop` applies the stash and removes it from the stash list.\n\n`git stash apply` applies the stash but keeps it saved.\n\n## Common mistake\n\nDo not use stash as long-term storage. If work matters, commit it on a branch instead.",
+    "code_examples": [
+      {
+        "title": "Save and restore stash",
+        "language": "bash",
+        "code": "git stash push -m \"WIP login form\"\ngit stash list\ngit stash pop"
+      },
+      {
+        "title": "Apply a specific stash",
+        "language": "bash",
+        "code": "git stash list\ngit stash apply stash@{1}\ngit stash drop stash@{1}"
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-tags-releases",
+    "title": "tags and releases",
+    "category": "GIT",
+    "tags": ["git tag", "release", "version"],
+    "summary": "Tags are named pointers to commits, commonly used for releases like `v1.0.0`.",
+    "content": "## What a tag is\n\nA tag is a stable name for a specific commit. Unlike a branch, a tag usually does not move.\n\n## Lightweight vs annotated tags\n\nA lightweight tag is just a pointer. An annotated tag includes metadata like tagger, date, and message.\n\n## Why teams use tags\n\nTags mark releases, deployment points, rollback targets, and important milestones.\n\n## Common habit\n\nUse semantic version tags like `v1.2.0` when releasing packages or applications.",
+    "code_examples": [
+      {
+        "title": "Create and push tags",
+        "language": "bash",
+        "code": "git tag v1.0.0\ngit push origin v1.0.0"
+      },
+      {
+        "title": "Annotated tag",
+        "language": "bash",
+        "code": "git tag -a v1.0.0 -m \"Release version 1.0.0\"\ngit push origin v1.0.0"
+      },
+      {
+        "title": "List tags",
+        "language": "bash",
+        "code": "git tag\ngit show v1.0.0"
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-reflog-recovery",
+    "title": "reflog and recovery",
+    "category": "GIT",
+    "tags": ["git reflog", "recovery", "lost commits"],
+    "summary": "`git reflog` shows where your branch and HEAD have recently been, which can help recover lost commits.",
+    "content": "## What reflog is\n\nReflog is Git's local safety journal. It records movements of HEAD and branches on your machine.\n\n## Why it saves people\n\nIf you reset, rebase, switch branches, or accidentally lose a commit, reflog often remembers where that commit was.\n\n## Important detail\n\nReflog is local. It is not shared with the remote repository. Your teammate's reflog is not your reflog.\n\n## Human advice\n\nWhen you think you lost work, stop making more changes and check reflog before trying random commands.",
+    "code_examples": [
+      {
+        "title": "Recover a commit",
+        "language": "bash",
+        "code": "git reflog\n# find the commit hash you want\ngit switch -c recovered-work abc123"
+      },
+      {
+        "title": "Move back to previous HEAD",
+        "language": "bash",
+        "code": "git reflog\ngit reset --hard HEAD@{1}"
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-cherry-pick",
+    "title": "cherry-pick",
+    "category": "GIT",
+    "tags": ["git cherry-pick", "commits", "hotfix"],
+    "summary": "`git cherry-pick` copies one or more specific commits from another branch onto your current branch.",
+    "content": "## What cherry-pick does\n\nCherry-pick takes a commit from somewhere else and applies its changes to your current branch as a new commit.\n\n## When to use it\n\nUse it when you need one fix from another branch without merging the whole branch. This is common for hotfixes.\n\n## Common example\n\nA bug fix was committed on `main`, and you need the same fix on a release branch. Cherry-pick just that commit.\n\n## Caution\n\nDo not overuse cherry-pick as a replacement for a clean branch strategy. It can duplicate commits across history and make tracking changes harder.",
+    "code_examples": [
+      {
+        "title": "Cherry-pick one commit",
+        "language": "bash",
+        "code": "git switch release/1.0\ngit cherry-pick abc123"
+      },
+      {
+        "title": "Cherry-pick multiple commits",
+        "language": "bash",
+        "code": "git cherry-pick abc123 def456"
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-clean-rm-mv",
+    "title": "clean, rm, and mv",
+    "category": "GIT",
+    "tags": ["git clean", "git rm", "git mv", "files"],
+    "summary": "These commands remove untracked files, delete tracked files, and move or rename tracked files.",
+    "content": "## git clean\n\n`git clean` removes untracked files. This can delete files permanently, so always preview first with `-n`.\n\n## git rm\n\n`git rm` removes a tracked file and stages that removal for the next commit.\n\n## git mv\n\n`git mv` renames or moves a tracked file and stages the change.\n\n## Simple rule\n\nTracked file? Use `git rm` or `git mv`.\n\nUntracked generated junk? Use `git clean`, carefully.\n\n## Safety warning\n\nRun `git clean -n` before `git clean -fd`. Preview first, delete second.",
+    "code_examples": [
+      {
+        "title": "Preview and clean untracked files",
+        "language": "bash",
+        "code": "git clean -n\ngit clean -fd"
+      },
+      {
+        "title": "Remove or move tracked files",
+        "language": "bash",
+        "code": "git rm old-file.js\ngit mv old-name.js new-name.js\ngit commit -m \"Rename utility file\""
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-ignore",
+    "title": ".gitignore",
+    "category": "GIT",
+    "tags": ["gitignore", "ignored files", "untracked"],
+    "summary": "A `.gitignore` file tells Git which untracked files should not be committed.",
+    "content": "## What .gitignore does\n\n`.gitignore` prevents unwanted untracked files from showing up in Git status. Common ignored files include dependencies, build output, logs, local env files, and editor folders.\n\n## Important limitation\n\n`.gitignore` does not automatically stop tracking a file that is already committed. If Git already tracks the file, you must remove it from the index.\n\n## Common frontend ignores\n\n`node_modules`, `.next`, `dist`, `build`, `.env.local`, log files, and cache folders are usually ignored.\n\n## Interview line\n\n`.gitignore` protects the repository from machine-specific and generated files.",
+    "code_examples": [
+      {
+        "title": "Example .gitignore",
+        "language": "bash",
+        "code": "node_modules\n.next\ndist\nbuild\n.env.local\n*.log"
+      },
+      {
+        "title": "Stop tracking an already tracked file",
+        "language": "bash",
+        "code": "git rm --cached .env.local\ngit commit -m \"Stop tracking local env file\""
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-blame-bisect-debugging",
+    "title": "blame and bisect",
+    "category": "GIT",
+    "tags": ["git blame", "git bisect", "debugging"],
+    "summary": "`git blame` explains who last changed each line; `git bisect` finds the commit that introduced a bug.",
+    "content": "## git blame\n\n`git blame` shows the last commit that touched each line in a file. Use it to understand context, not to accuse people.\n\n## git bisect\n\n`git bisect` helps find the exact commit where a bug started. You mark one commit as good and another as bad, and Git checks commits in the middle until it finds the first bad one.\n\n## Why this matters\n\nIn production debugging, knowing when a bug appeared often matters more than guessing from the current code.\n\n## Human advice\n\nBlame the change, not the person. Git history is for understanding, not finger-pointing.",
+    "code_examples": [
+      {
+        "title": "Inspect line history",
+        "language": "bash",
+        "code": "git blame src/app.js\ngit show abc123"
+      },
+      {
+        "title": "Find a bad commit",
+        "language": "bash",
+        "code": "git bisect start\ngit bisect bad\ngit bisect good v1.0.0\n# test each checked-out commit\ngit bisect good\n# or\ngit bisect bad\ngit bisect reset"
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-worktree",
+    "title": "worktree",
+    "category": "GIT",
+    "tags": ["git worktree", "branches", "parallel work"],
+    "summary": "`git worktree` lets you check out multiple branches into separate folders from one repository.",
+    "content": "## What worktree solves\n\nSometimes you need to work on two branches at once without constantly stashing or switching. Worktrees let one repository have multiple working folders.\n\n## Practical use\n\nYou can keep your feature branch open in one folder and create a second folder for a hotfix branch.\n\n## Why it is better than cloning twice\n\nWorktrees share the same repository storage, so they are lighter than separate clones.\n\n## Common habit\n\nRemove a worktree when you are done so stale folders do not pile up.",
+    "code_examples": [
+      {
+        "title": "Create and remove a worktree",
+        "language": "bash",
+        "code": "git worktree add ../project-hotfix hotfix/login-bug\ncd ../project-hotfix\n# work normally\ncd ../project\ngit worktree remove ../project-hotfix"
+      },
+      {
+        "title": "List worktrees",
+        "language": "bash",
+        "code": "git worktree list"
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-submodules",
+    "title": "submodules",
+    "category": "GIT",
+    "tags": ["git submodule", "dependencies", "repositories"],
+    "summary": "Git submodules let one repository include another repository at a specific commit.",
+    "content": "## What submodules are\n\nA submodule is a Git repository inside another Git repository. The parent repo records the exact commit of the child repo.\n\n## When teams use them\n\nSubmodules are used for shared libraries, vendor code, docs, or code that must stay in a separate repository.\n\n## Why they can be painful\n\nSubmodules require extra commands. New developers often clone the parent repo and forget to initialize submodules.\n\n## Human advice\n\nUse submodules only when the separate repository boundary is truly needed. For many JavaScript projects, packages or monorepos are easier.",
+    "code_examples": [
+      {
+        "title": "Add and clone submodules",
+        "language": "bash",
+        "code": "git submodule add https://github.com/org/shared-ui.git packages/shared-ui\ngit submodule update --init --recursive"
+      },
+      {
+        "title": "Clone with submodules",
+        "language": "bash",
+        "code": "git clone --recurse-submodules https://github.com/org/project.git"
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-patch-apply-archive",
+    "title": "patch, apply, and archive",
+    "category": "GIT",
+    "tags": ["git patch", "git apply", "git archive", "export"],
+    "summary": "Git can export changes as patch files, apply patch files, and archive repository snapshots.",
+    "content": "## git diff as a patch\n\nA patch is a text file describing changes. You can create one from `git diff` and send it to someone without pushing a branch.\n\n## git apply\n\n`git apply` applies a patch to your working tree. It does not automatically create a commit.\n\n## git format-patch and am\n\n`git format-patch` exports commits as email-style patch files. `git am` applies them as commits.\n\n## git archive\n\n`git archive` exports a clean snapshot of files from a commit or branch, without the `.git` history.\n\n## Practical use\n\nThese commands are less common in daily frontend work, but useful in open-source, restricted environments, and release packaging.",
+    "code_examples": [
+      {
+        "title": "Create and apply patch",
+        "language": "bash",
+        "code": "git diff > fix.patch\ngit apply fix.patch"
+      },
+      {
+        "title": "Patch from commits",
+        "language": "bash",
+        "code": "git format-patch -1 HEAD\ngit am 0001-my-change.patch"
+      },
+      {
+        "title": "Archive source",
+        "language": "bash",
+        "code": "git archive --format=zip --output=source.zip HEAD"
+      }
+    ],
+    "related_questions": []
+  },
+  {
+    "id": "git-maintenance-gc-fsck",
+    "title": "maintenance, gc, and fsck",
+    "category": "GIT",
+    "tags": ["git gc", "git fsck", "maintenance"],
+    "summary": "Git has maintenance commands for cleaning internal storage and checking repository integrity.",
+    "content": "## git gc\n\n`git gc` runs garbage collection. It packs loose objects and cleans internal repository data. Git usually runs this automatically when needed.\n\n## git fsck\n\n`git fsck` checks repository object integrity. You rarely need it, but it can help diagnose repository corruption.\n\n## git count-objects\n\n`git count-objects -v` shows storage details, useful when a repository is getting large.\n\n## Daily reality\n\nMost developers do not run these often. They are good to know when a repo becomes slow, huge, or suspiciously broken.\n\n## Interview line\n\nGit stores data as objects, and maintenance commands help inspect or clean that object database.",
+    "code_examples": [
+      {
+        "title": "Repository maintenance",
+        "language": "bash",
+        "code": "git count-objects -v\ngit gc\ngit fsck"
+      }
+    ],
+    "related_questions": []
+  }
+]

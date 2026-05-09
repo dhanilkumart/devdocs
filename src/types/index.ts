@@ -10,6 +10,7 @@ export type TechCategory =
   | "CSS3"
   | "GraphQL"
   | "DevOps"
+  | "GIT"
   | "General";
 
 export interface CodeExample {
