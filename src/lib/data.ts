@@ -10,6 +10,7 @@ import css from "@/data/docs/css3.json";
 import graphql from "@/data/docs/graphql.json";
 import html from "@/data/docs/html5.json";
 import javascript from "@/data/docs/javascript.json";
+import javascriptImportant from "@/data/docs/javascript-important.json";
 import nextjs from "@/data/docs/nextjs.json";
 import react from "@/data/docs/react.json";
 import redux from "@/data/docs/redux.json";
@@ -38,6 +39,7 @@ import { interviewSlug } from "@/lib/interviewDisplay";
 
 export const allDocs: DocTopic[] = [
   ...(javascript as DocTopic[]),
+  ...(javascriptImportant as DocTopic[]),
   ...(react as DocTopic[]),
   ...(redux as DocTopic[]),
   ...(typescript as DocTopic[]),

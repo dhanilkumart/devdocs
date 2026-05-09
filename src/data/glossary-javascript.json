@@ -1,0 +1,312 @@
+[
+  {
+    "slug": "js-arrow-functions",
+    "term": "Arrow Functions",
+    "aliases": ["Arrow Functions", "Arrow Function", "arrow functions", "arrow function", "arrows"],
+    "category": "JavaScript",
+    "short": "Short function expressions that keep `this` from the surrounding scope.",
+    "long": "Arrow functions are commonly used for callbacks because they are concise and do not create their own `this`. Instead, `this` is inherited from the surrounding scope.\n\nThey are great for array methods, promises, timers, and small callbacks. Avoid them for object methods that need dynamic `this` from the caller.",
+    "example": "const doubled = [1, 2, 3].map((n) => n * 2);",
+    "related": ["js-let-const", "js-promises"]
+  },
+  {
+    "slug": "js-classes",
+    "term": "JavaScript Classes",
+    "aliases": ["JavaScript Classes", "JavaScript classes", "class syntax", "ES6 classes"],
+    "category": "JavaScript",
+    "short": "Cleaner syntax for constructor functions and prototype-based inheritance.",
+    "long": "JavaScript classes make object-oriented code easier to read, but they still sit on top of the prototype system. Methods are shared through the prototype, and `extends` builds prototype inheritance.\n\nUse classes for domain objects, services, custom errors, and clear shared behavior. Avoid deep inheritance trees when composition would be simpler.",
+    "example": "class User {\n  constructor(name) { this.name = name; }\n  greet() { return `Hi, ${this.name}`; }\n}",
+    "related": ["js-subclassable-builtins"]
+  },
+  {
+    "slug": "js-enhanced-object-literals",
+    "term": "Enhanced Object Literals",
+    "aliases": ["Enhanced Object Literals", "enhanced object literals", "object literal shorthand", "computed property names"],
+    "category": "JavaScript",
+    "short": "ES6 object syntax improvements: shorthand properties, method syntax, computed keys, and cleaner object creation.",
+    "long": "Enhanced object literals remove repetitive syntax. If a variable and property have the same name, you can write it once. You can also define methods without `function` and compute property names with square brackets.\n\nThey are used everywhere in modern JavaScript, especially for configs, reducers, payloads, and object composition.",
+    "example": "const name = 'Ada';\nconst key = 'role';\nconst user = { name, [key]: 'admin', greet() { return this.name; } };",
+    "related": ["js-destructuring"]
+  },
+  {
+    "slug": "js-template-literals",
+    "term": "Template Literals",
+    "aliases": ["Template Literals", "Template Literal", "template literals", "template strings", "template string", "multi-line strings", "multiline strings", "tagged templates"],
+    "category": "JavaScript",
+    "short": "Backtick strings that support interpolation, multi-line text, and tagged template processing.",
+    "long": "Template literals make strings easier to compose by placing expressions inside `${...}`. They also preserve line breaks, which makes long messages, HTML snippets, and logs easier to read.\n\nTagged templates let a function process the string parts and values before returning a result. Libraries use this for SQL, CSS-in-JS, formatting, and translations.",
+    "example": "const name = 'Ada';\nconst message = `Hello ${name}`;",
+    "related": ["js-string-apis"]
+  },
+  {
+    "slug": "js-destructuring",
+    "term": "Destructuring Assignment",
+    "aliases": ["Destructuring Assignment", "destructuring", "object destructuring", "array destructuring"],
+    "category": "JavaScript",
+    "short": "Syntax for unpacking object properties or array positions into variables.",
+    "long": "Destructuring lets you pull values out of objects and arrays without repetitive property access. It is common with API responses, React props, config objects, entries, and tuples.\n\nIt also supports defaults and renaming, which keeps code readable when data comes from outside your control.",
+    "example": "const { name, role = 'user' } = user;\nconst [first, second] = items;",
+    "related": ["js-enhanced-object-literals", "js-default-parameters"]
+  },
+  {
+    "slug": "js-default-parameters",
+    "term": "Default Parameters",
+    "aliases": ["Default Parameters", "default parameters", "default parameter"],
+    "category": "JavaScript",
+    "short": "Function parameter fallback values used when an argument is `undefined`.",
+    "long": "Default parameters let a function define sensible fallbacks right in the function signature. They replace manual checks at the top of the function body.\n\nA default is used only when the argument is `undefined`, not when it is `null`, `0`, or an empty string.",
+    "example": "function greet(name = 'Guest') {\n  return `Hello, ${name}`;\n}",
+    "related": ["js-rest-parameters", "js-spread-syntax"]
+  },
+  {
+    "slug": "js-rest-parameters",
+    "term": "Rest Parameters",
+    "aliases": ["Rest Parameters", "rest parameters", "rest parameter", "rest syntax"],
+    "category": "JavaScript",
+    "short": "Syntax that collects remaining function arguments into a real array.",
+    "long": "Rest parameters use `...name` in a function parameter list. They collect all remaining arguments into an array, which is cleaner than the older `arguments` object.\n\nUse rest when a function accepts a flexible number of values, such as `sum(...numbers)`.",
+    "example": "function sum(...numbers) {\n  return numbers.reduce((a, b) => a + b, 0);\n}",
+    "related": ["js-default-parameters", "js-spread-syntax"]
+  },
+  {
+    "slug": "js-spread-syntax",
+    "term": "Spread Syntax",
+    "aliases": ["Spread Syntax", "spread syntax", "spread operator", "spread"],
+    "category": "JavaScript",
+    "short": "Syntax that expands arrays, iterables, or object properties into another place.",
+    "long": "Spread uses `...value` to expand an array into arguments, combine arrays, copy arrays, or copy object properties.\n\nRest gathers values together. Spread opens a value back out.",
+    "example": "const all = [...first, ...second];\nconst copy = { ...user, active: true };",
+    "related": ["js-rest-parameters", "js-destructuring"]
+  },
+  {
+    "slug": "js-let-const",
+    "term": "let and const",
+    "aliases": ["let and const", "let + const", "let/const", "block-scoped declarations"],
+    "category": "JavaScript",
+    "short": "Block-scoped variable declarations that avoid many `var` scoping bugs.",
+    "long": "`let` is for values that need reassignment. `const` is for bindings that should not be reassigned. Both are block-scoped, which means they stay inside the nearest braces.\n\n`const` does not freeze object contents; it only prevents rebinding the variable name.",
+    "example": "const user = { name: 'Ada' };\nuser.name = 'Grace';\nlet count = 0;\ncount += 1;",
+    "related": ["hoisting", "js-arrow-functions"]
+  },
+  {
+    "slug": "js-iterators",
+    "term": "Iterators",
+    "aliases": ["Iterators", "Iterator", "iterators", "iterator", "iterable", "iterables", "iterator protocol"],
+    "category": "JavaScript",
+    "short": "Objects that produce values one at a time through a `next()` method.",
+    "long": "An iterator returns `{ value, done }` from `next()`. An iterable is an object that can create an iterator through `Symbol.iterator`.\n\nArrays, strings, JavaScript Map, JavaScript Set, DOM collections, and generators are iterable.",
+    "example": "const iterator = [1, 2][Symbol.iterator]();\nconsole.log(iterator.next());",
+    "related": ["js-for-of", "js-generators", "js-symbols"]
+  },
+  {
+    "slug": "js-for-of",
+    "term": "for...of",
+    "aliases": ["for...of", "for..of", "for of"],
+    "category": "JavaScript",
+    "short": "A loop that reads values from any iterable.",
+    "long": "`for...of` loops over values. It works with arrays, strings, maps, sets, generators, and custom iterables.\n\nDo not confuse it with `for...in`, which loops over enumerable keys and is usually not what you want for arrays.",
+    "example": "for (const value of ['a', 'b']) {\n  console.log(value);\n}",
+    "related": ["js-iterators", "js-generators"]
+  },
+  {
+    "slug": "js-generators",
+    "term": "Generators",
+    "aliases": ["Generators", "Generator", "generators", "generator", "function*", "yield"],
+    "category": "JavaScript",
+    "short": "Functions that can pause and resume while yielding multiple values over time.",
+    "long": "A generator function uses `function*` and `yield`. Calling it returns an iterator, and each `next()` resumes execution until the next yield.\n\nThey are useful for lazy sequences, custom iteration, pagination helpers, and state-machine-like flows.",
+    "example": "function* ids() {\n  let id = 1;\n  while (true) yield id++;\n}",
+    "related": ["js-iterators", "js-for-of"]
+  },
+  {
+    "slug": "js-unicode",
+    "term": "Unicode",
+    "aliases": ["Unicode", "unicode", "UTF-16", "code point", "code points"],
+    "category": "JavaScript",
+    "short": "The text standard JavaScript strings interact with, with UTF-16 details that matter for emoji and combined characters.",
+    "long": "JavaScript strings are stored as UTF-16 code units. Some visible characters, especially emoji and combined accents, may use more than one code unit.\n\nThat means `length`, indexing, reversing, and slicing can surprise you with real-world user text.",
+    "example": "const smile = '😀';\nconsole.log(smile.length); // 2\nconsole.log([...smile].length); // 1",
+    "related": ["js-string-apis", "js-for-of"]
+  },
+  {
+    "slug": "js-es-modules",
+    "term": "ES Modules",
+    "aliases": ["ES Modules", "ES Module", "JavaScript modules", "JavaScript module", "import/export"],
+    "category": "JavaScript",
+    "short": "The standard JavaScript system for importing and exporting code between files.",
+    "long": "ES modules make dependencies explicit. A file exports values, and another file imports the values it needs.\n\nBecause module imports are static, bundlers can analyze dependencies, split code, and tree-shake unused exports.",
+    "example": "export function add(a, b) { return a + b; }\nimport { add } from './math.js';",
+    "related": ["js-module-loaders", "tree-shaking"]
+  },
+  {
+    "slug": "js-module-loaders",
+    "term": "Module Loaders",
+    "aliases": ["Module Loaders", "Module Loader", "module loaders", "module loader", "dynamic import"],
+    "category": "JavaScript",
+    "short": "Tools or runtime features that locate, load, and connect modules.",
+    "long": "Module loaders solve how imported code is found and loaded. Older tools included RequireJS and SystemJS. Modern apps usually rely on native ES modules plus bundlers like Vite, Webpack, Rollup, Turbopack, or esbuild.\n\nDynamic `import()` loads code only when needed, which helps split large apps.",
+    "example": "const editor = await import('./editor.js');\neditor.open();",
+    "related": ["js-es-modules", "code-splitting"]
+  },
+  {
+    "slug": "js-map",
+    "term": "JavaScript Map",
+    "aliases": ["JavaScript Map", "Map collection", "Map object"],
+    "category": "JavaScript",
+    "short": "A key-value collection where keys can be any value, including objects.",
+    "long": "JavaScript Map is useful when you need key-value storage with insertion order, non-string keys, or frequent additions and removals.\n\nUnlike plain objects, a Map can use an object as a key without converting it to a string.",
+    "example": "const visits = new Map();\nconst user = { id: 1 };\nvisits.set(user, 3);\nconsole.log(visits.get(user));",
+    "related": ["js-set", "js-weakmap"]
+  },
+  {
+    "slug": "js-set",
+    "term": "JavaScript Set",
+    "aliases": ["JavaScript Set", "Set collection", "Set object"],
+    "category": "JavaScript",
+    "short": "A collection of unique values.",
+    "long": "JavaScript Set stores each value only once. It is useful for removing duplicates, checking membership, and tracking selected IDs or visited nodes.\n\nSet keeps insertion order, so spreading a Set back into an array preserves first-seen order.",
+    "example": "const roles = new Set(['admin', 'user', 'admin']);\nconsole.log([...roles]);",
+    "related": ["js-map", "js-weakset"]
+  },
+  {
+    "slug": "js-weakmap",
+    "term": "WeakMap",
+    "aliases": ["WeakMap", "Weak Maps", "weakmap"],
+    "category": "JavaScript",
+    "short": "A key-value collection where keys must be objects and do not prevent garbage collection.",
+    "long": "WeakMap is useful for attaching private metadata to objects. If the object key becomes unreachable elsewhere, the WeakMap does not keep it alive.\n\nWeakMap is not iterable because exposing its contents would interfere with garbage-collection behavior.",
+    "example": "const metadata = new WeakMap();\nmetadata.set(button, { clicked: true });",
+    "related": ["js-map", "garbage-collection"]
+  },
+  {
+    "slug": "js-weakset",
+    "term": "WeakSet",
+    "aliases": ["WeakSet", "Weak Sets", "weakset"],
+    "category": "JavaScript",
+    "short": "A weak collection of objects used for membership tracking without preventing garbage collection.",
+    "long": "WeakSet stores objects weakly. It is useful when you only need to know whether an object has been seen or marked.\n\nLike WeakMap, it is not iterable and only accepts objects.",
+    "example": "const seen = new WeakSet();\nseen.add(node);\nconsole.log(seen.has(node));",
+    "related": ["js-set", "garbage-collection"]
+  },
+  {
+    "slug": "js-proxy",
+    "term": "Proxy",
+    "aliases": ["Proxy", "Proxies", "proxy", "proxies"],
+    "category": "JavaScript",
+    "short": "A wrapper that intercepts operations on an object, such as get, set, delete, and function calls.",
+    "long": "Proxy lets you customize object behavior. You can log property access, validate writes, build reactive stores, hide fields, or forward operations to another target.\n\nIt is powerful but can make behavior less obvious, so use it when interception is genuinely needed.",
+    "example": "const proxy = new Proxy(user, {\n  get(target, key) { return target[key]; }\n});",
+    "related": ["js-reflect-api"]
+  },
+  {
+    "slug": "js-symbols",
+    "term": "Symbols",
+    "aliases": ["Symbols", "Symbol", "symbols", "symbol", "well-known symbols", "Symbol.iterator"],
+    "category": "JavaScript",
+    "short": "Unique primitive values often used as non-colliding object keys and language protocol hooks.",
+    "long": "Every Symbol is unique, even if it has the same description as another Symbol. Symbols can be used as object keys that will not collide with normal string keys.\n\nWell-known symbols like `Symbol.iterator` let objects participate in language protocols.",
+    "example": "const id = Symbol('id');\nconst user = { [id]: 123 };",
+    "related": ["js-iterators"]
+  },
+  {
+    "slug": "js-subclassable-builtins",
+    "term": "Subclassable Built-ins",
+    "aliases": ["Subclassable Built-ins", "subclassable built-ins", "subclassable builtins", "built-in subclasses"],
+    "category": "JavaScript",
+    "short": "Native constructors such as Error, Array, Map, and Promise can be extended with class syntax.",
+    "long": "ES6 made it practical to extend built-in types. The most useful everyday example is a custom Error class that keeps stack-trace behavior while adding domain-specific fields.\n\nExtending Array, Map, or Promise can be useful, but composition is often clearer for app code.",
+    "example": "class ValidationError extends Error {\n  constructor(message) { super(message); this.name = 'ValidationError'; }\n}",
+    "related": ["js-classes"]
+  },
+  {
+    "slug": "js-promises",
+    "term": "JavaScript Promises",
+    "aliases": ["JavaScript Promises", "JavaScript Promise", "Promises", "Promise", "promise", "promises"],
+    "category": "JavaScript",
+    "short": "Objects representing async work that will either fulfill with a value or reject with an error.",
+    "long": "A Promise is a standard way to handle future success or failure. It starts pending, then settles as fulfilled or rejected.\n\nPromises make async work composable through `.then`, `.catch`, `.finally`, and `async`/`await`.",
+    "example": "fetch('/api/user')\n  .then((r) => r.json())\n  .then(console.log)\n  .catch(console.error);",
+    "related": ["event-loop", "abortcontroller"]
+  },
+  {
+    "slug": "js-math-features",
+    "term": "JavaScript Math",
+    "aliases": ["JavaScript Math", "Math Features", "Math features", "Math methods"],
+    "category": "JavaScript",
+    "short": "Built-in numeric helper methods for rounding, signs, powers, distances, and random values.",
+    "long": "JavaScript Math is a static utility object. You call methods like `Math.round`, `Math.trunc`, `Math.sign`, `Math.hypot`, and `Math.random` directly.\n\nIt is useful for normal numeric work, but not for financial precision or cryptographic randomness.",
+    "example": "Math.trunc(4.9); // 4\nMath.hypot(3, 4); // 5",
+    "related": ["js-number-apis"]
+  },
+  {
+    "slug": "js-number-apis",
+    "term": "JavaScript Number APIs",
+    "aliases": ["JavaScript Number APIs", "Number APIs", "Number API", "Number.isNaN", "Number.isInteger", "Number.isFinite"],
+    "category": "JavaScript",
+    "short": "Modern number helpers that avoid surprising coercion and clarify numeric checks.",
+    "long": "`Number.isNaN`, `Number.isFinite`, and `Number.isInteger` are safer than some older global helpers because they do not coerce unrelated values before checking them.\n\nUse them when validating numeric input or guarding calculations.",
+    "example": "Number.isNaN(NaN); // true\nNumber.isInteger(10); // true",
+    "related": ["js-math-features"]
+  },
+  {
+    "slug": "js-string-apis",
+    "term": "JavaScript String APIs",
+    "aliases": ["JavaScript String APIs", "String APIs", "String API", "String methods"],
+    "category": "JavaScript",
+    "short": "Built-in text helpers such as includes, startsWith, padStart, trim, and replaceAll.",
+    "long": "Modern String APIs make common text work readable. Use `includes` for containment, `startsWith` and `endsWith` for boundaries, `padStart` for codes, and `replaceAll` for full replacement.\n\nFor real user text, remember Unicode can make character counting more complex than `length` suggests.",
+    "example": "'7'.padStart(3, '0'); // '007'\n'hello'.includes('ell'); // true",
+    "related": ["js-unicode", "js-template-literals"]
+  },
+  {
+    "slug": "js-array-apis",
+    "term": "JavaScript Array APIs",
+    "aliases": ["JavaScript Array APIs", "Array APIs", "Array API", "Array methods"],
+    "category": "JavaScript",
+    "short": "Built-in list helpers like map, filter, reduce, find, includes, flat, flatMap, and at.",
+    "long": "Array APIs help you transform and query lists without writing manual loops every time. `map` transforms, `filter` keeps matching items, `reduce` accumulates, `find` returns the first match, and `flat` removes nesting.\n\nUse the method that communicates intent most clearly.",
+    "example": "const active = users.filter((user) => user.active);\nconst names = active.map((user) => user.name);",
+    "related": ["js-arrow-functions"]
+  },
+  {
+    "slug": "js-object-apis",
+    "term": "JavaScript Object APIs",
+    "aliases": ["JavaScript Object APIs", "Object APIs", "Object API", "Object methods", "Object.entries", "Object.keys", "Object.values", "Object.fromEntries"],
+    "category": "JavaScript",
+    "short": "Built-in helpers for reading, copying, and transforming plain objects.",
+    "long": "Object APIs include `Object.keys`, `Object.values`, `Object.entries`, `Object.assign`, and `Object.fromEntries`. They are useful for iterating over configs, converting objects to arrays, and building objects from pairs.\n\nThey make object transformations explicit and readable.",
+    "example": "const entries = Object.entries(user);\nconst copy = Object.assign({}, user, { active: true });",
+    "related": ["js-enhanced-object-literals"]
+  },
+  {
+    "slug": "js-binary-octal-literals",
+    "term": "Binary and Octal Literals",
+    "aliases": ["Binary and Octal Literals", "binary literals", "octal literals", "binary literal", "octal literal"],
+    "category": "JavaScript",
+    "short": "Numeric literal syntax for base 2 and base 8 values using `0b` and `0o`.",
+    "long": "Binary literals begin with `0b`, and octal literals begin with `0o`. They are still normal JavaScript numbers after parsing.\n\nThey are useful for flags, file permissions, buffers, and low-level numeric values where another base is easier to read.",
+    "example": "const read = 0b100;\nconst mode = 0o755;",
+    "related": ["js-number-apis"]
+  },
+  {
+    "slug": "js-reflect-api",
+    "term": "Reflect API",
+    "aliases": ["Reflect API", "Reflect", "reflect api"],
+    "category": "JavaScript",
+    "short": "A built-in object with function versions of low-level object operations.",
+    "long": "Reflect provides methods like `Reflect.get`, `Reflect.set`, `Reflect.has`, and `Reflect.apply`. It is especially useful inside Proxy traps, where you often want to add custom behavior and then forward to the default behavior.\n\nReflect makes low-level operations consistent and explicit.",
+    "example": "Reflect.set(settings, 'theme', 'dark');\nReflect.get(settings, 'theme');",
+    "related": ["js-proxy"]
+  },
+  {
+    "slug": "js-tail-calls",
+    "term": "Tail Calls",
+    "aliases": ["Tail Calls", "Tail Call", "tail calls", "tail call", "proper tail calls", "tail-call optimization"],
+    "category": "JavaScript",
+    "short": "A function call in return position that can theoretically reuse the current stack frame.",
+    "long": "A tail call happens when the final action of a function is returning another function call. In theory, proper tail-call optimization lets recursion avoid growing the stack.\n\nIn practical JavaScript, broad support is not reliable enough to depend on. Use loops or explicit stacks when recursion might get deep.",
+    "example": "function factorial(n, total = 1) {\n  if (n <= 1) return total;\n  return factorial(n - 1, n * total);\n}",
+    "related": ["js-classes"]
+  }
+]

@@ -1,0 +1,508 @@
+[
+  {
+    "id": "js-arrow-functions-deep",
+    "title": "Arrow functions",
+    "category": "JavaScript",
+    "tags": ["ES6", "functions", "arrows", "this"],
+    "summary": "Arrow functions are shorter function expressions with lexical `this`, which makes them especially useful for callbacks.",
+    "content": "## What they are\n\nArrow functions are a shorter way to write function expressions. They are most useful when you want to pass a small function into another function, like `map`, `filter`, event handlers, timers, or promise callbacks.\n\n## The big difference\n\nThe important thing is not just the shorter syntax. Arrow functions do not create their own `this`. They read `this` from the surrounding scope. That is helpful in callbacks, because you usually want the callback to keep the same surrounding context.\n\n## When not to use them\n\nDo not use arrow functions as object methods when the method needs its own dynamic `this`. In that case, a normal method is clearer and safer.\n\n## Interview line\n\nArrow functions are concise, but the real interview point is lexical `this`.",
+    "code_examples": [
+      {
+        "title": "Arrow function callback",
+        "language": "javascript",
+        "code": "const prices = [100, 200, 300];\nconst withTax = prices.map((price) => price * 1.18);\n\nconsole.log(withTax); // [118, 236, 354]"
+      },
+      {
+        "title": "Lexical this",
+        "language": "javascript",
+        "code": "const user = {\n  name: \"Ada\",\n  greetLater() {\n    setTimeout(() => {\n      console.log(`Hi, ${this.name}`);\n    }, 1000);\n  },\n};\n\nuser.greetLater();"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-ex-007", "preview": "What is an arrow function in JavaScript?" }
+    ]
+  },
+  {
+    "id": "js-classes-deep",
+    "title": "Classes",
+    "category": "JavaScript",
+    "tags": ["ES6", "classes", "prototype", "oop"],
+    "summary": "JavaScript classes are cleaner syntax over prototypes, giving you constructors, methods, inheritance, and static members.",
+    "content": "## What classes really are\n\nJavaScript classes look like classes from other languages, but underneath they still use prototypes. The class syntax gives a cleaner way to create constructor functions and share methods through the prototype chain.\n\n## Why they help\n\nClasses are useful when you have objects with shared behavior: services, models, custom errors, UI helpers, or domain objects. Instead of attaching methods manually to a prototype, you write the structure in one place.\n\n## Inheritance\n\n`extends` lets one class inherit from another. Use inheritance carefully. It is useful for real subtype relationships, but composition is usually better for flexible app code.\n\n## Interview line\n\nA JavaScript class is syntactic sugar over prototype-based inheritance, not a completely different object model.",
+    "code_examples": [
+      {
+        "title": "Basic class",
+        "language": "javascript",
+        "code": "class User {\n  constructor(name) {\n    this.name = name;\n  }\n\n  greet() {\n    return `Hello, ${this.name}`;\n  }\n}\n\nconst user = new User(\"Ada\");\nconsole.log(user.greet());"
+      },
+      {
+        "title": "Extending a class",
+        "language": "javascript",
+        "code": "class Admin extends User {\n  canDelete() {\n    return true;\n  }\n}\n\nconst admin = new Admin(\"Grace\");\nconsole.log(admin.greet());\nconsole.log(admin.canDelete());"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-010", "preview": "How does the prototype chain work?" }
+    ]
+  },
+  {
+    "id": "js-enhanced-object-literals-deep",
+    "title": "Enhanced object literals",
+    "category": "JavaScript",
+    "tags": ["ES6", "objects", "computed-properties"],
+    "summary": "Enhanced object literals make object creation cleaner with shorthand properties, method syntax, computed keys, and `super` in methods.",
+    "content": "## What changed\n\nEnhanced object literals made object creation less repetitive. If the variable name and property name are the same, you can write the name once. Methods also became shorter to define.\n\n## Computed property names\n\nYou can build a property name dynamically using square brackets. This is useful for feature flags, form fields, reducers, and API payloads where keys are not always hardcoded.\n\n## Why it matters\n\nThis feature looks small, but it makes everyday JavaScript cleaner. It is one of those features you use constantly without thinking about it.\n\n## Interview line\n\nEnhanced object literals reduce boilerplate when creating objects and make dynamic keys easier.",
+    "code_examples": [
+      {
+        "title": "Shorthand and methods",
+        "language": "javascript",
+        "code": "const name = \"Ada\";\nconst role = \"admin\";\n\nconst user = {\n  name,\n  role,\n  greet() {\n    return `Hi, ${this.name}`;\n  },\n};\n\nconsole.log(user.greet());"
+      },
+      {
+        "title": "Computed property name",
+        "language": "javascript",
+        "code": "const field = \"email\";\nconst value = \"ada@example.com\";\n\nconst formData = {\n  [field]: value,\n};\n\nconsole.log(formData.email);"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-037", "preview": "What are enhanced object literals?" }
+    ]
+  },
+  {
+    "id": "js-template-literals-multiline",
+    "title": "Template literals and multi-line strings",
+    "category": "JavaScript",
+    "tags": ["ES6", "template-literals", "strings"],
+    "summary": "Template literals use backticks for interpolation, readable multi-line strings, and tagged templates.",
+    "content": "## What they solve\n\nTemplate literals make strings easier to read when values need to be inserted. Instead of joining strings with `+`, you place expressions inside the string.\n\n## Multi-line strings\n\nBackticks preserve line breaks, so writing emails, SQL snippets, HTML strings, logs, or long messages becomes much cleaner.\n\n## Tagged templates\n\nA tag function can process the string parts and dynamic values before returning a result. Libraries use this for safe SQL builders, CSS-in-JS, translations, and formatting.\n\n## Interview line\n\nTemplate literals are not just string interpolation. They also support multi-line strings and tagged templates.",
+    "code_examples": [
+      {
+        "title": "Interpolation",
+        "language": "javascript",
+        "code": "const user = \"Ada\";\nconst count = 3;\n\nconst message = `Hello ${user}, you have ${count} notifications.`;\nconsole.log(message);"
+      },
+      {
+        "title": "Multi-line string",
+        "language": "javascript",
+        "code": "const email = `Hi Ada,\n\nYour report is ready.\nPlease review it when you have time.`;\n\nconsole.log(email);"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-038", "preview": "What are template literals?" }
+    ]
+  },
+  {
+    "id": "js-destructuring-assignment-deep",
+    "title": "Destructuring assignment",
+    "category": "JavaScript",
+    "tags": ["ES6", "destructuring", "objects", "arrays"],
+    "summary": "Destructuring pulls values out of arrays or objects into variables without repetitive property access.",
+    "content": "## What it does\n\nDestructuring lets you unpack values from arrays and objects. It is like saying, `take these fields from this object and make variables for me`.\n\n## Object destructuring\n\nObject destructuring is common with API responses, component props, config objects, and function parameters.\n\n## Array destructuring\n\nArray destructuring is useful when position matters, like coordinates, entries, hook return values, or pairs.\n\n## Defaults and renaming\n\nYou can provide default values and rename variables while destructuring. This keeps code readable when external data is incomplete or when property names are not ideal locally.",
+    "code_examples": [
+      {
+        "title": "Object destructuring",
+        "language": "javascript",
+        "code": "const user = { id: 1, name: \"Ada\", role: \"admin\" };\n\nconst { name, role } = user;\nconsole.log(name, role);"
+      },
+      {
+        "title": "Defaults and renaming",
+        "language": "javascript",
+        "code": "const settings = { theme: \"dark\" };\n\nconst { theme, language: lang = \"en\" } = settings;\nconsole.log(theme, lang);"
+      },
+      {
+        "title": "Array destructuring",
+        "language": "javascript",
+        "code": "const point = [10, 20];\nconst [x, y] = point;\n\nconsole.log(x, y);"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-036", "preview": "What is destructuring?" }
+    ]
+  },
+  {
+    "id": "js-default-rest-spread-parameters",
+    "title": "Default, rest, and spread parameters",
+    "category": "JavaScript",
+    "tags": ["ES6", "default-parameters", "rest", "spread"],
+    "summary": "Default parameters supply fallback values, rest collects arguments, and spread expands arrays or objects.",
+    "content": "## Default parameters\n\nDefault parameters give a function a fallback when an argument is `undefined`. They make functions easier to call and reduce manual fallback code inside the function body.\n\n## Rest parameters\n\nRest parameters collect the remaining function arguments into a real array. This is cleaner than using the older `arguments` object.\n\n## Spread syntax\n\nSpread does the opposite of rest. It expands arrays into arguments or copies values into new arrays and objects.\n\n## Easy way to remember\n\nRest gathers many values into one variable. Spread opens one array or object back into many values.",
+    "code_examples": [
+      {
+        "title": "Default parameter",
+        "language": "javascript",
+        "code": "function greet(name = \"Guest\") {\n  return `Hello, ${name}`;\n}\n\nconsole.log(greet());\nconsole.log(greet(\"Ada\"));"
+      },
+      {
+        "title": "Rest parameter",
+        "language": "javascript",
+        "code": "function sum(...numbers) {\n  return numbers.reduce((total, n) => total + n, 0);\n}\n\nconsole.log(sum(1, 2, 3));"
+      },
+      {
+        "title": "Spread syntax",
+        "language": "javascript",
+        "code": "const first = [1, 2];\nconst second = [3, 4];\nconst all = [...first, ...second];\n\nconst user = { name: \"Ada\" };\nconst admin = { ...user, role: \"admin\" };"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-034", "preview": "What are rest and spread operators?" }
+    ]
+  },
+  {
+    "id": "js-let-const-block-scope",
+    "title": "let and const",
+    "category": "JavaScript",
+    "tags": ["ES6", "let", "const", "scope"],
+    "summary": "`let` and `const` are block-scoped declarations that avoid many classic `var` bugs.",
+    "content": "## Why they replaced var\n\n`var` is function-scoped, which means it can escape blocks like `if` statements and loops. `let and const` are block-scoped, so they stay inside the nearest pair of braces.\n\n## let\n\nUse `let` when the variable needs to be reassigned, like a loop counter or a value that changes over time.\n\n## const\n\nUse `const` when the variable binding should not be reassigned. For objects and arrays, `const` prevents rebinding, not mutation of the contents.\n\n## Interview line\n\nDefault to `const`, use `let` when reassignment is needed, and avoid `var` in modern JavaScript.",
+    "code_examples": [
+      {
+        "title": "Block scope",
+        "language": "javascript",
+        "code": "if (true) {\n  let message = \"inside\";\n  const role = \"admin\";\n}\n\n// message and role are not available here"
+      },
+      {
+        "title": "const object can still mutate",
+        "language": "javascript",
+        "code": "const user = { name: \"Ada\" };\nuser.name = \"Grace\";\n\nconsole.log(user.name); // Grace\n\n// user = {} would throw"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-001", "preview": "var vs let vs const" }
+    ]
+  },
+  {
+    "id": "js-iterators-for-of",
+    "title": "Iterators and for...of",
+    "category": "JavaScript",
+    "tags": ["ES6", "iterators", "for-of", "iteration"],
+    "summary": "Iterators define how values are produced one at a time, and `for...of` consumes iterable values cleanly.",
+    "content": "## What an iterator is\n\nAn iterator is an object with a `next()` method. Each call returns the next value and tells JavaScript whether the sequence is done.\n\n## What an iterable is\n\nAn iterable is an object that knows how to create an iterator. Arrays, strings, Maps, Sets, NodeLists, and generators are iterable.\n\n## for...of\n\n`for...of` loops over values. That is different from `for...in`, which loops over object keys. For arrays, `for...of` is usually the one you want.\n\n## Interview line\n\n`for...of` works on iterables, not just arrays.",
+    "code_examples": [
+      {
+        "title": "for...of over values",
+        "language": "javascript",
+        "code": "const names = [\"Ada\", \"Grace\", \"Linus\"];\n\nfor (const name of names) {\n  console.log(name);\n}"
+      },
+      {
+        "title": "Custom iterable",
+        "language": "javascript",
+        "code": "const range = {\n  start: 1,\n  end: 3,\n  *[Symbol.iterator]() {\n    for (let i = this.start; i <= this.end; i++) {\n      yield i;\n    }\n  },\n};\n\nfor (const n of range) console.log(n);"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-041", "preview": "What is for...of?" }
+    ]
+  },
+  {
+    "id": "js-generators-deep",
+    "title": "Generators",
+    "category": "JavaScript",
+    "tags": ["ES6", "generators", "yield", "iterators"],
+    "summary": "Generators are functions that can pause and resume, producing values over time with `yield`.",
+    "content": "## What they are\n\nA generator function uses `function*` and can pause with `yield`. When you call a generator, it does not run immediately. It returns an iterator that you can pull values from.\n\n## Why they matter\n\nGenerators are useful for lazy sequences, custom iteration, state machines, pagination helpers, and older async control-flow libraries.\n\n## How to think about them\n\nA normal function returns once. A generator can return many times, one value at a time, and remember where it stopped.\n\n## Interview line\n\nGenerators are the engine behind many custom iterable patterns.",
+    "code_examples": [
+      {
+        "title": "Simple generator",
+        "language": "javascript",
+        "code": "function* numbers() {\n  yield 1;\n  yield 2;\n  yield 3;\n}\n\nfor (const n of numbers()) {\n  console.log(n);\n}"
+      },
+      {
+        "title": "Lazy id generator",
+        "language": "javascript",
+        "code": "function* ids() {\n  let id = 1;\n  while (true) {\n    yield id++;\n  }\n}\n\nconst nextId = ids();\nconsole.log(nextId.next().value);\nconsole.log(nextId.next().value);"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-045", "preview": "What are generators?" }
+    ]
+  },
+  {
+    "id": "js-unicode-deep",
+    "title": "Unicode in JavaScript",
+    "category": "JavaScript",
+    "tags": ["unicode", "strings", "emoji"],
+    "summary": "Modern JavaScript has better Unicode support, but strings are still based on UTF-16 code units, which matters for emoji and some languages.",
+    "content": "## The practical problem\n\nJavaScript strings are not always as simple as one character equals one position. Emoji, accented characters, and many non-English scripts can be made from multiple code units.\n\n## Why it matters\n\nIf you reverse a string, limit a display name, count characters, or validate user input, naive string logic can break real human text.\n\n## Modern tools\n\n`for...of` iterates by code point better than indexing with `str[i]`. Unicode escapes like `\\u{1F600}` are more readable for characters outside the basic plane.\n\n## Interview line\n\nJavaScript strings use UTF-16, so be careful with emoji and combined characters.",
+    "code_examples": [
+      {
+        "title": "Code point iteration",
+        "language": "javascript",
+        "code": "const smile = \"😀\";\n\nconsole.log(smile.length); // 2, because UTF-16 code units\n\nfor (const char of smile) {\n  console.log(char); // 😀\n}"
+      },
+      {
+        "title": "Unicode escape",
+        "language": "javascript",
+        "code": "const heart = \"\\u{2764}\";\nconsole.log(heart);"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-044", "preview": "How do JavaScript strings handle Unicode?" }
+    ]
+  },
+  {
+    "id": "js-es-modules-deep",
+    "title": "Modules",
+    "category": "JavaScript",
+    "tags": ["ES6", "modules", "import", "export"],
+    "summary": "ES modules let JavaScript files explicitly import and export values with static structure that bundlers and browsers understand.",
+    "content": "## Why modules exist\n\nBefore modules, JavaScript files often shared values through globals or custom module systems. ES modules gave the language a standard way to split code across files.\n\n## Imports and exports\n\nA module can export functions, constants, classes, or objects. Another module imports only what it needs. This makes dependencies visible and easier to refactor.\n\n## Static structure\n\nBecause imports are static, tools can analyze the dependency graph, tree-shake unused code, and split bundles more reliably.\n\n## Interview line\n\nES modules make dependencies explicit and help tooling optimize JavaScript apps.",
+    "code_examples": [
+      {
+        "title": "Named export and import",
+        "language": "javascript",
+        "code": "// math.js\nexport function add(a, b) {\n  return a + b;\n}\n\n// app.js\nimport { add } from \"./math.js\";\nconsole.log(add(2, 3));"
+      },
+      {
+        "title": "Default export",
+        "language": "javascript",
+        "code": "// logger.js\nexport default function log(message) {\n  console.log(message);\n}\n\n// app.js\nimport log from \"./logger.js\";\nlog(\"Started\");"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-046", "preview": "What are JavaScript modules?" }
+    ]
+  },
+  {
+    "id": "js-module-loaders",
+    "title": "Module loaders",
+    "category": "JavaScript",
+    "tags": ["modules", "loaders", "bundlers", "dynamic-import"],
+    "summary": "Module loaders and bundlers resolve module dependencies, load files, transform syntax, and create browser-ready output.",
+    "content": "## What a module loader does\n\nA module loader figures out where imported modules come from and makes them available at runtime. In older JavaScript, tools like RequireJS and SystemJS handled this job before native modules were widely supported.\n\n## Modern reality\n\nToday, browsers support ES modules, and bundlers like Vite, Webpack, Rollup, and Turbopack do most app-level module loading and bundling work.\n\n## Dynamic loading\n\nDynamic `import()` lets you load a module only when needed. This is useful for large admin screens, charts, editors, modals, and rarely used features.\n\n## Interview line\n\nModule loaders solve how modules are found, transformed, and loaded; bundlers usually handle this in modern apps.",
+    "code_examples": [
+      {
+        "title": "Dynamic import",
+        "language": "javascript",
+        "code": "async function openChart() {\n  const chartModule = await import(\"./chart.js\");\n  chartModule.renderChart();\n}\n\nbutton.addEventListener(\"click\", openChart);"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-047", "preview": "What is dynamic import?" }
+    ]
+  },
+  {
+    "id": "js-map-set-weak-collections",
+    "title": "Map, Set, WeakMap, and WeakSet",
+    "category": "JavaScript",
+    "tags": ["ES6", "Map", "Set", "WeakMap", "WeakSet"],
+    "summary": "JavaScript Map and JavaScript Set are collection types; WeakMap and WeakSet hold object references without preventing garbage collection.",
+    "content": "## JavaScript Map\n\nJavaScript Map stores key-value pairs and allows any value as a key, including objects. It is better than a plain object when keys are not just strings or when insertion order matters.\n\n## JavaScript Set\n\nJavaScript Set stores unique values. It is perfect when you need to remove duplicates or quickly check whether a value exists.\n\n## WeakMap and WeakSet\n\nWeakMap and WeakSet only accept objects as keys or values, and they do not keep those objects alive for garbage collection. They are useful for private metadata attached to objects.\n\n## Interview line\n\nUse Map for key-value data, Set for uniqueness, and WeakMap when metadata should disappear with the object.",
+    "code_examples": [
+      {
+        "title": "Map and Set",
+        "language": "javascript",
+        "code": "const visits = new Map();\nconst user = { id: 1 };\n\nvisits.set(user, 3);\nconsole.log(visits.get(user));\n\nconst uniqueRoles = new Set([\"admin\", \"user\", \"admin\"]);\nconsole.log([...uniqueRoles]);"
+      },
+      {
+        "title": "WeakMap metadata",
+        "language": "javascript",
+        "code": "const metadata = new WeakMap();\nconst button = document.querySelector(\"button\");\n\nmetadata.set(button, { clicked: 0 });\nconsole.log(metadata.get(button));"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-048", "preview": "What is the difference between Map and object?" }
+    ]
+  },
+  {
+    "id": "js-proxies-deep",
+    "title": "Proxies",
+    "category": "JavaScript",
+    "tags": ["ES6", "Proxy", "meta-programming"],
+    "summary": "A Proxy wraps an object and intercepts operations like getting, setting, deleting, or calling properties.",
+    "content": "## What a Proxy does\n\nA Proxy lets you stand between code and an object. When someone reads or writes a property, the Proxy can intercept that operation.\n\n## Why it is powerful\n\nProxies are useful for validation, logging, reactive state systems, API wrappers, access control, and building developer tools.\n\n## Use carefully\n\nProxies can make behavior less obvious. If normal objects solve the problem, use normal objects. Reach for Proxy when you genuinely need to intercept operations.\n\n## Interview line\n\nProxy is JavaScript's way to customize low-level object behavior.",
+    "code_examples": [
+      {
+        "title": "Validate property writes",
+        "language": "javascript",
+        "code": "const user = { age: 30 };\n\nconst guardedUser = new Proxy(user, {\n  set(target, key, value) {\n    if (key === \"age\" && value < 0) {\n      throw new Error(\"Age cannot be negative\");\n    }\n    target[key] = value;\n    return true;\n  },\n});\n\nguardedUser.age = 31;"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-049", "preview": "What is a Proxy?" }
+    ]
+  },
+  {
+    "id": "js-symbols-deep",
+    "title": "Symbols",
+    "category": "JavaScript",
+    "tags": ["ES6", "symbols", "unique-keys"],
+    "summary": "Symbols are unique primitive values often used as non-colliding object keys and protocol hooks like `Symbol.iterator`.",
+    "content": "## What a Symbol is\n\nA Symbol is a primitive value that is guaranteed to be unique. Even two Symbols with the same description are not equal.\n\n## Why they exist\n\nSymbols are useful when you need object keys that will not collide with normal string keys. JavaScript also uses well-known Symbols for language protocols.\n\n## Symbol.iterator\n\n`Symbol.iterator` tells JavaScript how an object should behave in `for...of`, spread, and other iteration contexts.\n\n## Interview line\n\nSymbols are unique keys and protocol hooks for advanced object behavior.",
+    "code_examples": [
+      {
+        "title": "Unique object key",
+        "language": "javascript",
+        "code": "const secret = Symbol(\"secret\");\n\nconst user = {\n  name: \"Ada\",\n  [secret]: \"hidden value\",\n};\n\nconsole.log(user[secret]);"
+      },
+      {
+        "title": "Symbol.iterator",
+        "language": "javascript",
+        "code": "const numbers = {\n  *[Symbol.iterator]() {\n    yield 1;\n    yield 2;\n  },\n};\n\nconsole.log([...numbers]);"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-050", "preview": "What is a Symbol?" }
+    ]
+  },
+  {
+    "id": "js-subclassable-builtins",
+    "title": "Subclassable built-ins",
+    "category": "JavaScript",
+    "tags": ["ES6", "classes", "built-ins", "inheritance"],
+    "summary": "ES6 made built-in constructors like Array, Error, Map, and Promise easier to extend with class syntax.",
+    "content": "## What it means\n\nSubclassable built-ins means you can create your own class that extends a native JavaScript class such as Array, Error, Map, or Promise.\n\n## When it is useful\n\nThe most common practical use is custom Error classes. They let you throw meaningful errors and still keep normal Error behavior like stack traces.\n\n## Use with care\n\nExtending Array, Map, or Promise can be clever but confusing. For business code, composition is often easier to understand than subclassing built-ins.\n\n## Interview line\n\nSubclassable built-ins make native objects extendable, but custom Error classes are the most practical everyday example.",
+    "code_examples": [
+      {
+        "title": "Custom error class",
+        "language": "javascript",
+        "code": "class ValidationError extends Error {\n  constructor(message, field) {\n    super(message);\n    this.name = \"ValidationError\";\n    this.field = field;\n  }\n}\n\nthrow new ValidationError(\"Email is required\", \"email\");"
+      },
+      {
+        "title": "Extending Array",
+        "language": "javascript",
+        "code": "class NumberList extends Array {\n  sum() {\n    return this.reduce((total, n) => total + n, 0);\n  }\n}\n\nconst list = new NumberList(1, 2, 3);\nconsole.log(list.sum());"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-013", "preview": "What are classes in JavaScript?" }
+    ]
+  },
+  {
+    "id": "js-promises-human",
+    "title": "Promises",
+    "category": "JavaScript",
+    "tags": ["ES6", "promises", "async", "then"],
+    "summary": "JavaScript Promises represent work that will finish later, either successfully or with an error.",
+    "content": "## Human explanation\n\nA Promise is like a receipt for a task that has not finished yet. You do not have the final value now, but the Promise says, `I will either give you the value later or tell you what went wrong`.\n\n## Promise states\n\nA Promise starts as pending. It becomes fulfilled when the work succeeds or rejected when the work fails. Once settled, it does not change again.\n\n## Why Promises matter\n\nPromises make async code composable. Fetching data, waiting for timers, reading files, loading modules, and calling APIs can all follow the same pattern.\n\n## Interview line\n\nA Promise is a standard object for handling future success or failure.",
+    "code_examples": [
+      {
+        "title": "Basic Promise",
+        "language": "javascript",
+        "code": "const promise = new Promise((resolve, reject) => {\n  const success = true;\n\n  if (success) resolve(\"Done\");\n  else reject(new Error(\"Failed\"));\n});\n\npromise.then(console.log).catch(console.error);"
+      },
+      {
+        "title": "Promise with fetch",
+        "language": "javascript",
+        "code": "fetch(\"/api/users\")\n  .then((response) => response.json())\n  .then((users) => console.log(users))\n  .catch((error) => console.error(error));"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-ex-011", "preview": "What are Promises in JavaScript?" }
+    ]
+  },
+  {
+    "id": "js-math-features",
+    "title": "Math features",
+    "category": "JavaScript",
+    "tags": ["Math", "number", "ES6", "numeric"],
+    "summary": "JavaScript Math features provide common numeric helpers for rounding, powers, signs, truncation, and safe calculations.",
+    "content": "## What Math is\n\nJavaScript Math is a built-in object with utility functions for numbers. You do not create it with `new`; you call methods directly on `Math`.\n\n## Useful methods\n\n`Math.trunc` removes the decimal part. `Math.sign` tells you whether a number is positive, negative, or zero. `Math.hypot` calculates the square root of summed squares, useful for distances. `Math.pow` raises a number to a power, though the `**` operator is usually cleaner now.\n\n## Random numbers\n\n`Math.random` returns a decimal from 0 up to but not including 1. For security-sensitive randomness, use the Web Crypto API instead.\n\n## Interview line\n\nMath is for everyday numeric utilities, but it is not a financial precision library and not a cryptographic random source.",
+    "code_examples": [
+      {
+        "title": "Common Math methods",
+        "language": "javascript",
+        "code": "console.log(Math.trunc(4.9)); // 4\nconsole.log(Math.sign(-10)); // -1\nconsole.log(Math.hypot(3, 4)); // 5\nconsole.log(2 ** 3); // 8"
+      },
+      {
+        "title": "Random integer",
+        "language": "javascript",
+        "code": "function randomInt(min, max) {\n  return Math.floor(Math.random() * (max - min + 1)) + min;\n}\n\nconsole.log(randomInt(1, 6));"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-051", "preview": "What are important Math methods?" }
+    ]
+  },
+  {
+    "id": "js-number-string-array-object-apis",
+    "title": "Number, String, Array, and Object APIs",
+    "category": "JavaScript",
+    "tags": ["Number", "String", "Array", "Object", "APIs"],
+    "summary": "Modern JavaScript added many practical helpers to Number, String, Array, and Object for everyday data work.",
+    "content": "## JavaScript Number APIs\n\nNumber helpers like `Number.isNaN`, `Number.isFinite`, and `Number.isInteger` are safer than older global functions because they do not unexpectedly coerce values.\n\n## JavaScript String APIs\n\nString helpers like `includes`, `startsWith`, `endsWith`, `repeat`, `padStart`, `padEnd`, and `replaceAll` make text processing more readable.\n\n## JavaScript Array APIs\n\nArray helpers like `find`, `findIndex`, `includes`, `flat`, `flatMap`, and `at` help you transform and query lists without manual loops.\n\n## JavaScript Object APIs\n\nObject helpers like `Object.assign`, `Object.keys`, `Object.values`, `Object.entries`, and `Object.fromEntries` make object transformation easier.\n\n## Interview line\n\nModern built-in APIs often remove the need for small utility functions.",
+    "code_examples": [
+      {
+        "title": "Number and String APIs",
+        "language": "javascript",
+        "code": "console.log(Number.isNaN(NaN));\nconsole.log(Number.isInteger(10));\n\nconst code = \"7\".padStart(3, \"0\");\nconsole.log(code); // 007"
+      },
+      {
+        "title": "Array APIs",
+        "language": "javascript",
+        "code": "const users = [\n  { id: 1, name: \"Ada\" },\n  { id: 2, name: \"Grace\" },\n];\n\nconst user = users.find((item) => item.id === 2);\nconsole.log(user.name);"
+      },
+      {
+        "title": "Object APIs",
+        "language": "javascript",
+        "code": "const user = { name: \"Ada\", role: \"admin\" };\n\nconsole.log(Object.keys(user));\nconsole.log(Object.entries(user));\n\nconst copy = Object.assign({}, user, { active: true });\nconsole.log(copy);"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-052", "preview": "What are common JavaScript built-in APIs?" }
+    ]
+  },
+  {
+    "id": "js-binary-octal-literals",
+    "title": "Binary and octal literals",
+    "category": "JavaScript",
+    "tags": ["ES6", "binary", "octal", "numbers"],
+    "summary": "Binary and octal literals let you write numbers directly in base 2 or base 8 using `0b` and `0o` prefixes.",
+    "content": "## What they are\n\nBinary literals start with `0b`. Octal literals start with `0o`. They are still normal numbers after JavaScript reads them.\n\n## Why they exist\n\nThey make low-level values easier to read when you work with permissions, bit flags, file modes, colors, buffers, or binary protocols.\n\n## Avoid old octal style\n\nOld JavaScript allowed octal-looking numbers with a leading zero in some cases. Modern code should use `0o` because it is explicit.\n\n## Interview line\n\nBinary and octal literals are readability features for numeric values in different bases.",
+    "code_examples": [
+      {
+        "title": "Binary and octal",
+        "language": "javascript",
+        "code": "const read = 0b100;\nconst write = 0b010;\nconst execute = 0b001;\n\nconst readWrite = read | write;\nconsole.log(readWrite); // 6\n\nconst fileMode = 0o755;\nconsole.log(fileMode); // 493"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-053", "preview": "What are binary and octal literals?" }
+    ]
+  },
+  {
+    "id": "js-reflect-api",
+    "title": "Reflect API",
+    "category": "JavaScript",
+    "tags": ["ES6", "Reflect", "Proxy", "meta-programming"],
+    "summary": "The Reflect API provides function-based versions of low-level object operations and pairs naturally with Proxy traps.",
+    "content": "## What Reflect is\n\nReflect is a built-in object with methods for operations like getting a property, setting a property, checking if a key exists, defining a property, or calling a function.\n\n## Why it exists\n\nSome operations that used to be syntax or Object methods now have consistent function forms. This is especially useful inside Proxy traps because you can forward the default behavior cleanly.\n\n## Proxy pairing\n\nWhen a Proxy intercepts an operation, Reflect can perform the normal version of that operation after your custom logic runs.\n\n## Interview line\n\nReflect gives standard functions for low-level object operations and is often used with Proxy.",
+    "code_examples": [
+      {
+        "title": "Reflect with Proxy",
+        "language": "javascript",
+        "code": "const user = { name: \"Ada\" };\n\nconst proxy = new Proxy(user, {\n  get(target, key, receiver) {\n    console.log(`Reading ${String(key)}`);\n    return Reflect.get(target, key, receiver);\n  },\n});\n\nconsole.log(proxy.name);"
+      },
+      {
+        "title": "Reflect set",
+        "language": "javascript",
+        "code": "const settings = {};\n\nReflect.set(settings, \"theme\", \"dark\");\nconsole.log(settings.theme);"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-054", "preview": "What is the Reflect API?" }
+    ]
+  },
+  {
+    "id": "js-tail-calls",
+    "title": "Tail calls",
+    "category": "JavaScript",
+    "tags": ["ES6", "tail-calls", "recursion", "performance"],
+    "summary": "A tail call happens when a function's final action is returning another function call; proper tail-call optimization is not something most JavaScript apps can rely on.",
+    "content": "## What a tail call is\n\nA tail call happens when the last thing a function does is call another function and return its result. There is no extra work left after that call finishes.\n\n## Why people talk about it\n\nIn theory, an engine can optimize tail calls so deep recursion does not keep growing the call stack. This is called proper tail-call optimization.\n\n## Practical JavaScript reality\n\nAlthough proper tail calls were specified in ES6 strict mode, broad engine support has not been reliable enough for normal application code. In real projects, avoid deep recursion when stack depth can become large.\n\n## Interview line\n\nUnderstand the concept, but do not depend on tail-call optimization in production JavaScript.",
+    "code_examples": [
+      {
+        "title": "Tail-recursive shape",
+        "language": "javascript",
+        "code": "function factorial(n, total = 1) {\n  if (n <= 1) return total;\n  return factorial(n - 1, n * total);\n}\n\nconsole.log(factorial(5)); // 120"
+      },
+      {
+        "title": "Loop alternative for production",
+        "language": "javascript",
+        "code": "function factorialSafe(n) {\n  let total = 1;\n\n  for (let i = 2; i <= n; i++) {\n    total *= i;\n  }\n\n  return total;\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "js-core50-055", "preview": "What are tail calls?" }
+    ]
+  }
+]

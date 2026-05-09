@@ -1,7 +1,11 @@
 import type { GlossaryEntry } from "@/types";
 import data from "@/data/glossary.json";
+import javascriptData from "@/data/glossary-javascript.json";
 
-export const glossary: GlossaryEntry[] = data as GlossaryEntry[];
+export const glossary: GlossaryEntry[] = [
+  ...(data as GlossaryEntry[]),
+  ...(javascriptData as GlossaryEntry[]),
+];
 
 const bySlug = new Map(glossary.map((e) => [e.slug, e] as const));
 

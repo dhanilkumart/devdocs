@@ -35,5 +35,404 @@
       { "id": "int-ts-3", "preview": "Generic constraints with keyof" },
       { "id": "int-ts-4", "preview": "Conditional types overview" }
     ]
+  },
+  {
+    "id": "ts-type-inference",
+    "title": "Type inference",
+    "category": "TypeScript",
+    "tags": ["inference", "annotations", "basics"],
+    "summary": "TypeScript often figures out types from assigned values, return expressions, and usage context, reducing unnecessary annotations.",
+    "content": "## How inference works\n\nIf you write `const count = 1`, TypeScript knows `count` is a number. Function returns, array items, object properties, and callback parameters can also be inferred from context.\n\n## When to annotate\n\nAdd explicit types at API boundaries, exported functions, complex generics, and places where inference becomes too wide.\n\n## Common pitfall\n\nEmpty arrays and objects may need context. `const items = []` can become too loose unless you provide a type.",
+    "code_examples": [
+      {
+        "title": "Inference with context",
+        "language": "typescript",
+        "code": "type User = { id: string; name: string };\n\nconst users: User[] = [];\nusers.push({ id: \"1\", name: \"Ada\" });\n\nfunction getName(user: User) {\n  return user.name; // inferred string\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-006", "preview": "What is type inference in TypeScript?" }
+    ]
+  },
+  {
+    "id": "ts-strict-mode",
+    "title": "strict mode and compiler safety",
+    "category": "TypeScript",
+    "tags": ["strict", "tsconfig", "compiler"],
+    "summary": "`strict` enables the safest default checks, including strict null handling and no implicit any.",
+    "content": "## Why strict matters\n\n`strict: true` turns TypeScript from light autocomplete into a serious safety net. It catches unsafe null access, implicit `any`, weak function typing, and several edge cases around class fields and bind/call/apply.\n\n## Production recommendation\n\nFor new projects, start strict from day one. For migrations, enable strict options gradually and track the remaining unsafe areas.\n\n## Interview line\n\nStrict mode catches the bugs JavaScript would let through silently.",
+    "code_examples": [
+      {
+        "title": "tsconfig strict mode",
+        "language": "json",
+        "code": "{\n  \"compilerOptions\": {\n    \"strict\": true,\n    \"noUncheckedIndexedAccess\": true,\n    \"exactOptionalPropertyTypes\": true\n  }\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-008", "preview": "What is the tsconfig.json file?" },
+      { "id": "ts-f50-010", "preview": "What is implicit any?" }
+    ]
+  },
+  {
+    "id": "ts-any-vs-unknown",
+    "title": "any vs unknown",
+    "category": "TypeScript",
+    "tags": ["any", "unknown", "safety"],
+    "summary": "`any` disables checking; `unknown` accepts any value but forces narrowing before use.",
+    "content": "## any\n\n`any` is an escape hatch. Once a value is `any`, TypeScript stops protecting you for that value and operations chained from it.\n\n## unknown\n\n`unknown` is safer for API responses, parsed JSON, message events, and user input. You must prove what it is before using it.\n\n## Rule of thumb\n\nUse `unknown` at trust boundaries and narrow it with checks, type guards, or runtime schemas.",
+    "code_examples": [
+      {
+        "title": "Narrow unknown before use",
+        "language": "typescript",
+        "code": "function format(value: unknown) {\n  if (typeof value === \"string\") return value.trim();\n  if (typeof value === \"number\") return value.toFixed(2);\n  return \"Unsupported\";\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-014", "preview": "What is the any type?" },
+      { "id": "ts-f50-015", "preview": "What is the unknown type?" }
+    ]
+  },
+  {
+    "id": "ts-unions-intersections",
+    "title": "Union and intersection types",
+    "category": "TypeScript",
+    "tags": ["union", "intersection", "composition"],
+    "summary": "Unions model alternatives; intersections combine requirements into one type.",
+    "content": "## Union types\n\n`A | B` means the value can be A or B. You usually narrow before using properties that only exist on one branch.\n\n## Intersection types\n\n`A & B` means the value must satisfy both A and B. This is useful for composing object capabilities.\n\n## Practical use\n\nUse unions for status, API variants, and UI states. Use intersections to combine base props with feature-specific props.",
+    "code_examples": [
+      {
+        "title": "Union and intersection",
+        "language": "typescript",
+        "code": "type Status = \"idle\" | \"loading\" | \"success\" | \"error\";\n\ntype Audited = { createdAt: string };\ntype User = { id: string; name: string };\ntype AuditedUser = User & Audited;"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-016", "preview": "What is a union type?" },
+      { "id": "ts-f50-017", "preview": "What is an intersection type?" }
+    ]
+  },
+  {
+    "id": "ts-literal-types-as-const",
+    "title": "Literal types and as const",
+    "category": "TypeScript",
+    "tags": ["literal-types", "as const", "immutability"],
+    "summary": "Literal types preserve exact values like `\"admin\"`; `as const` keeps object and array literals narrow and readonly.",
+    "content": "## Literal types\n\nA literal type is an exact value type, such as `\"admin\"`, `200`, or `true`. They are powerful for statuses, roles, variants, and event names.\n\n## as const\n\n`as const` tells TypeScript not to widen values. Arrays become readonly tuples and object properties become readonly exact values.\n\n## Common pattern\n\nDefine runtime arrays with `as const`, then derive a union type from them.",
+    "code_examples": [
+      {
+        "title": "Derive union from constants",
+        "language": "typescript",
+        "code": "const roles = [\"admin\", \"editor\", \"viewer\"] as const;\ntype Role = (typeof roles)[number];\n\nfunction canEdit(role: Role) {\n  return role === \"admin\" || role === \"editor\";\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-024", "preview": "What are literal types?" }
+    ]
+  },
+  {
+    "id": "ts-narrowing-type-guards",
+    "title": "Type narrowing and type guards",
+    "category": "TypeScript",
+    "tags": ["narrowing", "type-guards", "runtime-checks"],
+    "summary": "Narrowing refines a broad type into a safer specific type using checks like `typeof`, `in`, `instanceof`, and custom guards.",
+    "content": "## Built-in narrowing\n\nTypeScript understands common runtime checks: `typeof`, `instanceof`, truthiness, equality checks, and `in` checks.\n\n## Custom type guards\n\nA function returning `value is SomeType` tells TypeScript that a runtime check proves a more specific type.\n\n## Why it matters\n\nNarrowing is the bridge between unsafe external data and safe typed code.",
+    "code_examples": [
+      {
+        "title": "Custom type guard",
+        "language": "typescript",
+        "code": "type User = { id: string; name: string };\n\nfunction isUser(value: unknown): value is User {\n  return typeof value === \"object\" && value !== null &&\n    \"id\" in value && \"name\" in value;\n}\n\nfunction handle(value: unknown) {\n  if (isUser(value)) return value.name;\n  return \"Guest\";\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-025", "preview": "What is type narrowing?" }
+    ]
+  },
+  {
+    "id": "ts-discriminated-unions",
+    "title": "Discriminated unions",
+    "category": "TypeScript",
+    "tags": ["discriminated-union", "state", "exhaustiveness"],
+    "summary": "A discriminated union uses a shared tag field to model safe alternatives and make branching exhaustive.",
+    "content": "## Shape\n\nEach variant has a common field, often `type`, `kind`, or `status`, with a different literal value.\n\n## Why it is useful\n\nThis is one of TypeScript's best patterns for UI state, API responses, reducers, workflow nodes, and events.\n\n## Exhaustiveness\n\nPair with `never` in the default branch to catch missing cases when a new variant is added.",
+    "code_examples": [
+      {
+        "title": "Safe UI state",
+        "language": "typescript",
+        "code": "type LoadState =\n  | { status: \"idle\" }\n  | { status: \"loading\" }\n  | { status: \"success\"; data: string[] }\n  | { status: \"error\"; message: string };\n\nfunction render(state: LoadState) {\n  switch (state.status) {\n    case \"success\": return state.data.join(\", \");\n    case \"error\": return state.message;\n    default: return state.status;\n  }\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-026", "preview": "What is a discriminated union?" }
+    ]
+  },
+  {
+    "id": "ts-never-exhaustiveness",
+    "title": "never and exhaustiveness checks",
+    "category": "TypeScript",
+    "tags": ["never", "exhaustive", "switch"],
+    "summary": "`never` represents impossible values and helps catch missing branches in switches and reducers.",
+    "content": "## What never means\n\n`never` is the type of a value that should not exist. A function that always throws or never returns can return `never`.\n\n## Exhaustive switches\n\nWhen all union branches are handled, the leftover type becomes `never`. Assigning the default case to `never` catches future missing cases.\n\n## Production use\n\nUse it in reducers, API response handlers, and workflow engines where missing a new variant could become a bug.",
+    "code_examples": [
+      {
+        "title": "Exhaustive switch",
+        "language": "typescript",
+        "code": "type Event = { type: \"save\" } | { type: \"delete\" };\n\nfunction handle(event: Event) {\n  switch (event.type) {\n    case \"save\": return \"saved\";\n    case \"delete\": return \"deleted\";\n    default: {\n      const _exhaustive: never = event;\n      return _exhaustive;\n    }\n  }\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-035", "preview": "What is the never type?" }
+    ]
+  },
+  {
+    "id": "ts-keyof-typeof-indexed-access",
+    "title": "keyof, typeof, and indexed access",
+    "category": "TypeScript",
+    "tags": ["keyof", "typeof", "indexed-access"],
+    "summary": "`keyof`, `typeof`, and indexed access types let you derive types from existing objects and keep code synchronized.",
+    "content": "## keyof\n\n`keyof T` creates a union of the property names of T.\n\n## typeof\n\nIn type positions, `typeof value` extracts the static type of a runtime value.\n\n## Indexed access\n\n`T[K]` gets the type of a property. Combined together, these tools prevent duplicate hand-written types.",
+    "code_examples": [
+      {
+        "title": "Derive types from a config object",
+        "language": "typescript",
+        "code": "const routes = {\n  home: \"/\",\n  settings: \"/settings\",\n  profile: \"/profile\",\n} as const;\n\ntype RouteName = keyof typeof routes;\ntype RoutePath = (typeof routes)[RouteName];"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-028", "preview": "What is keyof?" }
+    ]
+  },
+  {
+    "id": "ts-utility-types",
+    "title": "Utility types",
+    "category": "TypeScript",
+    "tags": ["utility-types", "Partial", "Pick", "Omit", "Record"],
+    "summary": "Utility types transform existing types so you do not duplicate object shapes by hand.",
+    "content": "## Common utilities\n\n`Partial<T>` makes properties optional. `Required<T>` makes them required. `Pick<T, K>` selects fields. `Omit<T, K>` removes fields. `Record<K, V>` creates an object type with known keys and values.\n\n## Why they matter\n\nThey keep API payloads, form drafts, update requests, and view models tied to the source type.\n\n## Avoid overuse\n\nIf a transformed type becomes hard to read, name it clearly.",
+    "code_examples": [
+      {
+        "title": "Update payload",
+        "language": "typescript",
+        "code": "type User = { id: string; name: string; email: string; role: string };\n\ntype CreateUser = Omit<User, \"id\">;\ntype UpdateUser = Partial<Pick<User, \"name\" | \"email\" | \"role\">>;\ntype UsersById = Record<string, User>;"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-029", "preview": "What are utility types?" }
+    ]
+  },
+  {
+    "id": "ts-mapped-types",
+    "title": "Mapped types",
+    "category": "TypeScript",
+    "tags": ["mapped-types", "transform", "modifiers"],
+    "summary": "Mapped types loop over keys in type space to create new object types from existing ones.",
+    "content": "## Core idea\n\nA mapped type uses `[K in keyof T]` to transform every property in a type.\n\n## Common transformations\n\nMake fields readonly, optional, nullable, required, or convert property values to another wrapper type.\n\n## Real use\n\nForm error objects, feature flag maps, DTO transformations, and permission maps often use mapped types.",
+    "code_examples": [
+      {
+        "title": "Map fields to errors",
+        "language": "typescript",
+        "code": "type FormValues = { email: string; password: string };\n\ntype FormErrors<T> = {\n  [K in keyof T]?: string;\n};\n\nconst errors: FormErrors<FormValues> = { email: \"Invalid email\" };"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-030", "preview": "What is a mapped type?" }
+    ]
+  },
+  {
+    "id": "ts-conditional-types-infer",
+    "title": "Conditional types and infer",
+    "category": "TypeScript",
+    "tags": ["conditional-types", "infer", "advanced"],
+    "summary": "Conditional types choose one type or another based on assignability; `infer` extracts a type from another type.",
+    "content": "## Conditional types\n\n`T extends U ? X : Y` means: if T is assignable to U, use X, otherwise use Y.\n\n## infer\n\n`infer` introduces a temporary type variable inside a conditional type. It is commonly used to extract promise results, function returns, array items, and component props.\n\n## Keep it readable\n\nAdvanced types are powerful, but teams should name them well and avoid puzzle-code type systems.",
+    "code_examples": [
+      {
+        "title": "Extract Promise value",
+        "language": "typescript",
+        "code": "type UnwrapPromise<T> = T extends Promise<infer Value> ? Value : T;\n\ntype A = UnwrapPromise<Promise<string>>; // string\ntype B = UnwrapPromise<number>; // number"
+      }
+    ],
+    "related_questions": [
+      { "id": "int-ts-4", "preview": "Conditional types overview" }
+    ]
+  },
+  {
+    "id": "ts-template-literal-types",
+    "title": "Template literal types",
+    "category": "TypeScript",
+    "tags": ["template-literal-types", "strings", "events"],
+    "summary": "Template literal types build string unions from other string types, useful for event names, route names, and CSS-like tokens.",
+    "content": "## Pattern\n\nTemplate literal types use the same `${...}` idea as JavaScript template strings, but in type space.\n\n## Common uses\n\nTyped event names, route strings, analytics keys, API resource names, and design-system tokens.\n\n## Practical advice\n\nUse them when they remove real duplication. Avoid making every string in an app into a giant type puzzle.",
+    "code_examples": [
+      {
+        "title": "Typed event names",
+        "language": "typescript",
+        "code": "type Entity = \"user\" | \"invoice\";\ntype Action = \"created\" | \"deleted\";\ntype EventName = `${Entity}.${Action}`;\n\nconst event: EventName = \"user.created\";"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-042", "preview": "What are template literal types?" }
+    ]
+  },
+  {
+    "id": "ts-satisfies-operator",
+    "title": "satisfies operator",
+    "category": "TypeScript",
+    "tags": ["satisfies", "inference", "type-checking"],
+    "summary": "`satisfies` checks that a value matches a type without widening away its useful literal information.",
+    "content": "## Why it exists\n\nA type annotation can widen precise values. `satisfies` verifies the object shape while preserving the exact inferred type of the value.\n\n## Best use cases\n\nConfiguration objects, route maps, design tokens, feature flag definitions, and lookup tables.\n\n## Interview line\n\n`satisfies` is great when you want validation against a contract without losing precise inference.",
+    "code_examples": [
+      {
+        "title": "Config stays precise",
+        "language": "typescript",
+        "code": "type RouteConfig = Record<string, { path: string; auth: boolean }>;\n\nconst routes = {\n  home: { path: \"/\", auth: false },\n  admin: { path: \"/admin\", auth: true },\n} satisfies RouteConfig;\n\n// routes.admin.auth is still inferred as true"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-043", "preview": "What does satisfies do?" }
+    ]
+  },
+  {
+    "id": "ts-function-types-overloads",
+    "title": "Function types and overloads",
+    "category": "TypeScript",
+    "tags": ["functions", "overloads", "callbacks"],
+    "summary": "Function types define parameter and return contracts; overloads describe multiple valid call signatures.",
+    "content": "## Function types\n\nUse function types for callbacks, handlers, async utilities, and reusable APIs.\n\n## Overloads\n\nOverloads are useful when one function supports different input shapes and returns different output shapes.\n\n## Prefer simple unions first\n\nIf a union parameter is clear enough, use that. Reach for overloads when return type depends on input type.",
+    "code_examples": [
+      {
+        "title": "Overload return by input",
+        "language": "typescript",
+        "code": "function getValue(id: string): string;\nfunction getValue(id: number): number;\nfunction getValue(id: string | number) {\n  return id;\n}\n\nconst a = getValue(\"x\"); // string\nconst b = getValue(1); // number"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-039", "preview": "What are function overloads?" }
+    ]
+  },
+  {
+    "id": "ts-tuples-readonly-arrays",
+    "title": "Tuples and readonly arrays",
+    "category": "TypeScript",
+    "tags": ["tuples", "readonly", "arrays"],
+    "summary": "Tuples type fixed-position arrays; readonly arrays prevent mutation through the typed API.",
+    "content": "## Tuples\n\nUse tuples when positions matter, such as `[state, setState]`, coordinate pairs, or result pairs.\n\n## readonly arrays\n\n`readonly T[]` or `ReadonlyArray<T>` prevents pushing, splicing, or replacing items through that reference.\n\n## Practical use\n\nReadonly inputs make utilities safer because callers know their arrays will not be mutated.",
+    "code_examples": [
+      {
+        "title": "Tuple and readonly input",
+        "language": "typescript",
+        "code": "type Point = readonly [x: number, y: number];\n\nfunction distance(point: Point) {\n  const [x, y] = point;\n  return Math.sqrt(x * x + y * y);\n}\n\nfunction first(items: readonly string[]) {\n  return items[0];\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-018", "preview": "What are tuple types?" }
+    ]
+  },
+  {
+    "id": "ts-classes-access-modifiers",
+    "title": "Classes and access modifiers",
+    "category": "TypeScript",
+    "tags": ["classes", "private", "protected", "readonly"],
+    "summary": "TypeScript adds compile-time class checks: `public`, `private`, `protected`, `readonly`, abstract classes, and implements contracts.",
+    "content": "## Access modifiers\n\n`public` is default. `private` restricts access to the class. `protected` allows access in subclasses. `readonly` prevents reassignment after construction.\n\n## Abstract classes\n\nAbstract classes define shared implementation plus required methods for subclasses.\n\n## Runtime note\n\nTypeScript's `private` is mostly compile-time. JavaScript `#private` fields are runtime-private.",
+    "code_examples": [
+      {
+        "title": "Class contract",
+        "language": "typescript",
+        "code": "interface Logger {\n  log(message: string): void;\n}\n\nclass ConsoleLogger implements Logger {\n  constructor(private readonly prefix: string) {}\n  log(message: string) {\n    console.log(this.prefix, message);\n  }\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-044", "preview": "How do access modifiers work?" }
+    ]
+  },
+  {
+    "id": "ts-enums-vs-unions",
+    "title": "Enums vs union literals",
+    "category": "TypeScript",
+    "tags": ["enum", "union", "as const"],
+    "summary": "Enums create runtime objects; string literal unions are often smaller and easier to tree-shake.",
+    "content": "## Enums\n\nEnums group named constants, but normal enums emit JavaScript. That can matter for bundle size and runtime behavior.\n\n## Union literals\n\nA union like `\"admin\" | \"editor\" | \"viewer\"` is erased at compile time and works well with `as const` arrays.\n\n## Team choice\n\nMany frontend teams prefer union literals for statuses and variants, and reserve enums for interoperability with existing APIs or codebases.",
+    "code_examples": [
+      {
+        "title": "Union alternative to enum",
+        "language": "typescript",
+        "code": "const Status = {\n  Draft: \"draft\",\n  Published: \"published\",\n  Archived: \"archived\",\n} as const;\n\ntype Status = (typeof Status)[keyof typeof Status];"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-013", "preview": "What is an enum?" }
+    ]
+  },
+  {
+    "id": "ts-modules-declaration-files",
+    "title": "Modules and declaration files",
+    "category": "TypeScript",
+    "tags": ["modules", "declaration-files", "d.ts"],
+    "summary": "TypeScript uses ES modules for imports/exports and `.d.ts` files to describe types for JavaScript or compiled packages.",
+    "content": "## Modules\n\nUse `export` and `import` to share values and types between files. Type-only imports make intent clear and can reduce emitted code confusion.\n\n## Declaration files\n\n`.d.ts` files contain type declarations without runtime implementation. They describe libraries, globals, CSS modules, image imports, or compiled packages.\n\n## Common use\n\nWhen a JavaScript package has no bundled types, teams may install `@types/package` or write a small local declaration file.",
+    "code_examples": [
+      {
+        "title": "Type-only import and declaration",
+        "language": "typescript",
+        "code": "import type { User } from \"./types\";\n\nexport function formatUser(user: User) {\n  return user.name;\n}\n\n// images.d.ts\ndeclare module \"*.png\" {\n  const src: string;\n  export default src;\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-050", "preview": "What are declaration files?" }
+    ]
+  },
+  {
+    "id": "ts-tsconfig-paths-build",
+    "title": "tsconfig paths and build options",
+    "category": "TypeScript",
+    "tags": ["tsconfig", "paths", "target", "module"],
+    "summary": "`tsconfig.json` controls strictness, module output, path aliases, included files, and project build behavior.",
+    "content": "## Important options\n\n`target` controls emitted JavaScript syntax. `module` controls module format. `strict` controls safety checks. `paths` defines aliases. `noEmit` type-checks without writing files.\n\n## App vs library\n\nApps often let a bundler emit JavaScript and run `tsc --noEmit` for type checking. Libraries often use `declaration: true` to emit `.d.ts` files.\n\n## Monorepos\n\nProject references and `composite` help large TypeScript workspaces build incrementally.",
+    "code_examples": [
+      {
+        "title": "Common app config sketch",
+        "language": "json",
+        "code": "{\n  \"compilerOptions\": {\n    \"target\": \"ES2022\",\n    \"module\": \"ESNext\",\n    \"strict\": true,\n    \"noEmit\": true,\n    \"baseUrl\": \".\",\n    \"paths\": { \"@/*\": [\"src/*\"] }\n  }\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-008", "preview": "What is the tsconfig.json file?" }
+    ]
+  },
+  {
+    "id": "ts-react-props-hooks",
+    "title": "Typing React props and hooks",
+    "category": "TypeScript",
+    "tags": ["React", "props", "hooks", "tsx"],
+    "summary": "TypeScript makes React components safer by typing props, events, state, refs, and custom hooks.",
+    "content": "## Props\n\nType component props directly. Prefer clear named prop types for exported components.\n\n## Hooks\n\n`useState` often infers well, but add a generic when initial state is `null`, an empty array, or a union. Type refs and events when inference is not enough.\n\n## Custom hooks\n\nReturn named objects for clarity, or tuples with `as const` when tuple positions matter.",
+    "code_examples": [
+      {
+        "title": "Typed component and hook",
+        "language": "tsx",
+        "code": "type ButtonProps = {\n  label: string;\n  onClick: () => void;\n  disabled?: boolean;\n};\n\nfunction Button({ label, onClick, disabled = false }: ButtonProps) {\n  return <button disabled={disabled} onClick={onClick}>{label}</button>;\n}\n\nconst [selectedId, setSelectedId] = useState<string | null>(null);"
+      }
+    ],
+    "related_questions": [
+      { "id": "ts-f50-033", "preview": "How do you type React props?" }
+    ]
+  },
+  {
+    "id": "ts-runtime-validation-zod",
+    "title": "Runtime validation with Zod",
+    "category": "TypeScript",
+    "tags": ["Zod", "runtime-validation", "API"],
+    "summary": "TypeScript types disappear at runtime, so external data still needs validation with a schema library such as Zod.",
+    "content": "## Compile time vs runtime\n\nTypeScript checks code before it runs. It cannot guarantee that an API, localStorage value, form input, or LLM response actually matches your type.\n\n## Zod pattern\n\nDefine a schema, parse untrusted data, and infer the TypeScript type from the schema. That keeps runtime validation and compile-time types in sync.\n\n## Interview line\n\nUse TypeScript for developer safety and Zod for trust boundaries.",
+    "code_examples": [
+      {
+        "title": "Schema-first API parsing",
+        "language": "typescript",
+        "code": "import { z } from \"zod\";\n\nconst UserSchema = z.object({\n  id: z.string(),\n  name: z.string(),\n});\n\ntype User = z.infer<typeof UserSchema>;\n\nasync function getUser(): Promise<User> {\n  const data: unknown = await fetch(\"/api/user\").then((r) => r.json());\n  return UserSchema.parse(data);\n}"
+      }
+    ],
+    "related_questions": [
+      { "id": "femnc-039", "preview": "How do you validate LLM JSON output?" }
+    ]
   }
 ]
