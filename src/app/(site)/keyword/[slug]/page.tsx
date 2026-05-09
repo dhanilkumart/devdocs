@@ -24,6 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 function guessLanguage(code: string): string {
   if (/:\s*(string|number|boolean|void|Promise|interface|type)\b/.test(code)) return "typescript";
   if (code.includes("useState") || code.includes("useEffect") || code.includes("export default")) return "tsx";
+  if (/^(trigger|stages|steps):/m.test(code) || code.includes("displayName:")) return "yaml";
   if (code.startsWith("#") || code.includes("docker") || code.includes("vercel")) return "bash";
   return "javascript";
 }

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { TechText } from "@/components/keyword/TechText";
 
 function inlineFormat(line: string): ReactNode {
   const parts = line.split(/(\*\*[^*]+\*\*|`[^`]+`)/g);
@@ -16,7 +17,7 @@ function inlineFormat(line: string): ReactNode {
         </code>
       );
     }
-    return <span key={i}>{part}</span>;
+    return <TechText key={i} text={part} />;
   });
 }
 

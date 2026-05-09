@@ -1,0 +1,123 @@
+[
+  {
+    "id": "devops-azure-cicd",
+    "title": "Azure CI/CD workflow",
+    "category": "DevOps",
+    "tags": ["Azure", "CI/CD", "pipeline", "deployment", "frontend"],
+    "summary": "Azure DevOps connects source code, build steps, tests, approvals, secrets, and deployment targets into one automated release workflow.",
+    "content": "## How Azure works in CI/CD\n\nAzure DevOps helps automate CI/CD pipelines by connecting source code, build processes, testing, and deployments into one workflow. When code is pushed, Azure Pipelines can automatically build, test, and deploy the application.\n\n## Typical frontend flow\n\nFor a React or Next.js app, the pipeline checks out the repository, installs dependencies, runs linting or tests, creates a production build, publishes build artifacts, and deploys to staging or production.\n\n## Simple Azure CI/CD flow\n\n- Git push to GitHub or Azure Repos\n- Azure Pipeline trigger starts\n- Install dependencies\n- Run tests, linting, and build\n- Publish artifacts\n- Deploy to Azure App Service, Azure Storage, Kubernetes, or another target\n- Use environment approvals before production\n\n## Enterprise safety\n\nAzure supports environment approvals, rollback handling, secret management through Azure Key Vault, build logs, release history, and monitoring hooks. This makes releases consistent and easier to audit.\n\n## Interview line\n\nAzure CI/CD reduces manual deployment effort and ensures consistent releases across environments.",
+    "code_examples": [
+      {
+        "title": "Simple Azure Pipeline for a React app",
+        "language": "yaml",
+        "code": "trigger:\n- main\n\nsteps:\n- script: npm install\n  displayName: Install dependencies\n- script: npm run build\n  displayName: Build application"
+      }
+    ],
+    "related_questions": [
+      { "id": "devops-azure-cicd-001", "preview": "How does Azure work in CI/CD?" },
+      { "id": "femnc-082", "preview": "What is your CI/CD setup and what checks do you run in the pipeline?" }
+    ]
+  },
+  {
+    "id": "devops-azure-devops",
+    "title": "Azure DevOps",
+    "category": "DevOps",
+    "tags": ["Azure DevOps", "repos", "boards", "pipelines", "artifacts"],
+    "summary": "Azure DevOps is Microsoft's suite for planning work, storing code, running pipelines, and managing delivery.",
+    "content": "## What it includes\n\nAzure DevOps is not just one tool. It includes Azure Boards for work tracking, Azure Repos for Git repositories, Azure Pipelines for CI/CD, Azure Artifacts for packages, and Test Plans for QA workflows.\n\n## In deployment work\n\nIn frontend projects, teams usually use Azure DevOps to connect the repository to a pipeline. A code push or pull request can trigger linting, type checking, tests, builds, artifact publishing, and deployment.\n\n## Why companies use it\n\nEnterprise teams like Azure DevOps because permissions, audit history, approvals, service connections, secrets, and environment controls are built into one ecosystem.",
+    "code_examples": [],
+    "related_questions": [
+      { "id": "devops-azure-cicd-001", "preview": "How does Azure work in CI/CD?" }
+    ]
+  },
+  {
+    "id": "devops-azure-pipelines",
+    "title": "Azure Pipelines",
+    "category": "DevOps",
+    "tags": ["Azure Pipelines", "CI", "CD", "YAML", "agents"],
+    "summary": "Azure Pipelines is the CI/CD engine that runs jobs on agents whenever a trigger, schedule, or manual release starts.",
+    "content": "## What a pipeline does\n\nAzure Pipelines executes the steps required to verify and release code. For a frontend app, that usually means install, lint, test, build, publish artifacts, and deploy.\n\n## Agents and jobs\n\nA pipeline runs on an agent. Microsoft-hosted agents are managed by Azure, while self-hosted agents run inside a company's own network when deployments need private access.\n\n## Triggers\n\nCommon triggers are pushes to `main`, pull requests, scheduled nightly builds, and manual production releases.",
+    "code_examples": [
+      {
+        "title": "Pipeline trigger sketch",
+        "language": "yaml",
+        "code": "trigger:\n- main\n\npool:\n  vmImage: ubuntu-latest\n\nsteps:\n- script: npm ci\n- script: npm test\n- script: npm run build"
+      }
+    ],
+    "related_questions": [
+      { "id": "devops-azure-cicd-001", "preview": "How does Azure work in CI/CD?" }
+    ]
+  },
+  {
+    "id": "devops-yaml-pipelines",
+    "title": "YAML pipeline files",
+    "category": "DevOps",
+    "tags": ["YAML", "pipeline-as-code", "steps", "stages"],
+    "summary": "YAML pipeline files define CI/CD as code so build, test, and deploy steps live beside the application source.",
+    "content": "## Why YAML is used\n\nYAML makes the pipeline version-controlled. If the app changes, the build and deployment instructions can change in the same pull request.\n\n## Common pieces\n\nA typical YAML pipeline defines triggers, variables, stages, jobs, steps, scripts, artifacts, environments, and approvals.\n\n## Interview wording\n\nI usually describe YAML pipelines as deployment instructions stored as code. Instead of clicking through a UI every time, the team reviews pipeline changes through pull requests.",
+    "code_examples": [
+      {
+        "title": "Stage-based pipeline sketch",
+        "language": "yaml",
+        "code": "stages:\n- stage: Build\n  jobs:\n  - job: Web\n    steps:\n    - script: npm ci\n    - script: npm run build\n\n- stage: Deploy\n  dependsOn: Build\n  jobs:\n  - job: DeployWeb\n    steps:\n    - script: echo Deploy artifact"
+      }
+    ],
+    "related_questions": [
+      { "id": "devops-azure-cicd-001", "preview": "How does Azure work in CI/CD?" }
+    ]
+  },
+  {
+    "id": "devops-azure-app-service",
+    "title": "Azure App Service deployments",
+    "category": "DevOps",
+    "tags": ["Azure App Service", "web app", "staging", "production"],
+    "summary": "Azure App Service hosts web applications and is a common target for deploying React, Next.js, Node.js, and API apps.",
+    "content": "## Where it fits\n\nAfter the pipeline builds the app, Azure App Service can receive the generated files or Node.js application package.\n\n## Staging slots\n\nA common enterprise pattern is deploying to a staging slot first, testing the release, and then swapping the slot into production. This reduces downtime and gives teams a safer rollback path.\n\n## Frontend example\n\nA React build folder can be deployed as static assets. A Next.js app may need a Node runtime or a container depending on how it is built and hosted.",
+    "code_examples": [],
+    "related_questions": [
+      { "id": "devops-azure-cicd-001", "preview": "How does Azure work in CI/CD?" }
+    ]
+  },
+  {
+    "id": "devops-azure-container-registry",
+    "title": "Azure Container Registry",
+    "category": "DevOps",
+    "tags": ["ACR", "containers", "Docker", "images"],
+    "summary": "Azure Container Registry stores Docker images that pipelines build and later deploy to container-based environments.",
+    "content": "## What ACR stores\n\nAzure Container Registry stores versioned container images. A pipeline can build a Docker image, tag it with a commit SHA or version number, push it to ACR, and deploy that exact image.\n\n## Why it helps\n\nThe same image can move through staging and production, which reduces environment drift. If production has a problem, the team can roll back to a previous image tag.\n\n## Common targets\n\nACR is often paired with Azure Kubernetes Service, Azure Container Apps, or App Service for Containers.",
+    "code_examples": [
+      {
+        "title": "Container build sketch",
+        "language": "bash",
+        "code": "docker build -t myapp:$(Build.BuildId) .\ndocker tag myapp:$(Build.BuildId) myregistry.azurecr.io/myapp:$(Build.BuildId)\ndocker push myregistry.azurecr.io/myapp:$(Build.BuildId)"
+      }
+    ],
+    "related_questions": [
+      { "id": "femnc-083", "preview": "How do you use Docker in a frontend development context?" }
+    ]
+  },
+  {
+    "id": "devops-azure-key-vault",
+    "title": "Azure Key Vault",
+    "category": "DevOps",
+    "tags": ["Azure Key Vault", "secrets", "environment variables", "security"],
+    "summary": "Azure Key Vault stores secrets, certificates, and keys so pipelines and apps do not hardcode sensitive values.",
+    "content": "## Why it matters\n\nSecrets should not live inside source code, pipeline YAML, or frontend bundles. Azure Key Vault stores sensitive values centrally and exposes them only to authorized pipelines, apps, or service identities.\n\n## In CI/CD\n\nA pipeline can read a secret at deploy time, inject it as an environment variable for the server, and keep it masked in logs.\n\n## Frontend warning\n\nAnything shipped to the browser is public. Use Key Vault for backend secrets, API credentials, signing keys, and deployment tokens, not for values that must be hidden inside client-side JavaScript.",
+    "code_examples": [],
+    "related_questions": [
+      { "id": "femnc-057", "preview": "How do you handle environment variables securely in Next.js?" }
+    ]
+  },
+  {
+    "id": "devops-deployment-safety",
+    "title": "Approvals, rollback, and monitoring",
+    "category": "DevOps",
+    "tags": ["approvals", "rollback", "monitoring", "release safety"],
+    "summary": "Enterprise CI/CD adds controls around production releases: approvals, staged rollouts, rollback plans, logs, and monitoring.",
+    "content": "## Environment approvals\n\nProduction should not always deploy instantly after a build. Azure environments can require a manual approval from a lead, QA, or release manager before deployment continues.\n\n## Rollback handling\n\nA rollback usually means redeploying the previous artifact, swapping an App Service slot back, or moving a container deployment to the previous image tag.\n\n## Monitoring\n\nAfter deployment, teams watch application logs, error rates, performance metrics, and user-impact signals. The goal is to detect bad releases quickly and reverse them before customers are heavily affected.",
+    "code_examples": [],
+    "related_questions": [
+      { "id": "femnc-086", "preview": "How do you approach monitoring and alerting for a React application in production?" }
+    ]
+  }
+]

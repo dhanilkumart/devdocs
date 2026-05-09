@@ -14,6 +14,7 @@ const accent: Record<TechCategory, string> = {
   HTML5: "text-orange-600 dark:text-orange-400",
   CSS3: "text-pink-600 dark:text-pink-400",
   GraphQL: "text-violet-600 dark:text-violet-400",
+  DevOps: "text-cyan-600 dark:text-cyan-400",
   General: "text-emerald-600 dark:text-emerald-400",
 };
 

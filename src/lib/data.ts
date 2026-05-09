@@ -14,6 +14,7 @@ import nextjs from "@/data/docs/nextjs.json";
 import react from "@/data/docs/react.json";
 import redux from "@/data/docs/redux.json";
 import typescript from "@/data/docs/typescript.json";
+import devops from "@/data/docs/devops.json";
 import interviews from "@/data/interviews.json";
 import fe100a from "@/data/interviews-fe100-a.json";
 import fe100b from "@/data/interviews-fe100-b.json";
@@ -28,7 +29,10 @@ import interviewsJavascript50 from "@/data/interviews-javascript-50.json";
 import interviewsSeniorFe from "@/data/interviews-senior-fe.json";
 import interviewsFePatternsCombined from "@/data/interviews-fe-patterns-combined.json";
 import interviewsFrontendMnc100 from "@/data/interviews-frontend-mnc-100.json";
+import interviewsDevopsAzure from "@/data/interviews-devops-azure.json";
 import resumeQuestionsRaw from "@/data/resume-questions.json";
+import resumeQuestionOverridesRaw from "@/data/resume-question-overrides.json";
+import resumeDevopsRaw from "@/data/resume-devops.json";
 import { enrichInterviewQuestion } from "@/lib/interviewContent";
 import { interviewSlug } from "@/lib/interviewDisplay";
 
@@ -41,6 +45,7 @@ export const allDocs: DocTopic[] = [
   ...(html as DocTopic[]),
   ...(css as DocTopic[]),
   ...(graphql as DocTopic[]),
+  ...(devops as DocTopic[]),
 ];
 
 const rawInterviews: InterviewQuestion[] = [
@@ -58,6 +63,7 @@ const rawInterviews: InterviewQuestion[] = [
   ...(interviewsSeniorFe as InterviewQuestion[]),
   ...(interviewsFePatternsCombined as InterviewQuestion[]),
   ...(interviewsFrontendMnc100 as InterviewQuestion[]),
+  ...(interviewsDevopsAzure as InterviewQuestion[]),
 ];
 
 export const allInterviews: InterviewQuestion[] = rawInterviews.map(enrichInterviewQuestion);
@@ -87,6 +93,7 @@ export const CATEGORIES: TechCategory[] = [
   "HTML5",
   "CSS3",
   "GraphQL",
+  "DevOps",
 ];
 
 /** Includes topics like behavioral / Agile that have no doc sidebar section */
@@ -178,10 +185,10 @@ export const INTERVIEW_SECTIONS: InterviewSection[] = [
   },
   {
     slug: "tools-devops-workflow",
-    title: "Tools, DevOps & Workflow",
+    title: "DevOps & Workflow",
     description:
-      "Git workflow, CI/CD, Docker, feature flags, testing strategy, monitoring, env config, Vercel vs self-host, ESLint/Prettier, and Cloudflare.",
-    technology: "General",
+      "Git workflow, Azure DevOps, CI/CD, Docker, feature flags, testing strategy, monitoring, env config, Vercel vs self-host, ESLint/Prettier, and Cloudflare.",
+    technology: "DevOps",
   },
   {
     slug: "behavioural-leadership",
@@ -211,7 +218,28 @@ export function countInterviewsBySection(slug: string): number {
  * the /resume-based page. Topics and projects are free-form strings (not
  * tied to TechCategory) because they describe real situations from work.
  */
-export const allResumeQuestions: ResumeQuestion[] = resumeQuestionsRaw as ResumeQuestion[];
+type ResumeQuestionOverride = Pick<ResumeQuestion, "id"> & Partial<Omit<ResumeQuestion, "id">>;
+
+const duplicateResumeQuestionIds = new Set([
+  "rb-043", // repeats rb-027
+  "rb-044", // repeats rb-023/rb-019
+  "rb-048", // repeats rb-031
+  "rb-049", // repeats rb-032
+  "rb-050", // repeats rb-033
+  "rb-055", // repeats rb-005/rb-026
+  "rb-056", // repeats rb-020/rb-036
+]);
+
+const resumeQuestionOverrides = new Map(
+  (resumeQuestionOverridesRaw as ResumeQuestionOverride[]).map((q) => [q.id, q] as const),
+);
+
+export const allResumeQuestions: ResumeQuestion[] = [
+  ...(resumeQuestionsRaw as ResumeQuestion[])
+    .filter((q) => !duplicateResumeQuestionIds.has(q.id))
+    .map((q) => ({ ...q, ...resumeQuestionOverrides.get(q.id) })),
+  ...(resumeDevopsRaw as ResumeQuestion[]),
+];
 
 const resumeById = new Map(allResumeQuestions.map((q) => [q.id, q] as const));
 

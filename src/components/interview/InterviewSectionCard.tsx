@@ -10,6 +10,7 @@ const TECH_BADGE: Record<TechCategory, string> = {
   HTML5: "bg-orange-100 text-orange-900 dark:bg-orange-950 dark:text-orange-200",
   CSS3: "bg-pink-100 text-pink-900 dark:bg-pink-950 dark:text-pink-200",
   GraphQL: "bg-violet-100 text-violet-900 dark:bg-violet-950 dark:text-violet-200",
+  DevOps: "bg-cyan-100 text-cyan-900 dark:bg-cyan-950 dark:text-cyan-200",
   General: "bg-emerald-100 text-emerald-900 dark:bg-emerald-950 dark:text-emerald-200",
 };
 

@@ -1,0 +1,23 @@
+[
+  {
+    "id": "devops-azure-cicd-001",
+    "slug": "how-azure-works-in-ci-cd",
+    "section": "tools-devops-workflow",
+    "technology": "DevOps",
+    "level": "Intermediate",
+    "question": "How does Azure work in CI/CD?",
+    "answer": "Azure DevOps helps automate CI/CD pipelines by connecting source code, build processes, testing, and deployments into one workflow. When code is pushed, Azure Pipelines can automatically build, test, and deploy the application.",
+    "quickAnswer": "Azure DevOps connects the repo, build steps, tests, secrets, approvals, and deployment target. A push to main can trigger Azure Pipelines to install dependencies, run checks, build the app, publish artifacts, and deploy to staging or production.",
+    "detailedExplanation": "In Azure DevOps, we usually create pipelines connected to repositories like GitHub or Azure Repos. Whenever developers push code, the pipeline triggers automatically.\n\nFor a React or Next.js application, Azure first checks out the code, installs dependencies, runs tests or linting, and generates the production build. After the build succeeds, it deploys the application to staging or production servers.\n\nPipelines are usually defined using YAML files, where we configure steps like installing dependencies, building the application, running tests, publishing artifacts, and deploying to the target environment.\n\nAzure also supports environment approvals, rollback handling, secret management through Azure Key Vault, and monitoring hooks, which is useful for enterprise applications.",
+    "realWorldUseCase": "For a React app, an Azure Pipeline may run `npm install`, `npm run build`, and then deploy the generated build folder to Azure App Service, Azure Storage static hosting, or a server. For container-based apps, the pipeline can build a Docker image, push it to Azure Container Registry, and deploy that image to the runtime environment.",
+    "example": "Simple flow: Git push -> Azure Pipeline triggered -> install dependencies -> run tests and build -> deploy to staging or production.",
+    "codeExample": "trigger:\n- main\n\nsteps:\n- script: npm install\n  displayName: Install dependencies\n- script: npm run build\n  displayName: Build application",
+    "commonMistakes": "- Putting secrets directly in YAML instead of Azure Key Vault or protected variables.\n- Deploying straight to production without staging validation or approvals.\n- Skipping tests and linting, which makes the pipeline only a deploy script instead of a release safety net.\n- Not storing build artifacts, making rollback harder.",
+    "interviewTip": "Strong line: Azure CI/CD reduces manual deployment effort and ensures consistent releases across environments. If asked whether you configured pipelines yourself, be honest: I have worked with Azure-based deployment workflows, understood the pipeline flow, and collaborated with DevOps teams during deployments and build-issue debugging.",
+    "relatedQuestions": [
+      { "id": "femnc-082", "preview": "What is your CI/CD setup and what checks do you run in the pipeline?" },
+      { "id": "fe-q060", "preview": "What is CI/CD?" },
+      { "id": "fe-q061", "preview": "Describe a typical CI pipeline flow." }
+    ]
+  }
+]

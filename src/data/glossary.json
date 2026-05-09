@@ -981,5 +981,135 @@
     "short": "An error and performance monitoring service — captures uncaught exceptions, React render errors, and Web Vitals from production.",
     "long": "Drop-in SDK that hooks into Error Boundaries, unhandled promise rejections, and the Web Vitals API. Source maps make stack traces readable; release tracking ties errors to the deploy that introduced them; alerts trigger on error-rate spikes. Foundational for any production frontend.",
     "related": ["error-boundaries", "core-web-vitals"]
+  },
+  {
+    "slug": "ci-cd",
+    "term": "CI/CD",
+    "aliases": ["CI/CD", "CI CD", "Continuous Integration", "Continuous Delivery", "Continuous Deployment"],
+    "category": "DevOps",
+    "short": "The practice of automatically building, testing, and releasing code through a repeatable pipeline.",
+    "long": "CI means every change is integrated and verified quickly: install dependencies, lint, type-check, test, and build. CD means the verified build can move to staging or production with predictable release steps.\n\nFor frontend teams, CI/CD prevents manual deployment mistakes. A merge to main can produce a production build, publish artifacts, deploy to staging, wait for approval, and then release to production.",
+    "example": "Git push -> pipeline trigger -> install -> test -> build -> publish artifact -> deploy",
+    "related": ["azure-pipelines", "build-artifacts", "environment-approvals"]
+  },
+  {
+    "slug": "azure-devops",
+    "term": "Azure DevOps",
+    "aliases": ["Azure DevOps"],
+    "category": "DevOps",
+    "short": "Microsoft's platform for repos, work tracking, CI/CD pipelines, artifacts, testing, and release governance.",
+    "long": "Azure DevOps brings planning, source control, build automation, release automation, permissions, and audit history into one ecosystem. Teams can keep code in Azure Repos or connect external repositories like GitHub.\n\nIn CI/CD conversations, Azure DevOps usually means the place where pipelines, service connections, release approvals, variables, and deployment history are managed.",
+    "related": ["azure-pipelines", "azure-repos", "ci-cd"]
+  },
+  {
+    "slug": "azure-pipelines",
+    "term": "Azure Pipelines",
+    "aliases": ["Azure Pipelines", "Azure Pipeline"],
+    "category": "DevOps",
+    "short": "The Azure DevOps CI/CD service that runs build, test, and deployment jobs on hosted or self-hosted agents.",
+    "long": "Azure Pipelines executes the workflow defined by a YAML file or classic pipeline. It can trigger on pushes, pull requests, schedules, or manual release actions.\n\nA frontend pipeline commonly checks out code, installs npm dependencies, runs linting/tests, builds the app, publishes artifacts, and deploys to Azure App Service, Azure Storage, Kubernetes, or a custom server.",
+    "example": "trigger:\n- main\n\nsteps:\n- script: npm install\n- script: npm run build",
+    "related": ["azure-devops", "yaml-pipelines", "build-artifacts"]
+  },
+  {
+    "slug": "azure-repos",
+    "term": "Azure Repos",
+    "aliases": ["Azure Repos", "Azure Repo"],
+    "category": "DevOps",
+    "short": "Azure DevOps Git hosting, used as a source repository that can trigger pipelines.",
+    "long": "Azure Repos provides private Git repositories with branch policies, pull requests, code review, and integration with Azure Pipelines. A pipeline can watch a branch like `main` and run automatically whenever new commits are pushed.\n\nTeams may also keep code in GitHub and still run Azure Pipelines against that repository.",
+    "related": ["azure-devops", "azure-pipelines"]
+  },
+  {
+    "slug": "yaml-pipelines",
+    "term": "YAML pipelines",
+    "aliases": ["YAML pipelines", "YAML pipeline", "pipeline YAML", "YAML file", "YAML files", "YAML"],
+    "category": "DevOps",
+    "short": "Pipeline-as-code: a version-controlled YAML file that describes triggers, stages, jobs, and steps.",
+    "long": "YAML pipelines keep build and deployment logic in the repository, so pipeline changes can be reviewed in the same pull request as application changes.\n\nTypical sections include triggers, variables, pools, stages, jobs, steps, scripts, artifact publishing, environments, and deployment approvals.",
+    "example": "stages:\n- stage: Build\n  jobs:\n  - job: Web\n    steps:\n    - script: npm ci\n    - script: npm run build",
+    "related": ["azure-pipelines", "ci-cd"]
+  },
+  {
+    "slug": "build-artifacts",
+    "term": "build artifacts",
+    "aliases": ["build artifacts", "build artifact", "artifacts", "artifact"],
+    "category": "DevOps",
+    "short": "The output of a successful build, saved so the same verified package can be deployed later.",
+    "long": "A build artifact might be a React `build` folder, a Next.js standalone output, a zip package, or a Docker image. The key idea is immutability: test the artifact once, then promote that exact output through staging and production.\n\nArtifacts also make rollback simpler because previous known-good versions are still available.",
+    "related": ["ci-cd", "rollback-handling", "azure-container-registry"]
+  },
+  {
+    "slug": "azure-app-service",
+    "term": "Azure App Service",
+    "aliases": ["Azure App Service", "App Service"],
+    "category": "DevOps",
+    "short": "Azure's managed hosting service for web apps, APIs, and Node-based applications.",
+    "long": "Azure App Service is a common deployment target for React, Next.js, Node.js, and API apps. Pipelines can deploy a build output or application package directly to an App Service instance.\n\nDeployment slots are useful for safer releases: deploy to staging, verify, then swap staging into production with a rollback path.",
+    "related": ["azure-pipelines", "environment-approvals", "rollback-handling"]
+  },
+  {
+    "slug": "azure-container-registry",
+    "term": "Azure Container Registry",
+    "aliases": ["Azure Container Registry", "ACR"],
+    "category": "DevOps",
+    "short": "Azure's private registry for storing Docker container images built by CI/CD pipelines.",
+    "long": "A pipeline can build a Docker image, tag it with a commit SHA or build number, push it to Azure Container Registry, and deploy that exact image to a container runtime.\n\nThis gives teams repeatable deployments: staging and production can run the same image, and rollback can point the environment back to a previous tag.",
+    "related": ["docker", "build-artifacts", "rollback-handling"]
+  },
+  {
+    "slug": "docker",
+    "term": "Docker",
+    "aliases": ["Docker", "Dockerfile", "container image", "container images"],
+    "category": "DevOps",
+    "short": "A containerization tool that packages an application and its runtime dependencies into a portable image.",
+    "long": "Docker reduces environment drift. The app builds into an image once, then the same image can run locally, in CI, in staging, and in production.\n\nFrontend teams often use multi-stage Dockerfiles: one stage installs dependencies and builds the app; the final stage contains only the small production output.",
+    "example": "FROM node:20-alpine AS build\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci\nCOPY . .\nRUN npm run build",
+    "related": ["azure-container-registry", "build-artifacts"]
+  },
+  {
+    "slug": "azure-key-vault",
+    "term": "Azure Key Vault",
+    "aliases": ["Azure Key Vault", "Key Vault"],
+    "category": "Security",
+    "short": "Azure's managed service for storing secrets, certificates, and cryptographic keys.",
+    "long": "Azure Key Vault keeps sensitive values out of source code and pipeline YAML. Pipelines and applications can read secrets through authorized service connections or managed identities.\n\nIn frontend work, remember the boundary: values sent to browser JavaScript are public. Key Vault protects backend secrets, deployment tokens, signing keys, and server-side environment values.",
+    "related": ["secret-management", "azure-pipelines"]
+  },
+  {
+    "slug": "secret-management",
+    "term": "secret management",
+    "aliases": ["secret management", "pipeline secrets", "protected variables", "secrets"],
+    "category": "Security",
+    "short": "The discipline of storing and injecting sensitive values without committing or exposing them.",
+    "long": "Secrets include API keys, database passwords, signing keys, and deployment tokens. In CI/CD they should live in Key Vault, protected pipeline variables, or a secrets manager, and logs should mask them.\n\nNever hardcode secrets in YAML or client-side JavaScript. For frontend apps, only non-sensitive public configuration belongs in the browser bundle.",
+    "related": ["azure-key-vault"]
+  },
+  {
+    "slug": "azure-storage",
+    "term": "Azure Storage",
+    "aliases": ["Azure Storage", "Storage Account", "Azure Blob Storage"],
+    "category": "Cloud",
+    "short": "Azure's storage service for blobs, files, queues, tables, and static website hosting.",
+    "long": "For frontend deployments, Azure Storage can host static build output such as a React `build` folder. The pipeline uploads generated files to a storage account, often in front of a CDN.\n\nFor app data, Blob Storage is commonly used for user uploads, generated files, images, and exported reports.",
+    "related": ["azure-pipelines", "build-artifacts"]
+  },
+  {
+    "slug": "environment-approvals",
+    "term": "environment approvals",
+    "aliases": ["environment approvals", "environment approval", "approval workflows", "approval workflow", "manual approval", "manual approvals"],
+    "category": "Release engineering",
+    "short": "A release gate that requires authorized approval before deployment continues to a protected environment.",
+    "long": "A pipeline may deploy automatically to staging but pause before production until QA, a tech lead, or a release manager approves. This gives teams a human checkpoint for enterprise or regulated environments.\n\nApprovals pair well with staging validation, smoke tests, change tickets, and rollback plans.",
+    "related": ["ci-cd", "rollback-handling"]
+  },
+  {
+    "slug": "rollback-handling",
+    "term": "rollback handling",
+    "aliases": ["rollback handling", "rollback", "rollbacks"],
+    "category": "Release engineering",
+    "short": "The plan for quickly returning production to a previous known-good version after a bad release.",
+    "long": "Rollback can mean redeploying the previous artifact, swapping an Azure App Service slot back, or moving a container environment to a previous image tag. The key is preparing the mechanism before an incident happens.\n\nGood CI/CD keeps release history and immutable artifacts so rollback is a controlled action, not a scramble.",
+    "related": ["build-artifacts", "azure-app-service", "azure-container-registry"]
   }
 ]
