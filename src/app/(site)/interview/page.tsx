@@ -47,7 +47,7 @@ export default function InterviewPage() {
             Browse every question
           </h2>
           <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            Filter the full library by technology and focus. Use the section cards above for a tighter, in-section
+            Below is the full library of practice questions. Use the section cards above for a tighter, in-section
             search experience.
           </p>
         </div>

@@ -4,314 +4,314 @@
     "technology": "JavaScript",
     "level": "Intermediate",
     "question": "Explain closures in JavaScript and give a practical use case.",
-    "answer": "A closure is an inner function that retains access to variables from its outer lexical scope after the outer function has returned. Practical uses include factories (private state), partial application, and memoization.",
-    "explanation": "Interviewers look for lexical scope + persistence of environment. Mention memory implications and avoiding stale loop variables with var.",
-    "example": "function once(fn) { let called = false; return (...args) => { if (called) return; called = true; return fn(...args); }; }"
+    "answer": "A closure is when an inner function can still access variables from its outer function even after the outer function has finished executing. This happens because JavaScript remembers the lexical scope where the function was created. Closures are commonly used for private variables, counters, memoization, debouncing, and maintaining state between function calls.",
+    "explanation": "Here, the inner function still remembers the count variable even after the counter() function has finished execution. Every time we call increment(), it updates the same count variable instead of creating a new one. That is the closure behavior. One practical use case is creating private variables. Instead of exposing variables globally, closures allow controlled access through functions.\n\nExplanation of terms used:\n\nlexical scope\nLexical scope means a function can access variables from its parent scope based on where the function is written in the code.\n\ninner function\nA function defined inside another function.\n\nprivate variable\nA variable that cannot be accessed directly from outside the function.\n\nstate\nState means data that is remembered and reused later.\n\nclosure\nWhen a function remembers variables from its outer scope even after the outer function has completed execution.",
+    "example": "function counter() {\n  let count = 0;\n\n  return function () {\n    count++;\n    return count;\n  };\n}\n\nconst increment = counter();\n\nconsole.log(increment());\nconsole.log(increment());\nconsole.log(increment());"
   },
   {
     "id": "int-js-2",
     "technology": "JavaScript",
     "level": "Beginner",
     "question": "What is the difference between let, const, and var?",
-    "answer": "`var` is function-scoped and hoisted with `undefined` initialization. `let` and `const` are block-scoped, in the temporal dead zone until declared, and `const` cannot be reassigned (though object properties may still change).",
-    "explanation": "Demonstrate understanding of hoisting, TDZ, and why `let`/`const` reduce accidental globals.",
-    "example": "for (let i = 0; i < 3; i++) { setTimeout(() => console.log(i), 10); } // 0,1,2 — with var you'd see 3,3,3."
+    "answer": "var, let, and const are all used to declare variables in JavaScript, but they behave differently in terms of scope, hoisting, and reassignment. var is function-scoped and can be redeclared and reassigned. let and const are block-scoped, and const cannot be reassigned after declaration.",
+    "explanation": "var is older JavaScript syntax and can create bugs because it is not block-scoped. let was introduced in ES6 and is used when values need to change. const is also block-scoped but should be used when the value should remain constant.\n\nAnother important difference is hoisting.\n\nvar is hoisted and initialized with undefined.\n\nBut let and const stay in the Temporal Dead Zone until initialized.\n\nWe mostly use:\n- const by default\n- let when values change\n- avoid var in modern applications\n\nExplanation of terms used:\n\nscope\nScope means where a variable can be accessed.\n\nblock scope\nVariables declared inside {} can only be accessed within that block.\n\nredeclare\nDeclaring the same variable again in the same scope.\n\nreassign\nChanging the value after declaration.\n\nhoisting\nJavaScript moves declarations to memory before execution.\n\nTemporal Dead Zone\nThe time between hoisting and initialization where accessing let or const throws an error.",
+    "example": "var name = 'Dhanil';\nvar name = 'Kumar';\n\nlet age = 25;\nage = 30;\n\nconst country = 'India';\n\nconsole.log(a);\nvar a = 10;"
   },
   {
     "id": "int-js-3",
     "technology": "JavaScript",
     "level": "Advanced",
     "question": "How does the JavaScript event loop interact with microtasks and macrotasks?",
-    "answer": "The event loop processes one macrotask (e.g., script, timeout), then drains the microtask queue (promises, queueMicrotask) before rendering and picking the next macrotask.",
-    "explanation": "Shows depth for async debugging—order of promise.then vs setTimeout, and starvation risks from infinite microtasks.",
-    "example": "console.log('A'); setTimeout(() => console.log('B'), 0); Promise.resolve().then(() => console.log('C')); // A, C, B"
+    "answer": "The JavaScript event loop handles asynchronous operations by processing one macrotask first and then executing all microtasks before moving to the next macrotask. Promise callbacks are microtasks, while setTimeout belongs to macrotasks.",
+    "explanation": "The event loop is responsible for managing asynchronous execution in JavaScript. When the main execution stack becomes empty, JavaScript checks the microtask queue first and executes all microtasks before handling the next macrotask.\n\nThat is why Promise.then executes before setTimeout even if the timeout is set to 0.\n\nExplanation of terms used:\n\nmacrotask\nTasks like setTimeout, setInterval, and DOM events.\n\nmicrotask\nTasks like Promise.then, queueMicrotask, and MutationObserver.\n\nevent loop\nThe mechanism that manages asynchronous execution in JavaScript.\n\ncall stack\nThe place where JavaScript executes functions one by one.",
+    "example": "console.log('A');\n\nsetTimeout(() => {\n  console.log('B');\n}, 0);\n\nPromise.resolve().then(() => {\n  console.log('C');\n});\n\n// Output:\n// A\n// C\n// B"
   },
   {
     "id": "int-js-4",
     "technology": "JavaScript",
     "level": "Intermediate",
     "question": "How do you handle errors with async/await?",
-    "answer": "Wrap awaited calls in try/catch/finally, or attach .catch() on the promise. For parallel work, use Promise.all with care—one rejection fails all unless using allSettled.",
-    "explanation": "Mention unhandled promise rejections and returning errors vs throwing in Server Actions/API handlers.",
-    "example": "async function safe() { try { return await fetch('/x'); } catch (e) { console.error(e); return null; } }"
+    "answer": "I usually handle async errors using try/catch blocks around awaited calls. This helps prevent unhandled promise errors and keeps the application stable.",
+    "explanation": "When working with async/await, asynchronous operations can fail due to network issues, API failures, or invalid responses. Wrapping await calls inside try/catch helps handle those errors gracefully instead of crashing the application.\n\nI also use finally blocks when cleanup or loading-state handling is required.\n\nExplanation of terms used:\n\nasync\nA keyword used to declare asynchronous functions.\n\nawait\nPauses execution until the promise is resolved.\n\ntry/catch\nUsed for handling runtime errors.\n\nfinally\nA block that runs whether an error occurs or not.\n\npromise\nAn object representing future completion or failure of an asynchronous operation.",
+    "example": "async function loadData() {\n  try {\n    const response = await fetch('/api/users');\n    const data = await response.json();\n    console.log(data);\n  } catch (error) {\n    console.error(error);\n  } finally {\n    console.log('Request completed');\n  }\n}"
   },
   {
     "id": "int-react-1",
     "technology": "React",
     "level": "Intermediate",
     "question": "When would you choose useReducer instead of useState?",
-    "answer": "When next state depends on complex logic, several fields must update together, or you want a single reducer-style update path (often easier to test than many scattered `setState` calls).",
-    "explanation": "Contrast boilerplate vs clarity for wizard flows, undo/redo, or state machines.",
-    "example": "const [state, dispatch] = useReducer(reducer, initial); dispatch({ type: 'increment' });"
+    "answer": "I use useReducer when the state logic becomes complex or when multiple related states need to update together. It helps centralize update logic and makes state handling easier to manage.",
+    "explanation": "For simple state like toggles or input fields, useState is usually enough. But when a component has multiple related states, step-based forms, or complex update logic, useReducer becomes cleaner because all state updates go through one reducer function.\n\nIt also improves readability and makes debugging easier in large components.\n\nExplanation of terms used:\n\nstate\nData that changes inside a component.\n\nreducer\nA function that receives the current state and an action, then returns the updated state.\n\naction\nAn object describing what change should happen.\n\ndispatch\nA function used to send actions to the reducer.\n\ncentralized logic\nKeeping all state update logic in one place instead of scattering it across multiple functions.",
+    "example": "const initialState = { count: 0 };\n\nfunction reducer(state, action) {\n  switch (action.type) {\n    case 'increment':\n      return { count: state.count + 1 };\n\n    default:\n      return state;\n  }\n}\n\nconst [state, dispatch] = useReducer(reducer, initialState);\n\ndispatch({ type: 'increment' });"
   },
   {
     "id": "int-react-2",
     "technology": "React",
     "level": "Beginner",
     "question": "What are the Rules of Hooks?",
-    "answer": "Only call hooks at the top level of React functions—not inside loops, conditions, or nested functions. Only call them from React function components or custom hooks.",
-    "explanation": "Hooks rely on call order to associate state—breaking order breaks state mapping.",
-    "example": "function Bad({ show }) { if (show) useEffect(() => {}, []); } // violates rules"
+    "answer": "Hooks should only be called at the top level of React function components or custom hooks. They should not be called inside loops, conditions, or nested functions because React depends on the order of hooks to manage state correctly.",
+    "explanation": "React internally tracks hooks based on the order in which they are called during rendering. If hooks are called conditionally or inside loops, the order may change between renders, causing React to lose track of state and effects.\n\nThat can lead to unexpected bugs and incorrect state updates.\n\nHooks should also only be used inside:\n- React function components\n- custom hooks\n\nThey should not be used inside:\n- regular JavaScript functions\n- loops\n- conditions\n- nested functions\n\nExplanation of terms used:\n\nhook\nA special React function that allows functional components to use features like state and lifecycle methods.\n\ncustom hook\nA reusable function that contains React hook logic.\n\nrender\nThe process where React updates the UI.\n\nstate\nData stored inside a component that can change over time.\n\nconditional rendering\nRunning code only when a condition is true.\n\nnested function\nA function defined inside another function.",
+    "example": "function BadComponent({ show }) {\n  if (show) {\n    useEffect(() => {\n      console.log('Wrong usage');\n    }, []);\n  }\n\n  return <div>Hello</div>;\n}\n\n// Incorrect because hook is inside condition"
   },
   {
     "id": "int-react-3",
     "technology": "React",
     "level": "Intermediate",
     "question": "Compare useEffect and useLayoutEffect.",
-    "answer": "useEffect runs asynchronously after paint. useLayoutEffect runs synchronously after DOM mutations but before paint—use for measuring layout or preventing flicker.",
-    "explanation": "Mention blocking paint if layout effect is slow; prefer useEffect by default.",
-    "example": "useLayoutEffect(() => { const h = ref.current?.getBoundingClientRect().height; }, []);"
+    "answer": "useEffect runs after the browser paints the screen, while useLayoutEffect runs synchronously before the browser paint happens. useLayoutEffect can block visual rendering until it finishes.",
+    "explanation": "I usually use useEffect for API calls, subscriptions, timers, or side effects because it does not block rendering.\n\nuseLayoutEffect is mainly used when we need to:\n- measure DOM size\n- calculate layout\n- avoid UI flickering\n- update styles before paint\n\nThe main difference is timing.\n\nuseEffect:\n- runs after paint\n- better for most side effects\n- does not block UI rendering\n\nuseLayoutEffect:\n- runs before paint\n- blocks rendering until execution completes\n- useful for layout calculations\n\nExplanation of terms used:\n\nside effect\nOperations that interact with things outside rendering, like API calls or timers.\n\npaint\nThe process where the browser displays pixels on the screen.\n\nDOM\nDocument Object Model representing the webpage structure.\n\nsynchronously\nCode executes immediately in sequence and blocks further execution.\n\nlayout calculation\nMeasuring element positions or dimensions before rendering.",
+    "example": "function Example() {\n  const ref = useRef(null);\n\n  useLayoutEffect(() => {\n    const height = ref.current.offsetHeight;\n    console.log(height);\n  }, []);\n\n  return <div ref={ref}>Hello</div>;\n}"
   },
   {
     "id": "int-react-4",
     "technology": "React",
     "level": "Advanced",
     "question": "What causes stale closures in effects and how do you fix them?",
-    "answer": "Effects capture values from the render they were created in. If dependencies omit changing values, handlers see old state. Fix with correct dependency arrays, functional updates, or refs for stable callbacks.",
-    "explanation": "eslint-plugin-react-hooks catches many cases; discuss callbacks stored in refs for intervals.",
-    "example": "useEffect(() => { const id = setInterval(() => setCount((c) => c + 1), 1000); return () => clearInterval(id); }, []);"
+    "answer": "Stale closures happen when an effect captures old state or prop values because dependencies are missing or outdated. This causes callbacks to use previous values instead of the latest state.",
+    "explanation": "In React, effects remember values from the render where they were created.\n\nIf dependencies are missing inside the dependency array, the effect may continue using old state values even after the component updates.\n\nThis commonly happens with:\n- intervals\n- event listeners\n- async callbacks\n- timers\n\nI usually fix stale closures by:\n- adding proper dependencies\n- using functional updates\n- using refs for latest values\n\nFunctional updates are useful because React always passes the latest state value.\n\nExplanation of terms used:\n\nclosure\nWhen a function remembers variables from its outer scope.\n\ndependency array\nThe array passed to hooks like useEffect to control when the effect reruns.\n\nfunctional update\nUpdating state using the previous state value.\n\ncallback\nA function passed into another function to run later.\n\nref\nA React object used to persist mutable values without rerendering.",
+    "example": "useEffect(() => {\n  const id = setInterval(() => {\n    setCount((prev) => prev + 1);\n  }, 1000);\n\n  return () => clearInterval(id);\n}, []);"
   },
   {
     "id": "int-ts-1",
     "technology": "TypeScript",
     "level": "Intermediate",
     "question": "When do you use interface vs type for object shapes?",
-    "answer": "Interfaces support declaration merging and are often used for public contracts. Types excel at unions, intersections, and advanced mapped types. Teams usually standardize on one for plain objects.",
-    "explanation": "Discuss consistency over dogma; mention performance is negligible for typical apps.",
-    "example": "type Result<T> = { ok: true; value: T } | { ok: false; error: string };"
+    "answer": "Interfaces are commonly used for defining object contracts and component props, while types are more flexible for unions, intersections, and advanced type combinations.",
+    "explanation": "In most projects, both interface and type can define object shapes.\n\nI usually use:\n- interface for component props, API models, and class contracts\n- type for unions, utility types, mapped types, or advanced type compositions\n\nOne important difference is that interfaces support declaration merging, while types do not.\n\nBut in practical frontend projects, both are often interchangeable for simple objects.\n\nExplanation of terms used:\n\nobject shape\nThe structure of an object including its properties and types.\n\nunion type\nA type that can contain multiple possible values.\n\nintersection type\nCombining multiple types into one.\n\ndeclaration merging\nTypeScript feature where multiple interfaces with the same name are merged together.\n\nmapped type\nA type created dynamically using keys from another type.",
+    "example": "interface User {\n  name: string;\n  age: number;\n}\n\ntype Status = 'success' | 'error';"
   },
   {
     "id": "int-ts-2",
     "technology": "TypeScript",
     "level": "Intermediate",
     "question": "Explain structural typing in TypeScript.",
-    "answer": "TypeScript checks whether values have the required members (duck typing)—not nominal names. Two interfaces with the same shape are assignable to each other.",
-    "explanation": "Contrast with nominal languages; mention branding technique for opaque types when needed.",
-    "example": "type Point = { x: number; y: number }; const p = { x: 1, y: 2, z: 3 }; const q: Point = p; // excess ok with structural rules unless strict checks"
+    "answer": "TypeScript uses structural typing, which means compatibility is based on object structure instead of type names. If two objects have the same required properties, they are considered compatible.",
+    "explanation": "This is also called duck typing.\n\nTypeScript mainly checks whether the required properties exist, not where the type was originally created.\n\nFor example, if two objects contain the same fields with matching types, TypeScript allows assignment even if they were defined using different interfaces.\n\nThis makes TypeScript flexible and easier to work with when handling APIs or dynamic objects.\n\nExplanation of terms used:\n\nstructural typing\nType compatibility based on object structure.\n\nduck typing\nIf something behaves like the expected structure, it is treated as compatible.\n\ninterface\nA TypeScript structure used to define object shapes.\n\ncompatible\nTypes that can be assigned to each other without errors.",
+    "example": "type Point = {\n  x: number;\n  y: number;\n};\n\nconst p = {\n  x: 10,\n  y: 20,\n  z: 30\n};\n\nconst point: Point = p;"
   },
   {
     "id": "int-ts-3",
     "technology": "TypeScript",
     "level": "Advanced",
     "question": "How would you type a function that picks keys from an object?",
-    "answer": "Use generics with `keyof` and constraints: `function pick<T, K extends keyof T>(obj: T, keys: K[]): Pick<T, K>`.",
-    "explanation": "Shows knowledge of utility types like Pick, keyof, and mapped types.",
-    "example": "const nameOnly = pick(user, ['name'] as const);"
+    "answer": "I would use generics with keyof and Pick so TypeScript only allows valid object keys and returns properly typed selected properties.",
+    "explanation": "Using generics makes the function reusable for different object types while still keeping type safety.\n\nkeyof ensures that only existing keys from the object can be passed.\n\nPick is a built-in utility type that creates a new type containing only selected properties.\n\nThis approach prevents invalid keys and gives proper autocomplete support.\n\nExplanation of terms used:\n\ngeneric\nA reusable type placeholder in TypeScript.\n\nkeyof\nReturns all keys from an object type.\n\nPick\nA TypeScript utility type used to select specific properties from another type.\n\ntype safety\nPreventing invalid values or structures during development.\n\nutility type\nBuilt-in TypeScript types used for transforming other types.",
+    "example": "function pick(obj, keys) {\n  const result = {};\n\n  keys.forEach((key) => {\n    result[key] = obj[key];\n  });\n\n  return result;\n}"
   },
-  {
+   {
     "id": "int-ts-4",
     "technology": "TypeScript",
     "level": "Advanced",
     "question": "What are conditional types and when are they useful?",
-    "answer": "Conditional types select one type or another based on a condition (`T extends U ? X : Y`). Useful for overload-like APIs, inference with infer, and utility libraries.",
-    "explanation": "Mention distributive conditional types and cautions with complex inference.",
-    "example": "type IsString<T> = T extends string ? true : false;"
+    "answer": "Conditional types in TypeScript allow us to return different types based on a condition. They are useful for creating reusable utility types and building flexible type-safe APIs.",
+    "explanation": "Conditional types work similarly to JavaScript ternary operators but at the type level. TypeScript checks whether one type extends another and returns different types based on the result.\n\nThey are mainly useful when building reusable utility types, dynamic APIs, mapped types, or advanced generic functions.\n\nFor example, we can check whether a type is a string, array, object, or something else and return different types accordingly.\n\nExplanation of terms used:\n\nconditional type\nA type that returns different results depending on a condition.\n\nextends\nUsed to check whether one type is assignable to another.\n\ngeneric\nReusable type placeholders like T, K, or U.\n\nutility type\nReusable helper types provided by TypeScript or created manually.\n\ntype inference\nTypeScript automatically understanding the type based on usage.",
+    "example": "type IsString<T> = T extends string ? true : false;\n\ntype A = IsString<string>; // true\n\ntype B = IsString<number>; // false"
   },
   {
     "id": "int-next-1",
     "technology": "Next.js",
     "level": "Intermediate",
     "question": "When should a component be a Client Component in the App Router?",
-    "answer": "When it uses React hooks, browser APIs, event handlers, or state that must live in the browser. Otherwise prefer Server Components to reduce bundle size.",
-    "explanation": "Discuss boundaries—small client leaf nodes inside server trees.",
-    "example": "\"use client\"; export function LikeButton() { const [n, setN] = useState(0); ... }"
+    "answer": "A component should be a Client Component when it needs browser-side features like state, event handlers, hooks, or browser APIs. Otherwise, Server Components are preferred for better performance.",
+    "explanation": "In Next.js App Router, components are Server Components by default. Server Components help reduce JavaScript bundle size and improve performance because they run on the server.\n\nBut if a component needs:\n- useState\n- useEffect\n- click handlers\n- localStorage\n- window object\n- browser interactions\n\nthen it must become a Client Component using 'use client'.\n\nUsually, only interactive UI parts are converted into Client Components while the rest remain Server Components.\n\nExplanation of terms used:\n\nClient Component\nA component rendered and hydrated in the browser.\n\nServer Component\nA component rendered on the server.\n\nhydration\nThe process where React attaches interactivity to server-rendered HTML.\n\nbundle size\nThe amount of JavaScript sent to the browser.\n\nApp Router\nThe modern routing system introduced in newer versions of Next.js.",
+    "example": "'use client';\n\nimport { useState } from 'react';\n\nexport default function Counter() {\n  const [count, setCount] = useState(0);\n\n  return (\n    <button onClick={() => setCount(count + 1)}>\n      {count}\n    </button>\n  );\n}"
   },
   {
     "id": "int-next-2",
     "technology": "Next.js",
     "level": "Intermediate",
     "question": "How do streaming and Suspense improve UX in the App Router?",
-    "answer": "Server can stream HTML as segments resolve. Suspense boundaries show fallbacks for slow parts without blocking the entire page.",
-    "explanation": "Connect to loading.tsx and selective hydration concepts.",
-    "example": "<Suspense fallback={<Skeleton />}><Slow /></Suspense>"
+    "answer": "Streaming and Suspense improve user experience by allowing parts of the page to load progressively instead of waiting for the entire page to finish loading.",
+    "explanation": "Normally, users may need to wait until all API calls and components finish loading before seeing the page.\n\nWith streaming, Next.js can send completed parts of the UI immediately while slower sections continue loading in the background.\n\nSuspense allows us to show fallback loaders for slow components so users can interact with available content faster.\n\nThis improves:\n- perceived performance\n- loading experience\n- responsiveness\n\nExplanation of terms used:\n\nstreaming\nSending parts of HTML progressively while the server continues rendering remaining content.\n\nSuspense\nA React feature that allows fallback UI while waiting for async components or data.\n\nfallback\nTemporary UI like loaders or skeletons shown during loading.\n\nperceived performance\nHow fast the application feels to the user.",
+    "example": "import { Suspense } from 'react';\n\n<Suspense fallback={<Loader />}>\n  <SlowComponent />\n</Suspense>"
   },
   {
     "id": "int-next-3",
     "technology": "Next.js",
     "level": "Intermediate",
     "question": "Compare Server Actions to a traditional REST API.",
-    "answer": "Server Actions colocate mutations with components and reduce boilerplate for forms. REST APIs remain better for public third-party consumers, versioning, and strict HTTP semantics.",
-    "explanation": "Security: validate and authorize in actions as you would in API routes.",
-    "example": "async function save(formData: FormData) { 'use server'; ... }"
+    "answer": "Server Actions reduce frontend boilerplate by colocating server-side logic directly with components, while REST APIs are better for public integrations and external systems.",
+    "explanation": "Server Actions are a newer Next.js feature where server-side functions can be directly connected with frontend components.\n\nThis reduces:\n- separate API route creation\n- repetitive fetch calls\n- frontend boilerplate\n\nThey work especially well for form handling and internal application mutations.\n\nREST APIs are still useful when:\n- external clients consume APIs\n- mobile apps use the backend\n- versioning is needed\n- third-party integrations exist\n\nExplanation of terms used:\n\nServer Action\nA server-side function directly callable from React components.\n\nREST API\nA traditional backend API architecture using HTTP methods like GET, POST, PUT, DELETE.\n\nboilerplate\nRepeated setup code.\n\nmutation\nAn operation that changes data.\n\ncolocate\nKeeping related logic close together in the same file or component.",
+    "example": "async function save(formData) {\n  'use server';\n\n  console.log(formData);\n}"
   },
   {
     "id": "int-next-4",
     "technology": "Next.js",
     "level": "Advanced",
     "question": "Explain caching and revalidation strategies you would use.",
-    "answer": "Use fetch cache options, `revalidatePath`/`revalidateTag` after mutations, ISR for semi-static pages, and opt out with `no-store` when data must be fresh.",
-    "explanation": "Shows operational maturity—stale data vs load.",
-    "example": "export const revalidate = 3600; // ISR hourly"
+    "answer": "I use caching to improve performance and revalidation to keep data fresh when updates happen. The strategy depends on how dynamic the data is.",
+    "explanation": "For mostly static pages, I use ISR or timed revalidation because the content does not change frequently.\n\nFor dynamic dashboards or real-time data, I usually disable caching using no-store or manually trigger revalidation after mutations.\n\nThe goal is balancing:\n- performance\n- server load\n- fresh data\n- user experience\n\nExplanation of terms used:\n\ncache\nTemporarily storing data for faster access.\n\nrevalidation\nRefreshing cached content when data changes.\n\nISR\nIncremental Static Regeneration. Next.js regenerates static pages after a specified time.\n\nno-store\nDisables caching completely.\n\nmutation\nOperations that update or change data.",
+    "example": "export const revalidate = 3600;\n\nasync function getData() {\n  return fetch('/api/data', {\n    cache: 'no-store'\n  });\n}"
   },
   {
     "id": "int-html-1",
     "technology": "HTML5",
     "level": "Beginner",
     "question": "Why does semantic HTML matter for accessibility?",
-    "answer": "Semantic elements expose roles and structure to assistive technologies, improving navigation with landmarks and heading outlines.",
-    "explanation": "Contrast with div soup; mention screen reader rotor/landmarks.",
-    "example": "<main><h1>Article</h1><article>...</article></main>"
+    "answer": "Semantic HTML helps screen readers and assistive technologies understand the structure and meaning of a webpage properly. It also improves SEO and overall accessibility.",
+    "explanation": "Semantic elements like header, nav, main, article, section, and button already describe their purpose clearly.\n\nThis helps:\n- screen readers\n- keyboard navigation\n- search engines\n- accessibility tools\n\nWithout semantic HTML, developers often use too many div elements, which makes the structure less meaningful.\n\nUsing proper semantic elements reduces the need for unnecessary ARIA roles in many situations.\n\nExplanation of terms used:\n\nsemantic HTML\nHTML elements that clearly describe their meaning and purpose.\n\nscreen reader\nSoftware used by visually impaired users to read webpage content.\n\naccessibility\nMaking applications usable for all users, including people with disabilities.\n\nSEO\nSearch Engine Optimization.\n\nARIA\nAccessibility attributes used to improve accessibility when native HTML is insufficient.",
+    "example": "<main>\n  <article>\n    <h1>Blog Title</h1>\n    <p>Content...</p>\n  </article>\n</main>"
   },
   {
     "id": "int-html-2",
     "technology": "HTML5",
     "level": "Intermediate",
     "question": "How do native landmark elements relate to ARIA roles?",
-    "answer": "Prefer native elements—they imply roles by default. Use ARIA when no native equivalent exists or to repair incorrect patterns sparingly.",
-    "explanation": "First rule of ARIA: don't use ARIA if native HTML suffices.",
-    "example": "<nav aria-label=\"breadcrumb\">…</nav>"
+    "answer": "Native HTML elements already provide built-in accessibility roles, so ARIA should only be used when necessary. Elements like nav, main, header, and button already give semantic meaning to assistive technologies without extra ARIA attributes.",
+    "explanation": "HTML5 semantic elements already help screen readers understand the structure of the page. For example, nav is automatically recognized as navigation, and button is already interactive by default.\n\nARIA should mainly be used when native HTML cannot provide the required accessibility behavior.\n\nOverusing ARIA can sometimes create accessibility issues instead of fixing them.\n\nExplanation of terms used:\n\nsemantic HTML\nHTML elements that describe their meaning clearly.\n\nlandmark elements\nSpecial semantic elements that help screen readers navigate pages.\n\nARIA\nAccessible Rich Internet Applications. A set of attributes used to improve accessibility.\n\nassistive technologies\nTools like screen readers used by people with disabilities.\n\nscreen reader\nSoftware that reads webpage content aloud for visually impaired users.",
+    "example": "<nav aria-label='breadcrumb'>\n  <a href='/'>Home</a>\n</nav>"
   },
   {
     "id": "int-html-3",
     "technology": "HTML5",
     "level": "Intermediate",
     "question": "What validation belongs on the client vs server?",
-    "answer": "Client validation improves UX and catches mistakes early. Server validation is authoritative for security and data integrity—never trust the client alone.",
-    "explanation": "Discuss rate limits, auth, and business rules server-side only.",
-    "example": "required + pattern in HTML + Zod on server"
+    "answer": "Client-side validation improves user experience, while server-side validation is required for security and data integrity. The backend should never fully trust frontend validation alone.",
+    "explanation": "Client validation helps users catch mistakes quickly before submitting forms. For example, checking empty fields, email format, or password length.\n\nBut client-side validation can be bypassed easily using browser tools or custom requests.\n\nThat is why server-side validation is always necessary to verify:\n- authentication\n- authorization\n- business rules\n- database integrity\n- security checks\n\nIn real applications, both validations are usually used together.\n\nExplanation of terms used:\n\nclient-side validation\nValidation performed in the browser before sending data to the server.\n\nserver-side validation\nValidation performed in the backend after receiving data.\n\nauthorization\nChecking whether a user has permission to perform an action.\n\ndata integrity\nEnsuring stored data remains accurate and valid.\n\nbusiness rules\nApplication-specific logic like age limits or unique usernames.",
+    "example": "<input\n  type='text'\n  required\n  pattern='[A-Za-z]+'\n/>"
   },
   {
     "id": "int-html-4",
     "technology": "HTML5",
     "level": "Advanced",
     "question": "How would you surface custom validation messages accessibly?",
-    "answer": "Use `setCustomValidity` or server-rendered error regions linked with `aria-describedby` and `aria-invalid` on controls.",
-    "explanation": "Ensure errors are announced and programmatically associated.",
-    "example": "<input aria-invalid={!!err} aria-describedby=\"email-err\" /><p id=\"email-err\" role=\"alert\">{err}</p>"
+    "answer": "I would connect validation messages to form inputs using aria attributes so screen readers can announce errors properly. This improves accessibility for users relying on assistive technologies.",
+    "explanation": "When validation errors appear, screen readers should clearly understand which input has the issue.\n\nI usually use:\n- aria-invalid\n- aria-describedby\n- role='alert'\n\naria-invalid tells assistive technologies that the field contains invalid data.\n\naria-describedby connects the input field to the error message.\n\nrole='alert' helps screen readers immediately announce the error message.\n\nThis makes forms much more accessible and user friendly.\n\nExplanation of terms used:\n\naria-invalid\nIndicates whether the current input value is invalid.\n\naria-describedby\nLinks an element to another element that describes it.\n\nrole='alert'\nMakes screen readers announce updates immediately.\n\naccessible forms\nForms designed so all users, including disabled users, can interact properly.",
+    "example": "<input\n  aria-invalid='true'\n  aria-describedby='email-error'\n/>\n\n<p id='email-error' role='alert'>\n  Invalid email address\n</p>"
   },
   {
     "id": "int-css-1",
     "technology": "CSS3",
     "level": "Intermediate",
     "question": "When do you choose Flexbox vs CSS Grid?",
-    "answer": "Flexbox for one-dimensional layouts (rows or columns) and component-level alignment. Grid for two-dimensional layouts (rows and columns together) like page shells and dashboards.",
-    "explanation": "They compose—grid for macro layout, flex inside cells.",
-    "example": ".grid { display: grid; } .cell { display: flex; align-items: center; }"
+    "answer": "I use Flexbox for one-dimensional layouts and CSS Grid for two-dimensional layouts involving rows and columns together. Flexbox is better for alignment, while Grid is better for full-page or complex layouts.",
+    "explanation": "Flexbox works well when content flows mainly in one direction, like:\n- navbars\n- buttons\n- cards\n- menus\n\nCSS Grid is better when the layout needs row and column control together, like:\n- dashboards\n- gallery layouts\n- admin panels\n- page structures\n\nIn many projects, both are used together.\n\nUsually:\n- Grid handles the overall layout\n- Flexbox handles alignment inside components\n\nExplanation of terms used:\n\none-dimensional layout\nLayouts controlled in either a row or a column.\n\ntwo-dimensional layout\nLayouts controlled in both rows and columns.\n\nalignment\nPositioning items horizontally or vertically.\n\nresponsive layout\nLayouts that adapt properly across screen sizes.",
+    "example": ".container {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n}\n\n.card {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}"
   },
   {
     "id": "int-css-2",
     "technology": "CSS3",
     "level": "Beginner",
     "question": "What is the gap property in flex layouts?",
-    "answer": "`gap` sets spacing between flex items without margins on children—cleaner than hacks with negative margins on the container.",
-    "explanation": "Works in flex and grid; supports row-gap/column-gap.",
-    "example": ".row { display: flex; gap: 12px; }"
+    "answer": "The gap property adds spacing between flex or grid items without using margins on child elements. It makes layouts cleaner and easier to maintain.",
+    "explanation": "Before gap support, developers usually added margins to child elements for spacing.\n\nUsing gap is simpler because spacing is controlled directly from the parent container.\n\nIt works for:\n- Flexbox\n- CSS Grid\n\nIt also improves readability because spacing logic stays centralized.\n\nExplanation of terms used:\n\ngap\nA CSS property that creates space between child elements.\n\nflex container\nAn element using display: flex.\n\ngrid container\nAn element using display: grid.\n\nmargin\nSpace outside an element.",
+    "example": ".row {\n  display: flex;\n  gap: 12px;\n}"
   },
   {
     "id": "int-css-3",
     "technology": "CSS3",
     "level": "Advanced",
     "question": "Explain implicit vs explicit grid tracks.",
-    "answer": "Explicit tracks are defined in template properties; implicit tracks are auto-created when items overflow the explicit grid. Use `grid-auto-rows/columns` to size implicit tracks.",
-    "explanation": "Useful for unknown item counts in responsive galleries.",
-    "example": "grid-template-columns: repeat(3, 1fr); grid-auto-rows: 120px;"
+    "answer": "Explicit grid tracks are manually defined in the grid layout, while implicit tracks are automatically created when additional items overflow the defined structure.",
+    "explanation": "When we define rows or columns using grid-template-columns or grid-template-rows, those become explicit tracks.\n\nIf more items are added than the defined grid can hold, CSS Grid automatically creates new rows or columns. Those are implicit tracks.\n\nWe can control their size using:\n- grid-auto-rows\n- grid-auto-columns\n\nThis becomes useful in dynamic layouts where item counts are unknown.\n\nExplanation of terms used:\n\nexplicit tracks\nRows or columns manually defined by the developer.\n\nimplicit tracks\nRows or columns automatically created by CSS Grid.\n\noverflow\nWhen content exceeds the available layout space.\n\ndynamic layouts\nLayouts where content size or item count changes automatically.",
+    "example": ".container {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  grid-auto-rows: 120px;\n}"
   },
   {
     "id": "int-css-4",
     "technology": "CSS3",
     "level": "Advanced",
     "question": "What is subgrid and when is it useful?",
-    "answer": "Subgrid lets nested grids align to parent tracks for aligned card contents across columns.",
-    "explanation": "Browser support has improved—mention fallbacks for legacy.",
-    "example": ".child { grid-column: span 2; display: grid; grid-template-columns: subgrid; }"
+    "answer": "Subgrid allows nested grid elements to inherit the parent grid’s row or column structure. It helps maintain consistent alignment across complex layouts.",
+    "explanation": "Normally, nested grids create their own independent grid system.\n\nWith subgrid, child grids can reuse the parent grid tracks instead of defining new ones.\n\nThis is useful for:\n- dashboard cards\n- aligned content sections\n- responsive layouts\n- reusable UI components\n\nIt helps keep layouts visually consistent without repeating grid definitions.\n\nExplanation of terms used:\n\nnested grid\nA grid container placed inside another grid container.\n\nsubgrid\nA CSS Grid feature where child grids inherit parent grid tracks.\n\ntrack\nA row or column inside CSS Grid.\n\nlayout consistency\nKeeping spacing and alignment uniform across the UI.",
+    "example": ".child {\n  display: grid;\n  grid-template-columns: subgrid;\n}"
   },
   {
     "id": "int-gql-1",
     "technology": "GraphQL",
     "level": "Intermediate",
     "question": "When is GraphQL a better fit than REST?",
-    "answer": "When clients need flexible field selection, nested graphs with fewer round trips, and strongly typed contracts—but operational complexity (caching, authz per field) rises.",
-    "explanation": "Not a silver bullet; mention persisted queries and tooling.",
-    "example": "Mobile app fetching user + posts + comments in one query"
+    "answer": "GraphQL is a better fit when the frontend needs flexible data fetching and wants to avoid multiple API calls. Instead of receiving fixed responses like REST, the client can request only the required fields.",
+    "explanation": "In REST APIs, different endpoints are usually needed for related data. For example, fetching users, posts, and comments may require multiple requests. With GraphQL, all related data can be fetched in a single request, which improves performance and reduces over-fetching.\n\nGraphQL is especially useful for:\n- complex frontend applications\n- mobile apps\n- dashboards\n- applications with nested related data\n\nExplanation of terms used:\n\nover-fetching\nReceiving extra unnecessary data from the server.\n\nunder-fetching\nNot receiving enough data and needing multiple requests.\n\nschema\nDefines the structure and types available in GraphQL.\n\nresolver\nA function responsible for returning data for a query field.\n\nendpoint\nA URL where an API request is sent.",
+    "example": "query {\n  user(id: 1) {\n    name\n    posts {\n      title\n      comments {\n        text\n      }\n    }\n  }\n}"
   },
   {
     "id": "int-gql-2",
     "technology": "GraphQL",
     "level": "Advanced",
     "question": "What is the N+1 problem in GraphQL and how is it solved?",
-    "answer": "Resolvers may query the database once per child item. DataLoader batches and caches per request to collapse queries.",
-    "explanation": "Mention dataloader pattern and query complexity limits.",
-    "example": "user.posts resolver batches post IDs: SELECT * FROM posts WHERE id IN (...)"
+    "answer": "The N+1 problem happens when GraphQL performs repeated database queries for related data, causing performance issues.",
+    "explanation": "For example, if we fetch 100 users and then separately query posts for each user, the server may execute 101 database queries instead of one optimized query.\n\nThis creates unnecessary database load and slows down the application.\n\nA common solution is using DataLoader, which batches and caches queries so related data can be fetched together efficiently.\n\nExplanation of terms used:\n\nN+1 problem\nOne main query followed by many repeated queries.\n\nbatching\nCombining multiple requests into a single operation.\n\ncaching\nTemporarily storing data to avoid repeated processing.\n\nDataLoader\nA utility commonly used in GraphQL to batch and cache database queries.\n\nresolver\nA function that fetches data for a GraphQL field.",
+    "example": "SELECT * FROM posts WHERE user_id IN (1,2,3,4,5);"
   },
   {
     "id": "int-gql-3",
     "technology": "GraphQL",
     "level": "Intermediate",
     "question": "How do you handle authentication in GraphQL?",
-    "answer": "Establish identity via headers (e.g., bearer tokens) in context. Authorize in resolvers or centralized wrappers based on roles/scopes.",
-    "explanation": "Per-field authz vs REST route-level; depth/complexity limits for abuse.",
-    "example": "const ctx = { user: await verify(req.headers.authorization) };"
+    "answer": "Authentication in GraphQL is usually handled using tokens passed in request headers and validated inside the GraphQL context.",
+    "explanation": "When a request comes to the GraphQL server, the token is extracted from the authorization header and verified. After validation, user information is attached to the GraphQL context so resolvers can check permissions before returning data.\n\nThis approach allows centralized authentication and authorization handling.\n\nExplanation of terms used:\n\nauthentication\nVerifying the identity of a user.\n\nauthorization\nChecking what actions or data the user is allowed to access.\n\ntoken\nA secure string used to identify authenticated users.\n\ncontext\nAn object shared across GraphQL resolvers during a request.\n\nresolver\nA function responsible for returning GraphQL data.",
+    "example": "const ctx = {\n  user: verifyToken(req.headers.authorization)\n};"
   },
   {
     "id": "int-gql-4",
     "technology": "GraphQL",
     "level": "Advanced",
     "question": "Give an overview of GraphQL subscriptions.",
-    "answer": "Subscriptions stream events to clients over WebSockets or SSE, defined in schema with async iterators or pub/sub backends.",
-    "explanation": "Discuss scaling (Redis pub/sub), auth on connection, and filtering payloads.",
-    "example": "subscription { commentAdded(postId: \"1\") { id body } }"
+    "answer": "GraphQL subscriptions provide real-time communication between the server and client whenever data changes.",
+    "explanation": "Unlike normal queries that fetch data once, subscriptions keep an active connection open and continuously send updates to the client.\n\nThey are commonly implemented using WebSockets and are useful for:\n- chat applications\n- notifications\n- live dashboards\n- stock updates\n- multiplayer systems\n\nExplanation of terms used:\n\nsubscription\nA GraphQL operation used for real-time updates.\n\nWebSocket\nA protocol that allows two-way real-time communication.\n\nreal-time\nData updates instantly without refreshing.\n\npub/sub\nPublish-subscribe pattern used for broadcasting events.",
+    "example": "subscription {\n  commentAdded(postId: 1) {\n    id\n    text\n  }\n}"
   },
   {
     "id": "int-react-5",
     "technology": "React",
     "level": "Intermediate",
     "question": "When do you use useMemo vs useCallback?",
-    "answer": "useMemo memoizes a computed value; useCallback memoizes a function reference. Both need correct dependency arrays and are for performance, not correctness.",
-    "explanation": "Mention that inline objects in deps or unstable references defeat memoization; profile before using.",
-    "example": "const v = useMemo(() => heavy(a), [a]); const f = useCallback(() => doThing(b), [b]);"
+    "answer": "useMemo memoizes values, while useCallback memoizes function references. Both are mainly used for performance optimization.",
+    "explanation": "I use useMemo when an expensive calculation should not run on every render. It stores the computed value until dependencies change.\n\nI use useCallback when passing functions to child components so the function reference does not change unnecessarily.\n\nThis helps avoid unwanted rerenders.\n\nExplanation of terms used:\n\nmemoization\nCaching a value or function to avoid recalculating it repeatedly.\n\ndependency array\nAn array that determines when a hook should rerun.\n\nrerender\nWhen React updates the UI again.\n\nfunction reference\nThe memory reference of a function.",
+    "example": "const total = useMemo(() => calculate(items), [items]);\n\nconst handleClick = useCallback(() => {\n  console.log('clicked');\n}, []);"
   },
   {
     "id": "int-react-6",
     "technology": "React",
     "level": "Intermediate",
     "question": "When is useRef preferable to useState?",
-    "answer": "When updates should not trigger a re-render—DOM handles, timers, or storing the latest value read by async callbacks. useState schedules renders on change.",
-    "explanation": "Also discuss useRef to hold instance fields without re-subscribing effects.",
-    "example": "const id = useRef<number | null>(null); id.current = requestAnimationFrame(tick);"
+    "answer": "I use useRef when a value should persist between renders without triggering rerenders.",
+    "explanation": "useRef is commonly used for:\n- DOM references\n- timers\n- storing previous values\n- mutable variables\n\nUnlike useState, updating useRef does not cause the component to rerender.\n\nThat makes it useful when UI updates are not required.\n\nExplanation of terms used:\n\npersist\nKeeping a value across renders.\n\nDOM reference\nDirect access to an HTML element.\n\nrerender\nReact updating the component UI again.\n\nmutable value\nA value that can change without triggering UI updates.",
+    "example": "const inputRef = useRef(null);\n\ninputRef.current.focus();"
   },
   {
     "id": "int-react-7",
     "technology": "React",
     "level": "Intermediate",
     "question": "How does forwardRef relate to useImperativeHandle?",
-    "answer": "forwardRef passes the parent's ref into your component. useImperativeHandle shapes what object that ref exposes instead of the raw DOM node.",
-    "explanation": "Prefer exposing minimal imperative APIs; props remain the default integration surface.",
-    "example": "forwardRef((props, ref) => { useImperativeHandle(ref, () => ({ focus: () => inner.current?.focus() })); ... });"
+    "answer": "forwardRef passes a ref from parent to child, while useImperativeHandle controls what the parent can access through that ref.",
+    "explanation": "Normally refs expose the full DOM element or component instance. With useImperativeHandle, I can expose only specific methods instead of the entire element.\n\nThis helps create cleaner and safer component APIs.\n\nExplanation of terms used:\n\nref\nA way to directly access DOM elements or component instances.\n\nforwardRef\nAllows refs to be passed from parent components to child components.\n\nuseImperativeHandle\nCustomizes what values or methods are exposed through a ref.\n\ncomponent API\nThe public methods or properties exposed by a component.",
+    "example": "useImperativeHandle(ref, () => ({\n  focus: () => inputRef.current.focus()\n}));"
   },
   {
     "id": "int-react-8",
     "technology": "React",
     "level": "Advanced",
     "question": "Explain useTransition and useDeferredValue for concurrent rendering.",
-    "answer": "useTransition wraps updates so urgent interactions stay responsive; useDeferredValue keeps a lagging copy of expensive derived UI. Both cooperate with React's scheduler.",
-    "explanation": "Contrast urgency vs deferring display of stale-but-valid output.",
-    "example": "startTransition(() => setTab('heavy')); const deferred = useDeferredValue(query);"
+    "answer": "useTransition keeps urgent interactions responsive, while useDeferredValue delays expensive updates until later.",
+    "explanation": "I use useTransition when some state updates are heavy but should not block user interactions like typing or clicking.\n\nuseDeferredValue is useful when rendering expensive lists or filtered results because it allows React to keep showing older data until the expensive update completes.\n\nExplanation of terms used:\n\nconcurrent rendering\nReact’s ability to prepare UI updates without blocking the browser.\n\nurgent updates\nHigh-priority updates like typing or clicking.\n\ndeferred updates\nLower-priority updates delayed for smoother performance.\n\nresponsive UI\nAn interface that feels smooth and fast to users.",
+    "example": "startTransition(() => {\n  setSearch(query);\n});"
   },
   {
     "id": "int-react-9",
     "technology": "React",
     "level": "Advanced",
     "question": "Why does useSyncExternalStore exist and how does it relate to concurrent React?",
-    "answer": "External stores need tear-free reads during concurrent rendering; tear occurs when getSnapshot reads inconsistent states across renders. This hook coordinates subscribe/getSnapshot properly.",
-    "explanation": "Foundation for integrating Redux v8+ and custom stores safely.",
-    "example": "useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)"
+    "answer": "useSyncExternalStore helps React safely read external store data during concurrent rendering without inconsistent UI states.",
+    "explanation": "In concurrent rendering, React may render components multiple times before updating the screen. Without synchronization, external store values could become inconsistent.\n\nuseSyncExternalStore ensures React always reads stable data from external stores like Redux or custom state managers.\n\nExplanation of terms used:\n\nexternal store\nState stored outside React components.\n\nconcurrent rendering\nReact rendering updates in the background without blocking.\n\nconsistent state\nKeeping UI data synchronized correctly.\n\nsnapshot\nThe latest value read from the external store.",
+    "example": "useSyncExternalStore(subscribe, getSnapshot);"
   },
   {
     "id": "int-react-10",
     "technology": "React",
     "level": "Advanced",
     "question": "How does the React 19 use() hook differ from useContext?",
-    "answer": "use can unwrap promises with Suspense and can read context conditionally; useContext must follow hook rules at top level.",
-    "explanation": "Framework-specific constraints apply for RSC vs client trees.",
-    "example": "const data = use(props.promise);"
+    "answer": "The use() hook can unwrap promises and read async data, while useContext is specifically used for consuming React context values.",
+    "explanation": "use() is more flexible because it works with promises, Suspense, and async data fetching.\n\nuseContext is mainly used for accessing shared state provided through Context Providers.\n\nSo use() focuses more on async resource handling, while useContext focuses on shared application state.\n\nExplanation of terms used:\n\npromise\nAn object representing future completion of asynchronous work.\n\nSuspense\nA React feature for handling async loading states.\n\ncontext\nA way to share data across components without prop drilling.\n\nprovider\nA component that supplies shared context values.",
+    "example": "const data = use(fetchPromise);"
   },
   {
     "id": "int-react-11",
     "technology": "React",
     "level": "Intermediate",
     "question": "What problem does useFormStatus solve?",
-    "answer": "It exposes the parent form's submission pending state to descendants without prop drilling—must run under a form subtree.",
-    "explanation": "Pairs with Server Actions and progressive enhancement.",
+    "answer": "useFormStatus provides form submission state without needing prop drilling.",
+    "explanation": "It is mainly useful in forms using Server Actions. Components inside the form can directly know whether the form is currently pending or submitting.\n\nThis avoids manually passing loading states through multiple components.\n\nExplanation of terms used:\n\nform submission state\nThe current status of a form request.\n\npending\nA request that is still processing.\n\nprop drilling\nPassing props through multiple component levels unnecessarily.\n\nServer Actions\nServer-side functions used directly from React components.",
     "example": "const { pending } = useFormStatus();"
   },
   {
@@ -319,53 +319,68 @@
     "technology": "React",
     "level": "Intermediate",
     "question": "Describe optimistic UI with useOptimistic and its risks.",
-    "answer": "useOptimistic layers temporary state until async work completes; incorrect reconciliation can confuse users if server rejects or conflicts.",
-    "explanation": "Discuss rollback on error and idempotent server operations.",
-    "example": "addOptimistic({ type: 'add', item }); await sync();"
+    "answer": "Optimistic UI updates the interface immediately before the server confirms the action to make the application feel faster.",
+    "explanation": "Instead of waiting for the API response, the UI updates instantly assuming the request will succeed.\n\nThis improves user experience, especially in chat apps, likes, comments, or task management systems.\n\nBut if the request fails, the optimistic state must rollback correctly to avoid showing incorrect data.\n\nExplanation of terms used:\n\noptimistic UI\nUpdating the interface before server confirmation.\n\nrollback\nReverting temporary UI changes if the request fails.\n\nAPI response\nThe data returned from the server.\n\nuser experience\nHow smooth and responsive the application feels.",
+    "example": "addOptimistic({\n  type: 'add',\n  item\n});"
   },
-  {
+   {
     "id": "int-redux-1",
     "technology": "Redux",
     "level": "Intermediate",
     "question": "When would you pick Redux over React Context?",
-    "answer": "Redux suits large cross-cutting client state with predictable updates, middleware, DevTools, and normalized patterns. Context is fine for stable, modestly-sized shared values without complex update flows.",
-    "explanation": "Context can cause wide re-renders without selectors; Redux adds structure at the cost of boilerplate—often RTK today.",
-    "example": "Many consumers reading derived slices → Redux + selectors vs single ThemeProvider."
+    "answer": "I usually prefer Redux for large applications where multiple modules share complex state and predictable updates are important. React Context works well for smaller shared values like themes or authentication, but Redux becomes more useful when the application grows and state management becomes more complex.",
+    "explanation": "Redux provides centralized state management, middleware support, better debugging tools, and predictable state updates. In large enterprise applications, many components may depend on the same shared data, and Redux helps organize that state in a scalable way.\n\nReact Context is simpler and works well for lightweight state sharing, but frequent updates in Context can trigger unnecessary rerenders across many components.\n\nRedux also provides tools like Redux DevTools, createSlice, async middleware, and selectors which make debugging and maintaining large applications easier.\n\nExplanation of terms used:\n\ncentralized state\nA single place where application state is stored and managed.\n\nmiddleware\nFunctions that run between dispatching an action and updating the store.\n\npredictable updates\nState changes happen in a controlled and consistent way.\n\nrerender\nWhen React updates the UI again after state or props change.\n\nRedux DevTools\nA debugging tool used to inspect Redux state and actions.",
+    "example": "const user = useSelector((state) => state.user);"
   },
   {
     "id": "int-redux-2",
     "technology": "Redux",
     "level": "Intermediate",
     "question": "How does useSelector decide when to re-render?",
-    "answer": "It compares the selected value to the previous using strict equality by default; if you select objects, new references each time force re-renders unless using memoized selectors or shallowEqual.",
-    "explanation": "Mention reselect/createSelector for derived data.",
-    "example": "useSelector((s) => s.users.byId[id]) // stable if primitive; unstable if new object literal."
+    "answer": "useSelector rerenders a component when the selected value from the Redux store changes. By default, it compares the previous and current values using strict equality.",
+    "explanation": "Whenever the Redux store updates, useSelector checks whether the selected value has changed.\n\nIf the selected value is different, React rerenders the component.\n\nIf a new object or array reference is returned every time, unnecessary rerenders can happen even if the actual data did not change.\n\nThat is why memoization and selectors are important for performance optimization.\n\nExplanation of terms used:\n\nstrict equality\nComparison using ===.\n\nselector\nA function used to read specific data from the Redux store.\n\nmemoization\nCaching values so expensive operations do not run repeatedly.\n\nreference\nObjects and arrays are compared by memory reference, not actual content.",
+    "example": "useSelector((state) => state.user.name);"
   },
   {
     "id": "int-redux-3",
     "technology": "Redux",
     "level": "Beginner",
     "question": "What does Redux Toolkit give you over handwritten Redux?",
-    "answer": "Less boilerplate (createSlice), Immer-powered reducers, configureStore defaults, createAsyncThunk, RTK Query module, and official recommended patterns.",
-    "explanation": "It's the official maintainers' blessed approach since ~2019.",
-    "example": "createSlice({ name: 'x', initialState, reducers: { ... } })"
+    "answer": "Redux Toolkit reduces boilerplate and provides simpler modern Redux patterns. It makes Redux easier to write, manage, and scale.",
+    "explanation": "Earlier, handwritten Redux required a lot of setup like action types, action creators, reducers, and store configuration.\n\nRedux Toolkit simplifies this using built-in utilities like createSlice, configureStore, and createAsyncThunk.\n\nIt also uses Immer internally, which allows writing state updates in a simpler mutable-looking syntax while still keeping immutability.\n\nExplanation of terms used:\n\nboilerplate\nRepeated setup code that developers write again and again.\n\ncreateSlice\nA Redux Toolkit function that creates reducers and actions together.\n\nimmutability\nState should not be modified directly.\n\nImmer\nA library used internally by Redux Toolkit to simplify immutable updates.",
+    "example": "createSlice({\n  name: 'counter',\n  initialState,\n  reducers: {}\n});"
   },
   {
     "id": "int-redux-4",
     "technology": "Redux",
     "level": "Intermediate",
     "question": "Explain createAsyncThunk pending/fulfilled/rejected handling.",
-    "answer": "Thunk dispatches automated actions with types like `myThunk.pending`; extraReducers listen and update loading/error/data fields.",
-    "explanation": "Contrast with RTK Query for cacheable requests.",
-    "example": "extraReducers: (b) => { b.addCase(fetchUser.fulfilled, (s, a) => { s.user = a.payload; }); }"
+    "answer": "createAsyncThunk automatically generates pending, fulfilled, and rejected action states for asynchronous operations.",
+    "explanation": "When an async request starts, Redux dispatches a pending action.\n\nIf the request succeeds, fulfilled is triggered.\n\nIf the request fails, rejected is triggered.\n\nThis makes loading, success, and error handling much cleaner compared to manually writing multiple action types.\n\nExplanation of terms used:\n\nasync operation\nTasks like API requests that take time to complete.\n\npending\nThe request is currently running.\n\nfulfilled\nThe request completed successfully.\n\nrejected\nThe request failed.\n\naction\nAn object describing what happened in Redux.",
+    "example": "builder.addCase(fetchUser.fulfilled, (state, action) => {\n  state.user = action.payload;\n});"
   },
   {
     "id": "int-redux-5",
     "technology": "Redux",
     "level": "Advanced",
     "question": "Why normalize entity state in Redux apps?",
-    "answer": "Nested structures duplicate entities and make updates error-prone; normalized maps (`byId`, `allIds`) mirror relational data and simplify partial updates.",
-    "explanation": "RTK entity adapters automate common patterns.",
-    "example": "{ users: { byId: { 1: {...} }, allIds: ['1'] } }"
+    "answer": "Normalized state avoids deeply nested data structures and makes updates easier, faster, and more scalable.",
+    "explanation": "Instead of storing duplicate nested objects everywhere, Redux stores entities in a flat structure using IDs.\n\nThis improves performance and prevents inconsistent data updates.\n\nFor example, if the same user appears in multiple places, normalization ensures the user data exists only once in the store.\n\nExplanation of terms used:\n\nnormalized state\nData stored in a flat structure using IDs.\n\nnested data\nObjects inside objects or arrays inside arrays.\n\nentity\nA reusable data object like users, posts, or products.\n\nscalable\nAble to handle larger applications efficiently.",
+    "example": "{\n  users: {\n    byId: {\n      1: { id: 1, name: 'John' }\n    },\n    allIds: [1]\n  }\n}"
+  },
+  {
+    "id": "int-js-sample-json",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is Currying in JavaScript?",
+    "answer": "Currying is a functional programming technique where a function with multiple arguments is transformed into a series of functions that each take a single argument.",
+    "explanation": "Instead of taking all arguments at once, a curried function takes the first one and returns a new function that takes the second one, and so on, until all arguments are completed.",
+    "quickAnswer": "Currying transforms `f(a, b, c)` into `f(a)(b)(c)`. It uses closures to remember earlier arguments.",
+    "detailedExplanation": "Currying is useful for creating specialized versions of a function. For example, if you have a general `multiply(a, b)` function, you can curry it to create a `double(n)` function by pre-filling the first argument as `2`. This is often used in functional programming libraries like Ramda or Lodash, and it is a common interview topic when discussing higher-order functions and closures.",
+    "realWorldUseCase": "Creating reusable utility functions or pre-configuring API call helpers with a specific base URL or configuration.",
+    "codeExample": "const multiply = (a) => (b) => a * b;\nconst double = multiply(2);\nconsole.log(double(5)); // 10",
+    "commonMistakes": "- Forgetting to return the inner function.\n- Over-currying simple functions and making the code harder to read.",
+    "interviewTip": "Mention that currying relies on closures to keep the arguments accessible in the inner functions.",
+    "segment": "fundamentals"
   }
 ]

@@ -1435,16 +1435,17 @@ function getNonJavaScriptGuide(q: InterviewQuestion): Enrichment {
 }
 
 export function enrichInterviewQuestion(q: InterviewQuestion): InterviewQuestion {
-  const enrichment = q.technology === "JavaScript" ? getJavaScriptGuide(q) : getNonJavaScriptGuide(q);
-  if (!enrichment) return q;
-
+  // JSON-first mode:
+  // We no longer auto-generate per-question copy from regex/topic functions.
+  // Every field should come from source JSON (with only minimal base fallbacks).
+  // This keeps the authoring workflow AI-friendly and fully copy/paste driven.
   return {
     ...q,
-    quickAnswer: q.quickAnswer ?? enrichment.quickAnswer,
-    detailedExplanation: q.detailedExplanation ?? enrichment.detailedExplanation,
-    realWorldUseCase: q.realWorldUseCase ?? enrichment.realWorldUseCase,
-    codeExample: q.codeExample ?? enrichment.codeExample,
-    commonMistakes: q.commonMistakes ?? enrichment.commonMistakes,
-    interviewTip: q.interviewTip ?? enrichment.interviewTip,
+    quickAnswer: q.quickAnswer ?? q.answer,
+    detailedExplanation: q.detailedExplanation ?? q.explanation,
+    realWorldUseCase: q.realWorldUseCase ?? "",
+    codeExample: q.codeExample ?? q.example ?? "",
+    commonMistakes: q.commonMistakes ?? "",
+    interviewTip: q.interviewTip ?? "",
   };
 }

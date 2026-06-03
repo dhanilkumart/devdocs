@@ -25,15 +25,22 @@ export function ResumeQuestionCard({ q, defaultOpen = false }: { q: ResumeQuesti
       <div className="flex w-full items-start justify-between gap-4 rounded-2xl px-5 py-4 text-left">
         <div className="min-w-0 space-y-2">
           <h2>
-            <button
-              type="button"
+            <div
+              role="button"
+              tabIndex={0}
               onClick={() => setOpen((v) => !v)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setOpen((v) => !v);
+                }
+              }}
               aria-expanded={open}
               aria-controls={`resume-a-${q.id}`}
-              className="text-left text-base font-semibold leading-snug text-zinc-900 hover:text-sky-700 focus:outline-none focus-visible:rounded-md focus-visible:ring-2 focus-visible:ring-sky-500 dark:text-zinc-50 dark:hover:text-sky-400"
+              className="cursor-pointer text-left text-base font-semibold leading-snug text-zinc-900 hover:text-sky-700 focus:outline-none focus-visible:rounded-md focus-visible:ring-2 focus-visible:ring-sky-500 dark:text-zinc-50 dark:hover:text-sky-400"
             >
-              {q.question}
-            </button>
+              <TechText text={q.question} />
+            </div>
           </h2>
           {q.short && (
             <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">

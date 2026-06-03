@@ -1,0 +1,18 @@
+[
+  {
+    "id": "unique-id-001",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is the difference between shallow copy and deep copy?",
+    "answer": "A shallow copy only copies the top-level properties, while a deep copy recursively copies all levels.",
+    "explanation": "Shallow copy creates a new object with references to the original nested objects. Deep copy creates a completely independent clone.",
+    "quickAnswer": "Shallow copy = reference-level copy. Deep copy = full structural clone.",
+    "detailedExplanation": "When you use spread `...` or `Object.assign()`, you are doing a shallow copy. If the object has nested objects, both the original and the copy will share the same nested object in memory. `structuredClone()` is the modern way to perform a deep copy in JavaScript.",
+    "realWorldUseCase": "Use deep copy when you need to modify a draft state without affecting the original data that might be used elsewhere in the UI.",
+    "codeExample": "const original = { a: 1, b: { c: 2 } };\nconst shallow = { ...original };\nconst deep = structuredClone(original);",
+    "commonMistakes": "- Thinking spread operator does a deep copy.\n- Using JSON.parse(JSON.stringify(obj)) for objects containing functions or undefined.",
+    "interviewTip": "Mention `structuredClone` for deep copies to show you are up-to-date with modern Web APIs.",
+    "segment": "fundamentals",
+    "section": "javascript-core"
+  }
+]

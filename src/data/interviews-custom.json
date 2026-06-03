@@ -1,0 +1,1153 @@
+[
+  {
+    "id": "iq-001",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is React and why did you use it?",
+    "answer": "I mainly used React for building component-based user interfaces. The biggest advantage I found was reusability. Instead of creating the same UI multiple times, I could create reusable components and use them across different modules.\n\nIn projects like ZEOS and Rover, we had dashboards, forms, workflow screens, tables, and widgets that appeared in multiple places. React helped us build these once and reuse them. It also made maintenance easier because updating one component automatically reflected wherever it was used.",
+    "explanation": "I mainly used React for building component-based user interfaces. The biggest advantage I found was reusability. Instead of creating the same UI multiple times, I could create reusable components and use them across different modules.\n\nIn projects like ZEOS and Rover, we had dashboards, forms, workflow screens, tables, and widgets that appeared in multiple places. React helped us build these once and reuse them. It also made maintenance easier because updating one component automatically reflected wherever it was used.",
+    "example": "",
+    "section": "react-core-concepts"
+  },
+  {
+    "id": "iq-002",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is Virtual DOM?",
+    "answer": "Virtual DOM is React's lightweight copy of the real DOM.\n\nWhenever state changes, React first updates the Virtual DOM and compares it with the previous version. It then identifies only the changed parts and updates those in the real DOM instead of reloading the entire page.\n\nThis improves performance, especially in dashboards where multiple components update frequently.",
+    "explanation": "Virtual DOM is React's lightweight copy of the real DOM.\n\nWhenever state changes, React first updates the Virtual DOM and compares it with the previous version. It then identifies only the changed parts and updates those in the real DOM instead of reloading the entire page.\n\nThis improves performance, especially in dashboards where multiple components update frequently.",
+    "example": "",
+    "section": "react-core-concepts"
+  },
+  {
+    "id": "iq-003",
+    "technology": "React",
+    "level": "Beginner",
+    "question": "What is useState?",
+    "answer": "I use useState whenever a component needs to store data that can change.\n\nFor example:\n\nsearch text\nmodal open/close status\nselected dropdown value\nAPI response data\n\nWhen the state changes, React rerenders the component and updates the UI automatically.",
+    "explanation": "I use useState whenever a component needs to store data that can change.\n\nFor example:\n\nsearch text\nmodal open/close status\nselected dropdown value\nAPI response data\n\nWhen the state changes, React rerenders the component and updates the UI automatically.",
+    "example": "",
+    "section": "react-core-concepts"
+  },
+  {
+    "id": "iq-004",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is useEffect?",
+    "answer": "useEffect is used for side effects.\n\nI mainly used it for:\n\nAPI calls\nevent listeners\nWebSocket connections\ntimers\ncleanup operations\n\nFor example, when a page loads and needs to fetch dashboard data, I use useEffect to trigger the API call.",
+    "explanation": "useEffect is used for side effects.\n\nI mainly used it for:\n\nAPI calls\nevent listeners\nWebSocket connections\ntimers\ncleanup operations\n\nFor example, when a page loads and needs to fetch dashboard data, I use useEffect to trigger the API call.",
+    "example": "",
+    "section": "react-core-concepts"
+  },
+  {
+    "id": "iq-005",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is cleanup in useEffect?",
+    "answer": "Cleanup runs before the component is removed or before the effect runs again.\n\nI have used it to:\n\nclose WebSocket connections\nclear intervals\nremove event listeners\nabort API requests\n\nThis prevents memory leaks and unnecessary background operations.",
+    "explanation": "Cleanup runs before the component is removed or before the effect runs again.\n\nI have used it to:\n\nclose WebSocket connections\nclear intervals\nremove event listeners\nabort API requests\n\nThis prevents memory leaks and unnecessary background operations.",
+    "example": "",
+    "section": "react-core-concepts"
+  },
+  {
+    "id": "iq-006",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is React.memo?",
+    "answer": "React.memo prevents unnecessary rerenders.\n\nIf the props haven't changed, React can reuse the previous rendered output instead of rendering again.\n\nI used it mainly in dashboards where tables, charts, and widgets were expensive to rerender.",
+    "explanation": "React.memo prevents unnecessary rerenders.\n\nIf the props haven't changed, React can reuse the previous rendered output instead of rendering again.\n\nI used it mainly in dashboards where tables, charts, and widgets were expensive to rerender.",
+    "example": "",
+    "section": "react-core-concepts"
+  },
+  {
+    "id": "iq-007",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is useMemo?",
+    "answer": "useMemo is used to cache expensive calculations.\n\nFor example, if a dashboard has thousands of rows and filtering logic, I can calculate the filtered result once and reuse it until dependencies change.\n\nThis reduces unnecessary computations.",
+    "explanation": "useMemo is used to cache expensive calculations.\n\nFor example, if a dashboard has thousands of rows and filtering logic, I can calculate the filtered result once and reuse it until dependencies change.\n\nThis reduces unnecessary computations.",
+    "example": "",
+    "section": "react-core-concepts"
+  },
+  {
+    "id": "iq-008",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is useCallback?",
+    "answer": "useCallback is used to memoize functions.\n\nSometimes functions are recreated on every render and can cause child components to rerender unnecessarily.\n\nI use useCallback when passing functions as props to optimized child components.",
+    "explanation": "useCallback is used to memoize functions.\n\nSometimes functions are recreated on every render and can cause child components to rerender unnecessarily.\n\nI use useCallback when passing functions as props to optimized child components.",
+    "example": "",
+    "section": "react-core-concepts"
+  },
+  {
+    "id": "iq-009",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "How do you check component rerenders?",
+    "answer": "I normally use React DevTools Profiler.\n\nFor quick debugging, I also add console logs to see when components rerender.\n\nThen I verify whether state changes, prop changes, or parent rerenders are triggering the updates.",
+    "explanation": "I normally use React DevTools Profiler.\n\nFor quick debugging, I also add console logs to see when components rerender.\n\nThen I verify whether state changes, prop changes, or parent rerenders are triggering the updates.",
+    "example": "",
+    "section": "performance-optimization"
+  },
+  {
+    "id": "iq-010",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "Controlled vs Uncontrolled Components?",
+    "answer": "A controlled component stores input values in React state.\n\nA uncontrolled component lets the DOM manage the value.\n\nIn enterprise applications I mostly use controlled components because validation, dynamic forms, and API interactions become easier.",
+    "explanation": "A controlled component stores input values in React state.\n\nA uncontrolled component lets the DOM manage the value.\n\nIn enterprise applications I mostly use controlled components because validation, dynamic forms, and API interactions become easier.",
+    "example": "",
+    "section": "react-core-concepts"
+  },
+  {
+    "id": "iq-011",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What is TypeScript and why do we use it?",
+    "answer": "TypeScript is a superset of JavaScript that adds static typing.\n\nIn JavaScript, many errors are discovered only at runtime. TypeScript helps catch those errors during development itself.\n\nI mainly used TypeScript in React projects because it improves code quality, makes refactoring easier, and provides better IDE support through autocomplete and type checking.",
+    "explanation": "TypeScript is a superset of JavaScript that adds static typing.\n\nIn JavaScript, many errors are discovered only at runtime. TypeScript helps catch those errors during development itself.\n\nI mainly used TypeScript in React projects because it improves code quality, makes refactoring easier, and provides better IDE support through autocomplete and type checking.",
+    "example": "",
+    "section": "typescript-essentials"
+  },
+  {
+    "id": "iq-012",
+    "technology": "TypeScript",
+    "level": "Beginner",
+    "question": "Difference between JavaScript and TypeScript?",
+    "answer": "JavaScript is dynamically typed, while TypeScript is statically typed.\n\nIn JavaScript I can assign any value to a variable without restrictions. In TypeScript I can define the expected type and TypeScript validates it.\n\nThis helps catch bugs early and makes larger applications easier to maintain.",
+    "explanation": "JavaScript is dynamically typed, while TypeScript is statically typed.\n\nIn JavaScript I can assign any value to a variable without restrictions. In TypeScript I can define the expected type and TypeScript validates it.\n\nThis helps catch bugs early and makes larger applications easier to maintain.",
+    "example": "",
+    "section": "typescript-essentials"
+  },
+  {
+    "id": "iq-013",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What is Interface?",
+    "answer": "I mainly use interfaces to define object structures.\n\nFor example, API responses, component props, and user objects can all be described using interfaces.\n\nThis ensures consistency across the application.",
+    "explanation": "I mainly use interfaces to define object structures.\n\nFor example, API responses, component props, and user objects can all be described using interfaces.\n\nThis ensures consistency across the application.",
+    "example": "",
+    "section": "typescript-essentials"
+  },
+  {
+    "id": "iq-014",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "Difference between Interface and Type?",
+    "answer": "Both are used for defining structures.\n\nI generally use interfaces for component props and API models because they are easier to extend.",
+    "explanation": "Both are used for defining structures.\n\nI generally use interfaces for component props and API models because they are easier to extend.",
+    "example": "",
+    "section": "typescript-essentials"
+  },
+  {
+    "id": "iq-015",
+    "technology": "TypeScript",
+    "level": "Advanced",
+    "question": "Difference between Any and Unknown?",
+    "answer": "Any allows everything without checks.\n\nUnknown requires validation before usage.\n\nBecause of that, unknown provides much better type safety.",
+    "explanation": "Any allows everything without checks.\n\nUnknown requires validation before usage.\n\nBecause of that, unknown provides much better type safety.",
+    "example": "",
+    "section": "typescript-essentials"
+  },
+  {
+    "id": "iq-016",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "What is Next.js and why did you use it?",
+    "answer": "Next.js is a React framework that provides additional features like server-side rendering, static site generation, routing, API routes, and performance optimizations.\n\nI mainly used Next.js when SEO and initial page load performance were important. React itself only handles UI rendering, whereas Next.js provides a complete framework for building production-ready applications.",
+    "explanation": "Next.js is a React framework that provides additional features like server-side rendering, static site generation, routing, API routes, and performance optimizations.\n\nI mainly used Next.js when SEO and initial page load performance were important. React itself only handles UI rendering, whereas Next.js provides a complete framework for building production-ready applications.",
+    "example": "",
+    "section": "nextjs-ssr"
+  },
+  {
+    "id": "iq-017",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "What is SSR?",
+    "answer": "SSR means the HTML is generated on the server before being sent to the browser.\n\nInstead of loading an empty page and waiting for JavaScript, the user receives rendered content immediately.\n\nThis improves SEO and initial page load performance.",
+    "explanation": "SSR means the HTML is generated on the server before being sent to the browser.\n\nInstead of loading an empty page and waiting for JavaScript, the user receives rendered content immediately.\n\nThis improves SEO and initial page load performance.",
+    "example": "",
+    "section": "nextjs-ssr"
+  },
+  {
+    "id": "iq-018",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "What is SSG?",
+    "answer": "SSG generates pages at build time.\n\nThe generated HTML is stored and served directly to users without rendering again.\n\nI would use SSG for pages where data doesn't change frequently, such as blogs, documentation, or marketing pages.",
+    "explanation": "SSG generates pages at build time.\n\nThe generated HTML is stored and served directly to users without rendering again.\n\nI would use SSG for pages where data doesn't change frequently, such as blogs, documentation, or marketing pages.",
+    "example": "",
+    "section": "nextjs-ssr"
+  },
+  {
+    "id": "iq-019",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "Difference between SSR and SSG?",
+    "answer": "SSR generates HTML on every request.\n\nSSG generates HTML once during build time.\n\nSSR is suitable for dynamic data, while SSG is suitable for mostly static content.",
+    "explanation": "SSR generates HTML on every request.\n\nSSG generates HTML once during build time.\n\nSSR is suitable for dynamic data, while SSG is suitable for mostly static content.",
+    "example": "",
+    "section": "nextjs-ssr"
+  },
+  {
+    "id": "iq-020",
+    "technology": "Next.js",
+    "level": "Intermediate",
+    "question": "What is Hydration?",
+    "answer": "Hydration happens after the browser receives server-rendered HTML.\n\nReact attaches event handlers and makes the page interactive.\n\nWithout hydration, users could see content but wouldn't be able to interact with it.",
+    "explanation": "Hydration happens after the browser receives server-rendered HTML.\n\nReact attaches event handlers and makes the page interactive.\n\nWithout hydration, users could see content but wouldn't be able to interact with it.",
+    "example": "",
+    "section": "nextjs-ssr"
+  },
+  {
+    "id": "iq-021",
+    "technology": "Redux",
+    "level": "Intermediate",
+    "question": "What is the difference between Redux, Zustand, and TanStack Query?",
+    "answer": "I see them as solving different problems.\n\nRedux is for managing complex client-side application state that is shared across many components.\n\nZustand is also a state management library but much lighter and requires less boilerplate. I mainly used it for UI-related states like sidebar collapse, theme switching, and modal management.\n\nTanStack Query is different because it manages server state. It handles API fetching, caching, retries, background updates, and synchronization with the backend.\n\nSo in simple terms:\n\nRedux → Complex client state\nZustand → Simple client state\nTanStack Query → Server/API state",
+    "explanation": "I see them as solving different problems.\n\nRedux is for managing complex client-side application state that is shared across many components.\n\nZustand is also a state management library but much lighter and requires less boilerplate. I mainly used it for UI-related states like sidebar collapse, theme switching, and modal management.\n\nTanStack Query is different because it manages server state. It handles API fetching, caching, retries, background updates, and synchronization with the backend.\n\nSo in simple terms:\n\nRedux → Complex client state\nZustand → Simple client state\nTanStack Query → Server/API state",
+    "example": "",
+    "section": "state-management"
+  },
+  {
+    "id": "iq-022",
+    "technology": "Redux",
+    "level": "Intermediate",
+    "question": "Have you used Redux and Zustand together?",
+    "answer": "Yes.\n\nRedux was used for complex business workflows and shared enterprise state.\n\nZustand was used for lightweight UI state such as:\n\nsidebar collapse\ntheme settings\nmodal visibility\nuser preferences\n\nKeeping them separate helped avoid unnecessary Redux complexity.",
+    "explanation": "Yes.\n\nRedux was used for complex business workflows and shared enterprise state.\n\nZustand was used for lightweight UI state such as:\n\nsidebar collapse\ntheme settings\nmodal visibility\nuser preferences\n\nKeeping them separate helped avoid unnecessary Redux complexity.",
+    "example": "",
+    "section": "state-management"
+  },
+  {
+    "id": "iq-023",
+    "technology": "Redux",
+    "level": "Intermediate",
+    "question": "What is Redux Toolkit?",
+    "answer": "Redux Toolkit is the modern way of writing Redux.\n\nTraditional Redux required a lot of boilerplate code such as actions, reducers, and switch statements.\n\nRedux Toolkit simplifies that by providing utilities like createSlice and createAsyncThunk, making Redux easier to write and maintain.",
+    "explanation": "Redux Toolkit is the modern way of writing Redux.\n\nTraditional Redux required a lot of boilerplate code such as actions, reducers, and switch statements.\n\nRedux Toolkit simplifies that by providing utilities like createSlice and createAsyncThunk, making Redux easier to write and maintain.",
+    "example": "",
+    "section": "state-management"
+  },
+  {
+    "id": "iq-024",
+    "technology": "Redux",
+    "level": "Advanced",
+    "question": "What is Middleware?",
+    "answer": "Middleware sits between dispatching an action and updating the store.\n\nI mainly used middleware for:\n\nAPI calls\nasynchronous operations\nlogging\ncentralized error handling\n\nWithout middleware, reducers must remain pure and cannot perform async operations.",
+    "explanation": "Middleware sits between dispatching an action and updating the store.\n\nI mainly used middleware for:\n\nAPI calls\nasynchronous operations\nlogging\ncentralized error handling\n\nWithout middleware, reducers must remain pure and cannot perform async operations.",
+    "example": "",
+    "section": "state-management"
+  },
+  {
+    "id": "iq-025",
+    "technology": "Redux",
+    "level": "Intermediate",
+    "question": "What is TanStack Query?",
+    "answer": "TanStack Query manages API state automatically.\n\nBefore using it, we manually handled:\n\nloading states\ncaching\nretries\nrefetching\n\nTanStack Query provides these features out of the box, reducing boilerplate and improving performance.\n\nIt was especially useful in dashboard applications where multiple widgets depended on API data.",
+    "explanation": "TanStack Query manages API state automatically.\n\nBefore using it, we manually handled:\n\nloading states\ncaching\nretries\nrefetching\n\nTanStack Query provides these features out of the box, reducing boilerplate and improving performance.\n\nIt was especially useful in dashboard applications where multiple widgets depended on API data.",
+    "example": "",
+    "section": "state-management"
+  },
+  {
+    "id": "iq-026",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is Closure?",
+    "answer": "A closure happens when a function remembers variables from its outer scope even after the outer function has finished execution.\n\nI have seen closures commonly used in event handlers, callbacks, and private variable patterns.\n\nFor example, if a function returns another function, the inner function can still access variables from the parent function.",
+    "explanation": "A closure happens when a function remembers variables from its outer scope even after the outer function has finished execution.\n\nI have seen closures commonly used in event handlers, callbacks, and private variable patterns.\n\nFor example, if a function returns another function, the inner function can still access variables from the parent function.",
+    "example": "",
+    "section": "javascript-core"
+  },
+  {
+    "id": "iq-027",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is Hoisting?",
+    "answer": "Hoisting is JavaScript's behavior of moving declarations to memory before execution.\n\nFunction declarations are fully hoisted.\n\nVariables declared using var are hoisted and initialized as undefined.\n\nLet and const are also hoisted but remain in the Temporal Dead Zone until initialized.",
+    "explanation": "Hoisting is JavaScript's behavior of moving declarations to memory before execution.\n\nFunction declarations are fully hoisted.\n\nVariables declared using var are hoisted and initialized as undefined.\n\nLet and const are also hoisted but remain in the Temporal Dead Zone until initialized.",
+    "example": "",
+    "section": "javascript-core"
+  },
+  {
+    "id": "iq-028",
+    "technology": "JavaScript",
+    "level": "Advanced",
+    "question": "What is Event Loop?",
+    "answer": "JavaScript is single threaded.\n\nThe Event Loop helps JavaScript handle asynchronous operations.\n\nWhen async tasks like API calls complete, their callbacks are placed in queues and the Event Loop pushes them into the call stack when it becomes free.",
+    "explanation": "JavaScript is single threaded.\n\nThe Event Loop helps JavaScript handle asynchronous operations.\n\nWhen async tasks like API calls complete, their callbacks are placed in queues and the Event Loop pushes them into the call stack when it becomes free.",
+    "example": "",
+    "section": "javascript-core"
+  },
+  {
+    "id": "iq-029",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "Difference between async/await and Promise.then?",
+    "answer": "Both work with Promises.\n\nI prefer async/await because it reads more like synchronous code and is easier to maintain.\n\nUnder the hood, async/await still uses Promises.",
+    "explanation": "Both work with Promises.\n\nI prefer async/await because it reads more like synchronous code and is easier to maintain.\n\nUnder the hood, async/await still uses Promises.",
+    "example": "",
+    "section": "javascript-core"
+  },
+  {
+    "id": "iq-030",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is Debounce?",
+    "answer": "I use debounce when I want to delay execution until the user stops performing an action.\n\nA common example is search input where I wait for the user to stop typing before calling the API.",
+    "explanation": "I use debounce when I want to delay execution until the user stops performing an action.\n\nA common example is search input where I wait for the user to stop typing before calling the API.",
+    "example": "",
+    "section": "javascript-core"
+  },
+  {
+    "id": "iq-031",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "How do you handle API errors?",
+    "answer": "I use try-catch blocks and display meaningful error messages.\n\nI also handle loading states, retries, and fallback UI so users know what happened.",
+    "explanation": "I use try-catch blocks and display meaningful error messages.\n\nI also handle loading states, retries, and fallback UI so users know what happened.",
+    "example": "",
+    "section": "javascript-core"
+  },
+  {
+    "id": "iq-032",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "What is AbortController?",
+    "answer": "AbortController allows canceling API requests.\n\nI mainly use it inside useEffect cleanup to prevent memory leaks and unnecessary updates after navigation.",
+    "explanation": "AbortController allows canceling API requests.\n\nI mainly use it inside useEffect cleanup to prevent memory leaks and unnecessary updates after navigation.",
+    "example": "",
+    "section": "javascript-core"
+  },
+  {
+    "id": "iq-033",
+    "technology": "JavaScript",
+    "level": "Intermediate",
+    "question": "How do you avoid race conditions?",
+    "answer": "When multiple API calls happen quickly, older responses may arrive after newer ones.\n\nI use AbortController or request tracking to ensure only the latest response updates the UI.",
+    "explanation": "When multiple API calls happen quickly, older responses may arrive after newer ones.\n\nI use AbortController or request tracking to ensure only the latest response updates the UI.",
+    "example": "",
+    "section": "javascript-core"
+  },
+  {
+    "id": "iq-034",
+    "technology": "JavaScript",
+    "level": "Beginner",
+    "question": "What is REST API?",
+    "answer": "REST is an architectural style where frontend communicates with backend using HTTP methods like GET, POST, PUT, and DELETE.\n\nMost applications I worked on used REST APIs.",
+    "explanation": "REST is an architectural style where frontend communicates with backend using HTTP methods like GET, POST, PUT, and DELETE.\n\nMost applications I worked on used REST APIs.",
+    "example": "",
+    "section": "javascript-core"
+  },
+  {
+    "id": "iq-035",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is WebSocket?",
+    "answer": "WebSockets provide real-time bidirectional communication.\n\nI used WebSockets in AI voice assistant projects where live updates and streaming responses were required.",
+    "explanation": "WebSockets provide real-time bidirectional communication.\n\nI used WebSockets in AI voice assistant projects where live updates and streaming responses were required.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-036",
+    "technology": "DevOps",
+    "level": "Intermediate",
+    "question": "Explain CI/CD flow.",
+    "answer": "In a typical workflow, I make code changes locally, commit them, and push them to Git.\n\nThe CI pipeline then runs linting, testing, type checking, and build validation.\n\nIf everything passes, the CD process deploys the application to staging or production.",
+    "explanation": "In a typical workflow, I make code changes locally, commit them, and push them to Git.\n\nThe CI pipeline then runs linting, testing, type checking, and build validation.\n\nIf everything passes, the CD process deploys the application to staging or production.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-037",
+    "technology": "DevOps",
+    "level": "Beginner",
+    "question": "What is npm run lint?",
+    "answer": "It checks code quality using tools like ESLint.\n\nIt helps identify issues such as unused variables, formatting problems, and incorrect React hook usage.",
+    "explanation": "It checks code quality using tools like ESLint.\n\nIt helps identify issues such as unused variables, formatting problems, and incorrect React hook usage.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-038",
+    "technology": "DevOps",
+    "level": "Intermediate",
+    "question": "What is npm run typecheck?",
+    "answer": "It runs the TypeScript compiler to validate types without creating build files.\n\nIt helps catch type errors before deployment.",
+    "explanation": "It runs the TypeScript compiler to validate types without creating build files.\n\nIt helps catch type errors before deployment.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-039",
+    "technology": "DevOps",
+    "level": "Intermediate",
+    "question": "What is Docker?",
+    "answer": "Docker packages an application along with its dependencies into a container.\n\nThis ensures the application behaves consistently across development, testing, and production environments.",
+    "explanation": "Docker packages an application along with its dependencies into a container.\n\nThis ensures the application behaves consistently across development, testing, and production environments.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-040",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "Tell me about a difficult frontend issue you solved.",
+    "answer": "In one dashboard application, we noticed performance issues due to unnecessary rerenders across multiple widgets.\n\nUsing React DevTools Profiler, I identified state updates propagating through parent components. By memoizing components and separating state properly, we significantly reduced rendering overhead and improved responsiveness.",
+    "explanation": "In one dashboard application, we noticed performance issues due to unnecessary rerenders across multiple widgets.\n\nUsing React DevTools Profiler, I identified state updates propagating through parent components. By memoizing components and separating state properly, we significantly reduced rendering overhead and improved responsiveness.",
+    "example": "",
+    "section": "behavioural-leadership"
+  },
+  {
+    "id": "iq-041",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is Generative AI?",
+    "answer": "Generative AI is AI that can create new content instead of just analyzing existing data.\n\nFor example, ChatGPT can generate text, image generation models can create images, and coding models can generate code.\n\nIn my projects, I mainly worked with Generative AI for document summarization, conversational AI, and AI-assisted workflows. Instead of manually processing large amounts of information, users could interact with AI and receive generated responses.",
+    "explanation": "Generative AI is AI that can create new content instead of just analyzing existing data.\n\nFor example, ChatGPT can generate text, image generation models can create images, and coding models can generate code.\n\nIn my projects, I mainly worked with Generative AI for document summarization, conversational AI, and AI-assisted workflows. Instead of manually processing large amounts of information, users could interact with AI and receive generated responses.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-042",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is GPT-4o-mini-realtime and where did you use it?",
+    "answer": "I used GPT-4o-mini-realtime in our AI-Kiosk project for building a real-time voice assistant.\n\nThe model allows low-latency conversation where audio can be streamed continuously instead of waiting for complete requests and responses.\n\nWhen a user spoke, audio was streamed through WebSockets to the backend, forwarded to the realtime model, and responses were received almost instantly. This created a much more natural conversation experience compared to traditional request-response APIs.",
+    "explanation": "I used GPT-4o-mini-realtime in our AI-Kiosk project for building a real-time voice assistant.\n\nThe model allows low-latency conversation where audio can be streamed continuously instead of waiting for complete requests and responses.\n\nWhen a user spoke, audio was streamed through WebSockets to the backend, forwarded to the realtime model, and responses were received almost instantly. This created a much more natural conversation experience compared to traditional request-response APIs.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-043",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How did your real-time voice assistant work?",
+    "answer": "The flow was fairly straightforward.\n\nThe user speaks through the browser or kiosk device.\n\nAudio is streamed through Twilio and WebSockets to our backend.\n\nThe backend forwards the audio stream to the GPT realtime model.\n\nThe AI processes the conversation and sends back responses in real time.\n\nThose responses are then displayed or played back in the frontend.\n\nOne of the biggest challenges was handling interruptions when users started speaking before the AI finished responding.",
+    "explanation": "The flow was fairly straightforward.\n\nThe user speaks through the browser or kiosk device.\n\nAudio is streamed through Twilio and WebSockets to our backend.\n\nThe backend forwards the audio stream to the GPT realtime model.\n\nThe AI processes the conversation and sends back responses in real time.\n\nThose responses are then displayed or played back in the frontend.\n\nOne of the biggest challenges was handling interruptions when users started speaking before the AI finished responding.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-044",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Why did you use WebSockets instead of REST APIs?",
+    "answer": "REST APIs work very well for request-response communication.\n\nBut for realtime voice conversations, continuously sending HTTP requests would create delays and overhead.\n\nWebSockets maintain a persistent connection between client and server, allowing both sides to send messages instantly whenever needed.\n\nThat's why they are commonly used for chats, realtime dashboards, voice assistants, and live notifications.",
+    "explanation": "REST APIs work very well for request-response communication.\n\nBut for realtime voice conversations, continuously sending HTTP requests would create delays and overhead.\n\nWebSockets maintain a persistent connection between client and server, allowing both sides to send messages instantly whenever needed.\n\nThat's why they are commonly used for chats, realtime dashboards, voice assistants, and live notifications.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-045",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is a WebSocket?",
+    "answer": "A WebSocket is a persistent two-way communication channel between the client and the server.\n\nUnlike HTTP where the client initiates every request, WebSockets allow both the client and server to send data at any time.\n\nI mainly used WebSockets for realtime AI communication and live updates.",
+    "explanation": "A WebSocket is a persistent two-way communication channel between the client and the server.\n\nUnlike HTTP where the client initiates every request, WebSockets allow both the client and server to send data at any time.\n\nI mainly used WebSockets for realtime AI communication and live updates.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-046",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is Prompt Engineering?",
+    "answer": "Prompt Engineering is the process of designing instructions that guide AI models to produce better results.\n\nSmall changes in prompts can produce significantly different outputs.\n\nIn my projects, I worked on building structured prompts that included business rules, user selections, AI-generated context, and workflow information so the model produced more reliable responses.",
+    "explanation": "Prompt Engineering is the process of designing instructions that guide AI models to produce better results.\n\nSmall changes in prompts can produce significantly different outputs.\n\nIn my projects, I worked on building structured prompts that included business rules, user selections, AI-generated context, and workflow information so the model produced more reliable responses.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-047",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Can you give an example of Prompt Engineering?",
+    "answer": "In the GoodHomes project, users could select materials, furniture, colors, and room styles.\n\nInstead of sending a simple prompt, we generated structured prompts containing room metadata, user-selected materials, design constraints, and AI recommendations.\n\nThis helped improve consistency and reduced unwanted AI outputs.",
+    "explanation": "In the GoodHomes project, users could select materials, furniture, colors, and room styles.\n\nInstead of sending a simple prompt, we generated structured prompts containing room metadata, user-selected materials, design constraints, and AI recommendations.\n\nThis helped improve consistency and reduced unwanted AI outputs.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-048",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is a Vision Language Model (VLM)?",
+    "answer": "A Vision Language Model is an AI model that understands both images and text.\n\nUnlike traditional language models that only process text, VLMs can analyze images and answer questions about them.\n\nIn GoodHomes, we used Vision models to analyze floor plans and extract information such as room boundaries, furniture placement, and architectural details.",
+    "explanation": "A Vision Language Model is an AI model that understands both images and text.\n\nUnlike traditional language models that only process text, VLMs can analyze images and answer questions about them.\n\nIn GoodHomes, we used Vision models to analyze floor plans and extract information such as room boundaries, furniture placement, and architectural details.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-049",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How did you use Gemini Vision?",
+    "answer": "In GoodHomes, users uploaded 2D floor plans.\n\nGemini Vision analyzed those floor plans and extracted structured information from the image.\n\nThat information was then used to generate prompts and metadata for downstream image generation models which created photorealistic 3D interior designs.",
+    "explanation": "In GoodHomes, users uploaded 2D floor plans.\n\nGemini Vision analyzed those floor plans and extracted structured information from the image.\n\nThat information was then used to generate prompts and metadata for downstream image generation models which created photorealistic 3D interior designs.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-050",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What kind of information did Gemini Vision extract?",
+    "answer": "It extracted information such as:\n\nroom layouts\nroom boundaries\nopenings\nfurniture positions\narchitectural relationships\n\nThis transformed an image into structured data that other AI systems could understand.",
+    "explanation": "It extracted information such as:\n\nroom layouts\nroom boundaries\nopenings\nfurniture positions\narchitectural relationships\n\nThis transformed an image into structured data that other AI systems could understand.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-051",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What challenges did you face while working with AI models?",
+    "answer": "The biggest challenge was consistency.\n\nAI models can sometimes generate different outputs for similar inputs.\n\nTo improve reliability, we used structured prompts, validation rules, fallback handling, and prompt refinement.\n\nWe also monitored outputs and continuously adjusted prompts based on user feedback.",
+    "explanation": "The biggest challenge was consistency.\n\nAI models can sometimes generate different outputs for similar inputs.\n\nTo improve reliability, we used structured prompts, validation rules, fallback handling, and prompt refinement.\n\nWe also monitored outputs and continuously adjusted prompts based on user feedback.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-052",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is temperature in AI models?",
+    "answer": "Temperature controls randomness.\n\nLower temperature produces more predictable and consistent responses.\n\nHigher temperature produces more creative and varied responses.\n\nFor business workflows and healthcare applications, we usually preferred lower temperatures because consistency was more important than creativity.",
+    "explanation": "Temperature controls randomness.\n\nLower temperature produces more predictable and consistent responses.\n\nHigher temperature produces more creative and varied responses.\n\nFor business workflows and healthcare applications, we usually preferred lower temperatures because consistency was more important than creativity.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-053",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is context window?",
+    "answer": "The context window is the amount of information an AI model can remember within a conversation.\n\nThe larger the context window, the more information the model can consider while generating responses.\n\nThis becomes important when working with large documents or long conversations.",
+    "explanation": "The context window is the amount of information an AI model can remember within a conversation.\n\nThe larger the context window, the more information the model can consider while generating responses.\n\nThis becomes important when working with large documents or long conversations.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-054",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How did you handle long documents?",
+    "answer": "For large documents, we usually split content into manageable chunks.\n\nRelevant sections were retrieved and included in the prompt so the model focused only on important information instead of processing unnecessary content.",
+    "explanation": "For large documents, we usually split content into manageable chunks.\n\nRelevant sections were retrieved and included in the prompt so the model focused only on important information instead of processing unnecessary content.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-055",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is RAG?",
+    "answer": "RAG stands for Retrieval Augmented Generation.\n\nInstead of relying only on the model's training data, relevant information is retrieved from external sources and provided to the model during response generation.\n\nThis improves accuracy and allows AI systems to answer questions based on company-specific or document-specific data.",
+    "explanation": "RAG stands for Retrieval Augmented Generation.\n\nInstead of relying only on the model's training data, relevant information is retrieved from external sources and provided to the model during response generation.\n\nThis improves accuracy and allows AI systems to answer questions based on company-specific or document-specific data.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-056",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is Twilio and how did you use it?",
+    "answer": "Twilio is a communication platform that provides APIs for messaging, voice, video, and WhatsApp integrations.\n\nIn AI-Kiosk, we used Twilio for WhatsApp-based patient onboarding and voice communication workflows.\n\nIt helped automate document collection and patient interactions.",
+    "explanation": "Twilio is a communication platform that provides APIs for messaging, voice, video, and WhatsApp integrations.\n\nIn AI-Kiosk, we used Twilio for WhatsApp-based patient onboarding and voice communication workflows.\n\nIt helped automate document collection and patient interactions.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-057",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How did WhatsApp onboarding work?",
+    "answer": "When patients registered, the system automatically sent WhatsApp messages requesting required documents.\n\nPatients could upload documents through WhatsApp and those files were processed and attached to their records automatically.\n\nThis reduced manual administrative work.",
+    "explanation": "When patients registered, the system automatically sent WhatsApp messages requesting required documents.\n\nPatients could upload documents through WhatsApp and those files were processed and attached to their records automatically.\n\nThis reduced manual administrative work.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-058",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What happens when a WebSocket connection disconnects?",
+    "answer": "If a connection drops, the client usually receives a disconnect event.\n\nWe typically implement reconnection logic so the application attempts to reconnect automatically.\n\nFor critical systems, we also display connection status to users.",
+    "explanation": "If a connection drops, the client usually receives a disconnect event.\n\nWe typically implement reconnection logic so the application attempts to reconnect automatically.\n\nFor critical systems, we also display connection status to users.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-059",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How did you secure AI APIs?",
+    "answer": "We never exposed API keys in the frontend.\n\nAll AI requests were routed through backend services.\n\nThe backend handled authentication, rate limiting, validation, and communication with AI providers.",
+    "explanation": "We never exposed API keys in the frontend.\n\nAll AI requests were routed through backend services.\n\nThe backend handled authentication, rate limiting, validation, and communication with AI providers.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-060",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "Explain your AI experience.",
+    "answer": "I have worked on AI-powered healthcare and enterprise applications involving realtime voice assistants, document summarization, Vision Language Models, prompt engineering, WebSockets, and AI workflow integrations.\n\nMy role was primarily focused on frontend experiences, AI integration workflows, realtime communication, prompt design, and building user interfaces that made AI capabilities accessible to end users.",
+    "explanation": "I have worked on AI-powered healthcare and enterprise applications involving realtime voice assistants, document summarization, Vision Language Models, prompt engineering, WebSockets, and AI workflow integrations.\n\nMy role was primarily focused on frontend experiences, AI integration workflows, realtime communication, prompt design, and building user interfaces that made AI capabilities accessible to end users.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-061",
+    "technology": "GIT",
+    "level": "Intermediate",
+    "question": "What is Git?",
+    "answer": "Git is a distributed version control system used to track code changes.\n\nI use Git daily for managing source code, creating branches, collaborating with team members, reviewing changes, and maintaining project history.\n\nIt allows multiple developers to work on the same project without overwriting each other's work.",
+    "explanation": "Git is a distributed version control system used to track code changes.\n\nI use Git daily for managing source code, creating branches, collaborating with team members, reviewing changes, and maintaining project history.\n\nIt allows multiple developers to work on the same project without overwriting each other's work.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-062",
+    "technology": "GIT",
+    "level": "Intermediate",
+    "question": "What is the difference between Git and GitHub?",
+    "answer": "Git is the version control system itself.\n\nGitHub is a cloud platform that hosts Git repositories.\n\nGit tracks changes locally, while GitHub provides collaboration features like pull requests, code reviews, issue tracking, and repository hosting.",
+    "explanation": "Git is the version control system itself.\n\nGitHub is a cloud platform that hosts Git repositories.\n\nGit tracks changes locally, while GitHub provides collaboration features like pull requests, code reviews, issue tracking, and repository hosting.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-063",
+    "technology": "GIT",
+    "level": "Intermediate",
+    "question": "Explain your Git workflow.",
+    "answer": "Usually I pull the latest code from the main branch, create a feature branch, implement changes, commit them, push the branch, and then create a pull request.\n\nAfter code review and approval, the changes get merged into the main branch.",
+    "explanation": "Usually I pull the latest code from the main branch, create a feature branch, implement changes, commit them, push the branch, and then create a pull request.\n\nAfter code review and approval, the changes get merged into the main branch.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-064",
+    "technology": "GIT",
+    "level": "Beginner",
+    "question": "What is a Pull Request?",
+    "answer": "A Pull Request is a request to merge code from one branch into another.\n\nIt allows team members to review code, suggest improvements, and ensure quality before merging changes into the main codebase.",
+    "explanation": "A Pull Request is a request to merge code from one branch into another.\n\nIt allows team members to review code, suggest improvements, and ensure quality before merging changes into the main codebase.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-065",
+    "technology": "GIT",
+    "level": "Intermediate",
+    "question": "Difference between Merge and Rebase?",
+    "answer": "Merge combines two branches and preserves complete branch history.\n\nRebase moves commits on top of another branch and creates a cleaner linear history.\n\nI generally follow the team's preferred workflow.",
+    "explanation": "Merge combines two branches and preserves complete branch history.\n\nRebase moves commits on top of another branch and creates a cleaner linear history.\n\nI generally follow the team's preferred workflow.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-066",
+    "technology": "GIT",
+    "level": "Intermediate",
+    "question": "Have you used GitHub and GitLab?",
+    "answer": "Yes.\n\nI have used both for source control, pull requests, code reviews, issue tracking, and CI/CD integration.\n\nThe overall workflow is very similar, although GitLab provides more built-in DevOps capabilities.",
+    "explanation": "Yes.\n\nI have used both for source control, pull requests, code reviews, issue tracking, and CI/CD integration.\n\nThe overall workflow is very similar, although GitLab provides more built-in DevOps capabilities.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-067",
+    "technology": "GIT",
+    "level": "Intermediate",
+    "question": "What happens when you push code?",
+    "answer": "When I push code, the latest commits are uploaded to the remote repository.\n\nDepending on project configuration, this may trigger CI/CD pipelines which perform linting, testing, builds, and deployments automatically.",
+    "explanation": "When I push code, the latest commits are uploaded to the remote repository.\n\nDepending on project configuration, this may trigger CI/CD pipelines which perform linting, testing, builds, and deployments automatically.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-068",
+    "technology": "DevOps",
+    "level": "Intermediate",
+    "question": "What is Vercel?",
+    "answer": "Vercel is a cloud platform mainly used for deploying frontend applications, especially React and Next.js applications.\n\nIt provides automatic deployments, CDN distribution, SSL certificates, preview environments, and performance optimizations.",
+    "explanation": "Vercel is a cloud platform mainly used for deploying frontend applications, especially React and Next.js applications.\n\nIt provides automatic deployments, CDN distribution, SSL certificates, preview environments, and performance optimizations.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-069",
+    "technology": "DevOps",
+    "level": "Intermediate",
+    "question": "Why use Vercel for Next.js?",
+    "answer": "Since Vercel created Next.js, the integration is very smooth.\n\nFeatures like SSR, SSG, API routes, image optimization, caching, and edge deployments work with minimal configuration.",
+    "explanation": "Since Vercel created Next.js, the integration is very smooth.\n\nFeatures like SSR, SSG, API routes, image optimization, caching, and edge deployments work with minimal configuration.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-070",
+    "technology": "DevOps",
+    "level": "Intermediate",
+    "question": "How does deployment happen in Vercel?",
+    "answer": "After connecting the Git repository, Vercel automatically detects code changes.\n\nWhenever code is pushed, Vercel pulls the latest code, installs dependencies, builds the application, and deploys it automatically.",
+    "explanation": "After connecting the Git repository, Vercel automatically detects code changes.\n\nWhenever code is pushed, Vercel pulls the latest code, installs dependencies, builds the application, and deploys it automatically.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-071",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is Prisma?",
+    "answer": "Prisma is an ORM that simplifies database access in Node.js and TypeScript applications.\n\nInstead of writing raw SQL queries everywhere, Prisma provides a type-safe way to interact with databases.",
+    "explanation": "Prisma is an ORM that simplifies database access in Node.js and TypeScript applications.\n\nInstead of writing raw SQL queries everywhere, Prisma provides a type-safe way to interact with databases.",
+    "example": "",
+    "section": "system-design"
+  },
+  {
+    "id": "iq-072",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Why use Prisma?",
+    "answer": "I mainly like Prisma because it provides type safety, autocomplete support, easier database queries, and simplified schema management.\n\nIt reduces the chances of writing incorrect database queries.",
+    "explanation": "I mainly like Prisma because it provides type safety, autocomplete support, easier database queries, and simplified schema management.\n\nIt reduces the chances of writing incorrect database queries.",
+    "example": "",
+    "section": "system-design"
+  },
+  {
+    "id": "iq-073",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is an ORM?",
+    "answer": "ORM stands for Object Relational Mapping.\n\nIt allows developers to work with database records as JavaScript or TypeScript objects instead of writing SQL for every operation.",
+    "explanation": "ORM stands for Object Relational Mapping.\n\nIt allows developers to work with database records as JavaScript or TypeScript objects instead of writing SQL for every operation.",
+    "example": "",
+    "section": "system-design"
+  },
+  {
+    "id": "iq-074",
+    "technology": "DevOps",
+    "level": "Intermediate",
+    "question": "What is Cloudflare?",
+    "answer": "Cloudflare is a platform that provides CDN, security, caching, DNS management, and performance optimization.\n\nIt sits between users and servers to improve speed and security.",
+    "explanation": "Cloudflare is a platform that provides CDN, security, caching, DNS management, and performance optimization.\n\nIt sits between users and servers to improve speed and security.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-075",
+    "technology": "DevOps",
+    "level": "Intermediate",
+    "question": "Why use Cloudflare?",
+    "answer": "I have mainly used Cloudflare for:\n\nfaster content delivery\ncaching\nDNS management\nSSL certificates\nDDoS protection\n\nIt helps improve application performance globally.",
+    "explanation": "I have mainly used Cloudflare for:\n\nfaster content delivery\ncaching\nDNS management\nSSL certificates\nDDoS protection\n\nIt helps improve application performance globally.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-076",
+    "technology": "DevOps",
+    "level": "Intermediate",
+    "question": "What is a CDN?",
+    "answer": "A CDN is a Content Delivery Network.\n\nInstead of serving files from one server, content is distributed across multiple locations worldwide.\n\nUsers receive content from the nearest location which reduces loading time.",
+    "explanation": "A CDN is a Content Delivery Network.\n\nInstead of serving files from one server, content is distributed across multiple locations worldwide.\n\nUsers receive content from the nearest location which reduces loading time.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-077",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is MongoDB?",
+    "answer": "MongoDB is a NoSQL document database.\n\nInstead of storing data in tables and rows, it stores data as JSON-like documents.\n\nIt works well when data structures can vary between records.",
+    "explanation": "MongoDB is a NoSQL document database.\n\nInstead of storing data in tables and rows, it stores data as JSON-like documents.\n\nIt works well when data structures can vary between records.",
+    "example": "",
+    "section": "system-design"
+  },
+  {
+    "id": "iq-078",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Difference between MongoDB and PostgreSQL?",
+    "answer": "MongoDB stores data as documents and provides flexible schemas.\n\nPostgreSQL stores data in structured tables with relationships.\n\nMongoDB is more flexible, while PostgreSQL provides stronger relational capabilities.",
+    "explanation": "MongoDB stores data as documents and provides flexible schemas.\n\nPostgreSQL stores data in structured tables with relationships.\n\nMongoDB is more flexible, while PostgreSQL provides stronger relational capabilities.",
+    "example": "",
+    "section": "system-design"
+  },
+  {
+    "id": "iq-079",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is PostgreSQL?",
+    "answer": "PostgreSQL is an open-source relational database.\n\nIt stores data in tables and supports relationships, transactions, indexing, and advanced SQL features.\n\nIt is commonly used for enterprise applications.",
+    "explanation": "PostgreSQL is an open-source relational database.\n\nIt stores data in tables and supports relationships, transactions, indexing, and advanced SQL features.\n\nIt is commonly used for enterprise applications.",
+    "example": "",
+    "section": "system-design"
+  },
+  {
+    "id": "iq-080",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What are Primary Keys and Foreign Keys?",
+    "answer": "A Primary Key uniquely identifies a record.\n\nA Foreign Key creates a relationship between two tables.\n\nThese relationships help maintain data consistency.",
+    "explanation": "A Primary Key uniquely identifies a record.\n\nA Foreign Key creates a relationship between two tables.\n\nThese relationships help maintain data consistency.",
+    "example": "",
+    "section": "system-design"
+  },
+  {
+    "id": "iq-081",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is Indexing?",
+    "answer": "Indexing improves query performance.\n\nWithout indexes, the database may need to scan every row.\n\nIndexes allow the database to find records much faster.",
+    "explanation": "Indexing improves query performance.\n\nWithout indexes, the database may need to scan every row.\n\nIndexes allow the database to find records much faster.",
+    "example": "",
+    "section": "system-design"
+  },
+  {
+    "id": "iq-082",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Difference between MySQL and PostgreSQL?",
+    "answer": "Both are relational databases.\n\nPostgreSQL generally offers more advanced features and flexibility.\n\nMySQL is simpler and commonly used in many traditional web applications.",
+    "explanation": "Both are relational databases.\n\nPostgreSQL generally offers more advanced features and flexibility.\n\nMySQL is simpler and commonly used in many traditional web applications.",
+    "example": "",
+    "section": "system-design"
+  },
+  {
+    "id": "iq-083",
+    "technology": "DevOps",
+    "level": "Intermediate",
+    "question": "What is Docker?",
+    "answer": "Docker packages applications and their dependencies into containers.\n\nThis ensures the application behaves consistently across development, testing, and production environments.",
+    "explanation": "Docker packages applications and their dependencies into containers.\n\nThis ensures the application behaves consistently across development, testing, and production environments.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-084",
+    "technology": "DevOps",
+    "level": "Intermediate",
+    "question": "What problem does Docker solve?",
+    "answer": "Docker solves the 'works on my machine' problem.\n\nSince everything needed by the application is packaged inside the container, the application behaves the same everywhere.",
+    "explanation": "Docker solves the 'works on my machine' problem.\n\nSince everything needed by the application is packaged inside the container, the application behaves the same everywhere.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-085",
+    "technology": "DevOps",
+    "level": "Intermediate",
+    "question": "What is a Docker Container?",
+    "answer": "A container is a lightweight isolated environment where an application runs.\n\nIt contains the application code, runtime, libraries, and dependencies needed for execution.",
+    "explanation": "A container is a lightweight isolated environment where an application runs.\n\nIt contains the application code, runtime, libraries, and dependencies needed for execution.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-086",
+    "technology": "DevOps",
+    "level": "Intermediate",
+    "question": "What is a Docker Image?",
+    "answer": "A Docker Image is a blueprint used to create containers.\n\nThe image contains the application code and configuration required to run the application.",
+    "explanation": "A Docker Image is a blueprint used to create containers.\n\nThe image contains the application code and configuration required to run the application.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-087",
+    "technology": "DevOps",
+    "level": "Intermediate",
+    "question": "What is a Dockerfile?",
+    "answer": "A Dockerfile contains instructions for building Docker images.\n\nIt defines things like base image, dependencies, build commands, and startup commands.",
+    "explanation": "A Dockerfile contains instructions for building Docker images.\n\nIt defines things like base image, dependencies, build commands, and startup commands.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-088",
+    "technology": "DevOps",
+    "level": "Intermediate",
+    "question": "How do you deploy a React application?",
+    "answer": "Typically the application is built using npm run build.\n\nThe generated files are then deployed to platforms such as Vercel, Azure, AWS, or Nginx servers.\n\nCI/CD pipelines often automate this process.",
+    "explanation": "Typically the application is built using npm run build.\n\nThe generated files are then deployed to platforms such as Vercel, Azure, AWS, or Nginx servers.\n\nCI/CD pipelines often automate this process.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-089",
+    "technology": "DevOps",
+    "level": "Intermediate",
+    "question": "How do you manage environment variables?",
+    "answer": "I keep environment-specific values outside the source code.\n\nThings like API URLs, tokens, and configuration values are stored in environment files or deployment platform settings.",
+    "explanation": "I keep environment-specific values outside the source code.\n\nThings like API URLs, tokens, and configuration values are stored in environment files or deployment platform settings.",
+    "example": "",
+    "section": "tools-devops-workflow"
+  },
+  {
+    "id": "iq-090",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "Tell me about your experience with deployment and infrastructure.",
+    "answer": "I have worked closely with deployment workflows involving Git, GitHub/GitLab, Vercel deployments, Cloudflare configurations, Docker-based environments, CI/CD pipelines, and database-backed applications.\n\nWhile my primary role has been frontend development, I have collaborated regularly with backend and DevOps teams and understand the full deployment flow from code commit to production release.",
+    "explanation": "I have worked closely with deployment workflows involving Git, GitHub/GitLab, Vercel deployments, Cloudflare configurations, Docker-based environments, CI/CD pipelines, and database-backed applications.\n\nWhile my primary role has been frontend development, I have collaborated regularly with backend and DevOps teams and understand the full deployment flow from code commit to production release.",
+    "example": "",
+    "section": "behavioural-leadership"
+  },
+  {
+    "id": "iq-091",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Explain AI-KIOSK Architecture",
+    "answer": "AI-KIOSK was designed to automate patient onboarding and doctor consultation workflows.\n\nThe frontend was built using React and TypeScript.\n\nWhen a patient interacted with the kiosk, the UI collected patient information and initiated voice conversations.\n\nAudio was streamed using Twilio and WebSockets to our Node.js backend.\n\nThe backend forwarded audio streams to GPT-4o realtime APIs.\n\nResponses were streamed back to the frontend in real time.\n\nPatient information, prescriptions, and visit records were stored in PostgreSQL.\n\nDocuments were uploaded to cloud storage and linked to patient records.",
+    "explanation": "AI-KIOSK was designed to automate patient onboarding and doctor consultation workflows.\n\nThe frontend was built using React and TypeScript.\n\nWhen a patient interacted with the kiosk, the UI collected patient information and initiated voice conversations.\n\nAudio was streamed using Twilio and WebSockets to our Node.js backend.\n\nThe backend forwarded audio streams to GPT-4o realtime APIs.\n\nResponses were streamed back to the frontend in real time.\n\nPatient information, prescriptions, and visit records were stored in PostgreSQL.\n\nDocuments were uploaded to cloud storage and linked to patient records.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-092",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Why WebSockets?",
+    "answer": "We needed realtime communication.\n\nVoice conversations generate continuous audio streams.\n\nUsing REST APIs would require sending hundreds of requests.\n\nWebSockets maintain one connection and allow continuous bidirectional communication.",
+    "explanation": "We needed realtime communication.\n\nVoice conversations generate continuous audio streams.\n\nUsing REST APIs would require sending hundreds of requests.\n\nWebSockets maintain one connection and allow continuous bidirectional communication.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-093",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What happens when the patient speaks?",
+    "answer": "When the patient starts speaking, audio chunks are captured in the browser.\n\nThose chunks are sent through WebSockets to the backend.\n\nThe backend forwards the stream to GPT realtime APIs.\n\nThe AI processes the conversation and returns responses continuously.\n\nThe frontend receives those responses and updates the conversation immediately.",
+    "explanation": "When the patient starts speaking, audio chunks are captured in the browser.\n\nThose chunks are sent through WebSockets to the backend.\n\nThe backend forwards the stream to GPT realtime APIs.\n\nThe AI processes the conversation and returns responses continuously.\n\nThe frontend receives those responses and updates the conversation immediately.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-094",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How did you reduce prescription entry by 40%?",
+    "answer": "Previously nurses manually entered symptoms, vitals, and consultation notes.\n\nThe AI listened to doctor-patient conversations and generated structured summaries.\n\nDoctors reviewed the generated information instead of typing everything manually.\n\nThis significantly reduced documentation time.",
+    "explanation": "Previously nurses manually entered symptoms, vitals, and consultation notes.\n\nThe AI listened to doctor-patient conversations and generated structured summaries.\n\nDoctors reviewed the generated information instead of typing everything manually.\n\nThis significantly reduced documentation time.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-095",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What challenge did you face?",
+    "answer": "The biggest challenge was interruptions.\n\nSometimes doctors started speaking while AI responses were still being processed.\n\nWe had to implement stream cancellation and context synchronization to avoid overlapping conversations.",
+    "explanation": "The biggest challenge was interruptions.\n\nSometimes doctors started speaking while AI responses were still being processed.\n\nWe had to implement stream cancellation and context synchronization to avoid overlapping conversations.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-096",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How did document summarization work?",
+    "answer": "Patients uploaded lab reports and medical documents.\n\nThe documents were processed by backend services.\n\nRelevant text was extracted and sent to LLMs.\n\nThe AI generated concise summaries highlighting key findings.\n\nDoctors could quickly review summaries instead of reading entire reports.",
+    "explanation": "Patients uploaded lab reports and medical documents.\n\nThe documents were processed by backend services.\n\nRelevant text was extracted and sent to LLMs.\n\nThe AI generated concise summaries highlighting key findings.\n\nDoctors could quickly review summaries instead of reading entire reports.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-097",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Explain GoodHomes Architecture",
+    "answer": "Users uploaded floor plans through the frontend.\n\nThe floor plan image was stored in Cloudflare R2.\n\nThe backend passed the image to Gemini Vision.\n\nGemini analyzed the floor plan and extracted architectural information.\n\nThat information was converted into structured metadata.\n\nGPT generated prompts based on the extracted metadata.\n\nImage generation models then created photorealistic room renders.",
+    "explanation": "Users uploaded floor plans through the frontend.\n\nThe floor plan image was stored in Cloudflare R2.\n\nThe backend passed the image to Gemini Vision.\n\nGemini analyzed the floor plan and extracted architectural information.\n\nThat information was converted into structured metadata.\n\nGPT generated prompts based on the extracted metadata.\n\nImage generation models then created photorealistic room renders.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-098",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is a Vision Language Model?",
+    "answer": "A Vision Language Model can understand both images and text.\n\nIn GoodHomes, Gemini Vision looked at floor plans and identified rooms, walls, openings, and layout relationships.\n\nIt converted visual information into structured data that other AI systems could use.",
+    "explanation": "A Vision Language Model can understand both images and text.\n\nIn GoodHomes, Gemini Vision looked at floor plans and identified rooms, walls, openings, and layout relationships.\n\nIt converted visual information into structured data that other AI systems could use.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-099",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is Continuation Mode?",
+    "answer": "Continuation Mode allowed users to modify an existing design without generating everything again.\n\nFor example, if a user wanted to change only the sofa color, we preserved room structure and updated only the requested changes.\n\nThis maintained consistency across multiple edits.",
+    "explanation": "Continuation Mode allowed users to modify an existing design without generating everything again.\n\nFor example, if a user wanted to change only the sofa color, we preserved room structure and updated only the requested changes.\n\nThis maintained consistency across multiple edits.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-100",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How did Continuation Mode work?",
+    "answer": "We stored session metadata for each generated image.\n\nWhen users made changes, we compared the previous state with the new request.\n\nOnly the changed attributes were added to the next prompt.\n\nThe original design context was preserved.",
+    "explanation": "We stored session metadata for each generated image.\n\nWhen users made changes, we compared the previous state with the new request.\n\nOnly the changed attributes were added to the next prompt.\n\nThe original design context was preserved.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-101",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Why not regenerate the whole image?",
+    "answer": "If we regenerated everything, room layouts, lighting, and furniture positions could change unexpectedly.\n\nUsers wanted consistency.\n\nContinuation Mode solved that problem.",
+    "explanation": "If we regenerated everything, room layouts, lighting, and furniture positions could change unexpectedly.\n\nUsers wanted consistency.\n\nContinuation Mode solved that problem.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-102",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What challenge did you face?",
+    "answer": "Prompt conflicts.\n\nUsers selected specific materials while AI recommendations suggested alternatives.\n\nWe created a priority system where explicit user selections always had higher priority.",
+    "explanation": "Prompt conflicts.\n\nUsers selected specific materials while AI recommendations suggested alternatives.\n\nWe created a priority system where explicit user selections always had higher priority.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-103",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is Rover?",
+    "answer": "Rover was an enterprise Generative AI platform.\n\nOrganizations uploaded structured and unstructured data.\n\nUsers could ask questions and interact with enterprise information through AI-powered workflows.",
+    "explanation": "Rover was an enterprise Generative AI platform.\n\nOrganizations uploaded structured and unstructured data.\n\nUsers could ask questions and interact with enterprise information through AI-powered workflows.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-104",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How did AI access enterprise data?",
+    "answer": "The platform indexed enterprise documents into a search layer.\n\nWhen users asked questions, relevant content was retrieved first.\n\nThat content was added to prompts and sent to LLMs.\n\nThis improved answer accuracy.",
+    "explanation": "The platform indexed enterprise documents into a search layer.\n\nWhen users asked questions, relevant content was retrieved first.\n\nThat content was added to prompts and sent to LLMs.\n\nThis improved answer accuracy.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-105",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Is that RAG?",
+    "answer": "Yes.\n\nInstead of relying only on model training data, we retrieved organization-specific information and provided it to the model before response generation.",
+    "explanation": "Yes.\n\nInstead of relying only on model training data, we retrieved organization-specific information and provided it to the model before response generation.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-106",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Why use RAG?",
+    "answer": "Enterprise data changes frequently.\n\nTraining models every time would be impractical.\n\nRAG allows AI systems to use the latest documents without retraining.",
+    "explanation": "Enterprise data changes frequently.\n\nTraining models every time would be impractical.\n\nRAG allows AI systems to use the latest documents without retraining.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-107",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How did authorization work?",
+    "answer": "Users had role-based permissions.\n\nThe backend filtered accessible documents based on user roles.\n\nOnly authorized information could be included in AI responses.",
+    "explanation": "Users had role-based permissions.\n\nThe backend filtered accessible documents based on user roles.\n\nOnly authorized information could be included in AI responses.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-108",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What frontend challenges existed?",
+    "answer": "Large workflow screens and complex dashboards.\n\nWe built reusable component libraries to keep the UI consistent across multiple enterprise applications.",
+    "explanation": "Large workflow screens and complex dashboards.\n\nWe built reusable component libraries to keep the UI consistent across multiple enterprise applications.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-109",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Explain ZEOS",
+    "answer": "ZEOS was a low-code platform that allowed business users to build applications without writing code.\n\nApplications were created through configurations rather than traditional development.",
+    "explanation": "ZEOS was a low-code platform that allowed business users to build applications without writing code.\n\nApplications were created through configurations rather than traditional development.",
+    "example": "",
+    "section": "system-design"
+  },
+  {
+    "id": "iq-110",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How did dynamic UI generation work?",
+    "answer": "The backend returned JSON configurations describing forms, tables, workflows, validations, and actions.\n\nReact components interpreted those configurations and rendered screens dynamically.",
+    "explanation": "The backend returned JSON configurations describing forms, tables, workflows, validations, and actions.\n\nReact components interpreted those configurations and rendered screens dynamically.",
+    "example": "",
+    "section": "system-design"
+  },
+  {
+    "id": "iq-111",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Why was React suitable?",
+    "answer": "React's component-based architecture made it easy to build reusable widgets.\n\nThe same components could render different applications based on configuration.",
+    "explanation": "React's component-based architecture made it easy to build reusable widgets.\n\nThe same components could render different applications based on configuration.",
+    "example": "",
+    "section": "system-design"
+  },
+  {
+    "id": "iq-112",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What reusable components did you build?",
+    "answer": "I worked on:\n\ndynamic forms\ndata tables\ndashboards\nworkflow components\ncharts\napproval screens\nfile upload modules\n\nThese components were reused across multiple client implementations.",
+    "explanation": "I worked on:\n\ndynamic forms\ndata tables\ndashboards\nworkflow components\ncharts\napproval screens\nfile upload modules\n\nThese components were reused across multiple client implementations.",
+    "example": "",
+    "section": "system-design"
+  },
+  {
+    "id": "iq-113",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What was the biggest technical challenge?",
+    "answer": "Balancing flexibility and maintainability.\n\nThe platform needed to support many client-specific workflows while still using the same core component architecture.",
+    "explanation": "Balancing flexibility and maintainability.\n\nThe platform needed to support many client-specific workflows while still using the same core component architecture.",
+    "example": "",
+    "section": "system-design"
+  },
+  {
+    "id": "iq-114",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How did state management work?",
+    "answer": "Workflow state was managed globally using Redux.\n\nComponent-specific UI state remained local.\n\nThis kept business logic centralized while avoiding unnecessary complexity.",
+    "explanation": "Workflow state was managed globally using Redux.\n\nComponent-specific UI state remained local.\n\nThis kept business logic centralized while avoiding unnecessary complexity.",
+    "example": "",
+    "section": "system-design"
+  },
+  {
+    "id": "iq-115",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "Which project would you discuss most confidently?",
+    "answer": "AI-KIOSK because it combined React, WebSockets, realtime AI, Twilio integrations, document processing, and enterprise healthcare workflows.\n\nIt involved both frontend architecture and AI integration challenges, which provided opportunities to solve complex real-world problems.",
+    "explanation": "Which project would you discuss most confidently?",
+    "answer": "AI-KIOSK because it combined React, WebSockets, realtime AI, Twilio integrations, document processing, and enterprise healthcare workflows.\n\nIt involved both frontend architecture and AI integration challenges, which provided opportunities to solve complex real-world problems.",
+    "example": "",
+    "section": "behavioural-leadership"
+  }
+]
