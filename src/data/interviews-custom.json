@@ -254,8 +254,8 @@
     "technology": "JavaScript",
     "level": "Intermediate",
     "question": "What is Closure?",
-    "answer": "A closure happens when a function remembers variables from its outer scope even after the outer function has finished execution.\n\nI have seen closures commonly used in event handlers, callbacks, and private variable patterns.\n\nFor example, if a function returns another function, the inner function can still access variables from the parent function.",
-    "explanation": "A closure happens when a function remembers variables from its outer scope even after the outer function has finished execution.\n\nI have seen closures commonly used in event handlers, callbacks, and private variable patterns.\n\nFor example, if a function returns another function, the inner function can still access variables from the parent function.",
+    "answer": "To put it simply, a closure is when an inner function remembers and has access to variables from its outer function's scope, even after the outer function has finished running.\n\nI think of it as a function carrying its birthplace's memory with it.\n\nI use closures all the time in everyday development. For instance, when writing event handlers, callbacks, or creating custom React hooks where state needs to persist across renders but shouldn't be exposed globally. It's a great way to keep data private and avoid polluting the global scope.",
+    "explanation": "To put it simply, a closure is when an inner function remembers and has access to variables from its outer function's scope, even after the outer function has finished running.\n\nI think of it as a function carrying its birthplace's memory with it.\n\nI use closures all the time in everyday development. For instance, when writing event handlers, callbacks, or creating custom React hooks where state needs to persist across renders but shouldn't be exposed globally. It's a great way to keep data private and avoid polluting the global scope.",
     "example": "",
     "section": "javascript-core"
   },
@@ -264,8 +264,8 @@
     "technology": "JavaScript",
     "level": "Intermediate",
     "question": "What is Hoisting?",
-    "answer": "Hoisting is JavaScript's behavior of moving declarations to memory before execution.\n\nFunction declarations are fully hoisted.\n\nVariables declared using var are hoisted and initialized as undefined.\n\nLet and const are also hoisted but remain in the Temporal Dead Zone until initialized.",
-    "explanation": "Hoisting is JavaScript's behavior of moving declarations to memory before execution.\n\nFunction declarations are fully hoisted.\n\nVariables declared using var are hoisted and initialized as undefined.\n\nLet and const are also hoisted but remain in the Temporal Dead Zone until initialized.",
+    "answer": "Hoisting is how JavaScript sets up memory space for our variables and functions before actually running the code.\n\nWhen JavaScript executes a file, it does a quick scanning pass first. During this scan, function declarations are fully loaded into memory, so you can call a function even before you define it in the file.\n\nVariables are a bit different. If you declare a variable with var, it gets hoisted and initialized as undefined. But if you use let or const, they are still hoisted, but JavaScript prevents you from using them until the line of code where they are defined is actually reached. This phase is called the Temporal Dead Zone, and it's super helpful because it catches potential bugs before they cause weird issues in production.",
+    "explanation": "Hoisting is how JavaScript sets up memory space for our variables and functions before actually running the code.\n\nWhen JavaScript executes a file, it does a quick scanning pass first. During this scan, function declarations are fully loaded into memory, so you can call a function even before you define it in the file.\n\nVariables are a bit different. If you declare a variable with var, it gets hoisted and initialized as undefined. But if you use let or const, they are still hoisted, but JavaScript prevents you from using them until the line of code where they are defined is actually reached. This phase is called the Temporal Dead Zone, and it's super helpful because it catches potential bugs before they cause weird issues in production.",
     "example": "",
     "section": "javascript-core"
   },
@@ -274,8 +274,8 @@
     "technology": "JavaScript",
     "level": "Advanced",
     "question": "What is Event Loop?",
-    "answer": "JavaScript is single threaded.\n\nThe Event Loop helps JavaScript handle asynchronous operations.\n\nWhen async tasks like API calls complete, their callbacks are placed in queues and the Event Loop pushes them into the call stack when it becomes free.",
-    "explanation": "JavaScript is single threaded.\n\nThe Event Loop helps JavaScript handle asynchronous operations.\n\nWhen async tasks like API calls complete, their callbacks are placed in queues and the Event Loop pushes them into the call stack when it becomes free.",
+    "answer": "JavaScript runs on a single thread, meaning it can only do one thing at a time. The Event Loop is the mechanism that allows it to handle asynchronous tasks—like API requests or timeouts—without freezing the user interface.\n\nHow it works is pretty straightforward. When you trigger an async operation, JavaScript hands it off to the browser in the background. Once that background task finishes, its callback is placed in a queue.\n\nMeanwhile, the Event Loop acts like a traffic cop. It constantly checks if the main call stack is empty. The moment the main code finishes running and the stack is clear, the Event Loop pushes the callback from the queue onto the stack so it can run. This is what keeps our web apps feeling smooth and responsive, even when loading lots of data.",
+    "explanation": "JavaScript runs on a single thread, meaning it can only do one thing at a time. The Event Loop is the mechanism that allows it to handle asynchronous tasks—like API requests or timeouts—without freezing the user interface.\n\nHow it works is pretty straightforward. When you trigger an async operation, JavaScript hands it off to the browser in the background. Once that background task finishes, its callback is placed in a queue.\n\nMeanwhile, the Event Loop acts like a traffic cop. It constantly checks if the main call stack is empty. The moment the main code finishes running and the stack is clear, the Event Loop pushes the callback from the queue onto the stack so it can run. This is what keeps our web apps feeling smooth and responsive, even when loading lots of data.",
     "example": "",
     "section": "javascript-core"
   },
@@ -284,8 +284,8 @@
     "technology": "JavaScript",
     "level": "Intermediate",
     "question": "Difference between async/await and Promise.then?",
-    "answer": "Both work with Promises.\n\nI prefer async/await because it reads more like synchronous code and is easier to maintain.\n\nUnder the hood, async/await still uses Promises.",
-    "explanation": "Both work with Promises.\n\nI prefer async/await because it reads more like synchronous code and is easier to maintain.\n\nUnder the hood, async/await still uses Promises.",
+    "answer": "Both are used to handle asynchronous operations in JavaScript, and under the hood, async/await is actually built on top of Promises.\n\nThe biggest difference is in how the code looks and reads.\n\nWhen you use .then() and .catch(), you can end up with nested blocks of code, especially when you need to chain multiple API requests. This can get hard to read and debug.\n\nWith async/await, the code reads sequentially from top to bottom, almost like synchronous code. It makes it much cleaner to write, and you can handle errors naturally using standard try-catch blocks. In all my projects, I prefer async/await because it keeps the codebase clean and easy to maintain.",
+    "explanation": "Both are used to handle asynchronous operations in JavaScript, and under the hood, async/await is actually built on top of Promises.\n\nThe biggest difference is in how the code looks and reads.\n\nWhen you use .then() and .catch(), you can end up with nested blocks of code, especially when you need to chain multiple API requests. This can get hard to read and debug.\n\nWith async/await, the code reads sequentially from top to bottom, almost like synchronous code. It makes it much cleaner to write, and you can handle errors naturally using standard try-catch blocks. In all my projects, I prefer async/await because it keeps the codebase clean and easy to maintain.",
     "example": "",
     "section": "javascript-core"
   },
@@ -294,8 +294,8 @@
     "technology": "JavaScript",
     "level": "Intermediate",
     "question": "What is Debounce?",
-    "answer": "I use debounce when I want to delay execution until the user stops performing an action.\n\nA common example is search input where I wait for the user to stop typing before calling the API.",
-    "explanation": "I use debounce when I want to delay execution until the user stops performing an action.\n\nA common example is search input where I wait for the user to stop typing before calling the API.",
+    "answer": "Debouncing is a technique used to limit how often a function gets executed. Instead of running the function immediately, we wait for a specific amount of time to pass after the last trigger before actually running it.\n\nA classic example of this is a search input bar. If a user types 'React', we don't want to make an API request for every single keystroke because that would overload our server.\n\nInstead, we debounce the input handler. We set it to wait, say, 300 milliseconds. When the user stops typing for that brief moment, we make a single API request with the complete search term. I've used this in projects like ZEOS and Rover to optimize search bars and significantly reduce server load.",
+    "explanation": "Debouncing is a technique used to limit how often a function gets executed. Instead of running the function immediately, we wait for a specific amount of time to pass after the last trigger before actually running it.\n\nA classic example of this is a search input bar. If a user types 'React', we don't want to make an API request for every single keystroke because that would overload our server.\n\nInstead, we debounce the input handler. We set it to wait, say, 300 milliseconds. When the user stops typing for that brief moment, we make a single API request with the complete search term. I've used this in projects like ZEOS and Rover to optimize search bars and significantly reduce server load.",
     "example": "",
     "section": "javascript-core"
   },
@@ -304,8 +304,8 @@
     "technology": "JavaScript",
     "level": "Intermediate",
     "question": "How do you handle API errors?",
-    "answer": "I use try-catch blocks and display meaningful error messages.\n\nI also handle loading states, retries, and fallback UI so users know what happened.",
-    "explanation": "I use try-catch blocks and display meaningful error messages.\n\nI also handle loading states, retries, and fallback UI so users know what happened.",
+    "answer": "Handling API errors is crucial for a good user experience. I want to make sure the app doesn't crash and the user knows exactly what went wrong.\n\nUsually, I wrap my API calls in a try-catch block when using async/await.\n\nIn the try block, I make the request. If it fails, the code jumps to the catch block where I capture the error. From there, I update the UI state to show a friendly error message, like 'Failed to load data. Please try again.'\n\nAt the same time, I make sure the loading spinner is turned off and a fallback UI is shown. Depending on the scenario, I might also implement automatic retries or fallback data so the user isn't stuck looking at a broken page.",
+    "explanation": "Handling API errors is crucial for a good user experience. I want to make sure the app doesn't crash and the user knows exactly what went wrong.\n\nUsually, I wrap my API calls in a try-catch block when using async/await.\n\nIn the try block, I make the request. If it fails, the code jumps to the catch block where I capture the error. From there, I update the UI state to show a friendly error message, like 'Failed to load data. Please try again.'\n\nAt the same time, I make sure the loading spinner is turned off and a fallback UI is shown. Depending on the scenario, I might also implement automatic retries or fallback data so the user isn't stuck looking at a broken page.",
     "example": "",
     "section": "javascript-core"
   },
@@ -314,8 +314,8 @@
     "technology": "JavaScript",
     "level": "Intermediate",
     "question": "What is AbortController?",
-    "answer": "AbortController allows canceling API requests.\n\nI mainly use it inside useEffect cleanup to prevent memory leaks and unnecessary updates after navigation.",
-    "explanation": "AbortController allows canceling API requests.\n\nI mainly use it inside useEffect cleanup to prevent memory leaks and unnecessary updates after navigation.",
+    "answer": "AbortController is a built-in browser API that lets us cancel ongoing HTTP requests.\n\nIn React, when a component makes an API call but the user suddenly navigates away to another page, that API request is still running in the background. When the response finally comes back, the component might try to update the state, which is now unmounted. This can cause memory leaks and console warnings.\n\nTo fix this, I use AbortController. I create an abort signal and pass it to the fetch request. Then, in the cleanup function of my useEffect, I call controller.abort(). If the user leaves the page before the response returns, the browser instantly cancels the request, keeping the app clean and saving network bandwidth.",
+    "explanation": "AbortController is a built-in browser API that lets us cancel ongoing HTTP requests.\n\nIn React, when a component makes an API call but the user suddenly navigates away to another page, that API request is still running in the background. When the response finally comes back, the component might try to update the state, which is now unmounted. This can cause memory leaks and console warnings.\n\nTo fix this, I use AbortController. I create an abort signal and pass it to the fetch request. Then, in the cleanup function of my useEffect, I call controller.abort(). If the user leaves the page before the response returns, the browser instantly cancels the request, keeping the app clean and saving network bandwidth.",
     "example": "",
     "section": "javascript-core"
   },
@@ -324,8 +324,8 @@
     "technology": "JavaScript",
     "level": "Intermediate",
     "question": "How do you avoid race conditions?",
-    "answer": "When multiple API calls happen quickly, older responses may arrive after newer ones.\n\nI use AbortController or request tracking to ensure only the latest response updates the UI.",
-    "explanation": "When multiple API calls happen quickly, older responses may arrive after newer ones.\n\nI use AbortController or request tracking to ensure only the latest response updates the UI.",
+    "answer": "A race condition happens when you fire multiple API requests in a row, and because network latency varies, an older request finishes after a newer one. If you're not careful, the older data overwrites the newer data on the screen, showing the wrong information to the user.\n\nA common place this happens is in search filters. If a user quickly toggles between 'Category A' and 'Category B', you want to show Category B's results, but if Category A's API call was slow and resolves last, the UI will show Category A.\n\nTo avoid this, I use AbortController to cancel any active, previous requests whenever a new request is triggered. This ensures that only the response from the very last request is processed and rendered on the screen. Alternatively, libraries like TanStack Query handle this automatically under the hood, which is why I love using it for server state.",
+    "explanation": "A race condition happens when you fire multiple API requests in a row, and because network latency varies, an older request finishes after a newer one. If you're not careful, the older data overwrites the newer data on the screen, showing the wrong information to the user.\n\nA common place this happens is in search filters. If a user quickly toggles between 'Category A' and 'Category B', you want to show Category B's results, but if Category A's API call was slow and resolves last, the UI will show Category A.\n\nTo avoid this, I use AbortController to cancel any active, previous requests whenever a new request is triggered. This ensures that only the response from the very last request is processed and rendered on the screen. Alternatively, libraries like TanStack Query handle this automatically under the hood, which is why I love using it for server state.",
     "example": "",
     "section": "javascript-core"
   },
@@ -334,8 +334,8 @@
     "technology": "JavaScript",
     "level": "Beginner",
     "question": "What is REST API?",
-    "answer": "REST is an architectural style where frontend communicates with backend using HTTP methods like GET, POST, PUT, and DELETE.\n\nMost applications I worked on used REST APIs.",
-    "explanation": "REST is an architectural style where frontend communicates with backend using HTTP methods like GET, POST, PUT, and DELETE.\n\nMost applications I worked on used REST APIs.",
+    "answer": "REST is basically a set of design rules that allows the frontend and backend to talk to each other over HTTP. It stands for Representational State Transfer.\n\nInstead of writing custom endpoints for every action, REST organizes resources into URLs and uses standard HTTP methods to perform operations:\n\n- GET to fetch data (like loading user profiles)\n- POST to create new data (like submitting a registration form)\n- PUT or PATCH to update existing data (like editing a product description)\n- DELETE to remove data (like deleting a post)\n\nWe send and receive JSON data over these endpoints. It's the standard way of building APIs, and I have used it in almost all my projects to build robust and predictable integrations between the client and server.",
+    "explanation": "REST is basically a set of design rules that allows the frontend and backend to talk to each other over HTTP. It stands for Representational State Transfer.\n\nInstead of writing custom endpoints for every action, REST organizes resources into URLs and uses standard HTTP methods to perform operations:\n\n- GET to fetch data (like loading user profiles)\n- POST to create new data (like submitting a registration form)\n- PUT or PATCH to update existing data (like editing a product description)\n- DELETE to remove data (like deleting a post)\n\nWe send and receive JSON data over these endpoints. It's the standard way of building APIs, and I have used it in almost all my projects to build robust and predictable integrations between the client and server.",
     "example": "",
     "section": "javascript-core"
   },
@@ -1146,7 +1146,116 @@
     "question": "Which project would you discuss most confidently?",
     "answer": "AI-KIOSK because it combined React, WebSockets, realtime AI, Twilio integrations, document processing, and enterprise healthcare workflows.\n\nIt involved both frontend architecture and AI integration challenges, which provided opportunities to solve complex real-world problems.",
     "explanation": "Which project would you discuss most confidently?",
-    "answer": "AI-KIOSK because it combined React, WebSockets, realtime AI, Twilio integrations, document processing, and enterprise healthcare workflows.\n\nIt involved both frontend architecture and AI integration challenges, which provided opportunities to solve complex real-world problems.",
+    "example": "",
+    "section": "behavioural-leadership"
+  },
+  {
+    "id": "iq-116",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "Explain useState and useEffect with a real example.",
+    "answer": "useState is how React remembers information inside a component — like a variable that, when it changes, automatically refreshes what's shown on screen.In the AI Kiosk I built, we had a patient's name displayed on screen. When the voice assistant captured the name, I'd do:\nconst [patientName, setPatientName] = useState('')\nCalling setPatientName('Dhanil') would instantly update what's shown.useEffect is for side effects — things that need to happen after the component renders, like fetching data or setting up a WebSocket connection.In the kiosk, I used useEffect to start the WebSocket connection when the component mounted, and clean it up when it was removed — so we didn't have memory leaks.\nuseEffect(() => {\n  const ws = new WebSocket('wss://voice-api/realtime');\n  ws.onmessage = (e) => setTranscript(e.data);\n  return () => ws.close(); // cleanup on unmount\n}, []); // [] means run once on mount",
+    "explanation": "useState is how React remembers information inside a component — like a variable that, when it changes, automatically refreshes what's shown on screen.In the AI Kiosk I built, we had a patient's name displayed on screen. When the voice assistant captured the name, I'd do:\nconst [patientName, setPatientName] = useState('')\nCalling setPatientName('Dhanil') would instantly update what's shown.useEffect is for side effects — things that need to happen after the component renders, like fetching data or setting up a WebSocket connection.In the kiosk, I used useEffect to start the WebSocket connection when the component mounted, and clean it up when it was removed — so we didn't have memory leaks.\nuseEffect(() => {\n  const ws = new WebSocket('wss://voice-api/realtime');\n  ws.onmessage = (e) => setTranscript(e.data);\n  return () => ws.close(); // cleanup on unmount\n}, []); // [] means run once on mount",
+    "example": "",
+    "section": "react-core-concepts"
+  },
+  {
+    "id": "iq-117",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "What is the difference between useMemo and useCallback?",
+    "answer": "Both are about performance — avoiding unnecessary recalculations or re-renders.\nuseMemo caches the result of a computation. Say you have a list of 1000 patients and you're filtering by name — without useMemo, that filter runs every single render even if nothing changed. With useMemo, it only reruns when the dependencies actually change.\nuseCallback caches a function itself. This is useful when you pass a function as a prop to a child component. Without it, a new function is created every render, which makes React think the prop changed and re-renders the child unnecessarily.\n\nconst filtered = useMemo(() =>\n  patients.filter(p => p.name.includes(search)),\n  [patients, search]\n);",
+    "explanation": "Both are about performance — avoiding unnecessary recalculations or re-renders.\nuseMemo caches the result of a computation. Say you have a list of 1000 patients and you're filtering by name — without useMemo, that filter runs every single render even if nothing changed. With useMemo, it only reruns when the dependencies actually change.\nuseCallback caches a function itself. This is useful when you pass a function as a prop to a child component. Without it, a new function is created every render, which makes React think the prop changed and re-renders the child unnecessarily.\n\nconst filtered = useMemo(() =>\n  patients.filter(p => p.name.includes(search)),\n  [patients, search]\n);",
+    "example": "",
+    "section": "react-core-concepts"
+  },
+  {
+    "id": "iq-118",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "How do you handle performance optimization in React?",
+    "answer": "At the component level, I use React.memo to prevent re-renders when props haven't changed, useMemo for expensive calculations, and useCallback for stable function references.\nAt the app level, I use lazy loading — React.lazy with Suspense — so the user doesn't download all the code upfront. In the ZEOS platform, different workflow modules were loaded on demand, which cut initial load time significantly.\nFor lists with thousands of items, I use virtualization — only rendering items visible on screen. The react-window library helps with this.\nAnd honestly, one of the most important things is keeping state as local as possible — not dumping everything in a global store.",
+    "explanation": "At the component level, I use React.memo to prevent re-renders when props haven't changed, useMemo for expensive calculations, and useCallback for stable function references.\nAt the app level, I use lazy loading — React.lazy with Suspense — so the user doesn't download all the code upfront. In the ZEOS platform, different workflow modules were loaded on demand, which cut initial load time significantly.\nFor lists with thousands of items, I use virtualization — only rendering items visible on screen. The react-window library helps with this.\nAnd honestly, one of the most important things is keeping state as local as possible — not dumping everything in a global store.",
+    "example": "",
+    "section": "performance-optimization"
+  },
+  {
+    "id": "iq-119",
+    "technology": "TypeScript",
+    "level": "Intermediate",
+    "question": "What is TypeScript and why use it over plain JavaScript?",
+    "answer": "TypeScript is JavaScript with types. You tell it what shape your data should be — and it warns you at the coding stage if you're using it wrong, before the code even runs.\nIf you have a patient object and you try to access patient.phonenumber but the actual field is patient.phone, TypeScript will underline that immediately. In plain JavaScript, you'd only find out when testing in the browser.\nIn team environments — like at Vizru where multiple developers worked on the same codebase — TypeScript saved us a lot of time. When someone uses my component, TypeScript tells them exactly what props it needs and what types they should be.",
+    "explanation": "TypeScript is JavaScript with types. You tell it what shape your data should be — and it warns you at the coding stage if you're using it wrong, before the code even runs.\nIf you have a patient object and you try to access patient.phonenumber but the actual field is patient.phone, TypeScript will underline that immediately. In plain JavaScript, you'd only find out when testing in the browser.\nIn team environments — like at Vizru where multiple developers worked on the same codebase — TypeScript saved us a lot of time. When someone uses my component, TypeScript tells them exactly what props it needs and what types they should be.",
+    "example": "",
+    "section": "typescript-essentials"
+  },
+  {
+    "id": "iq-120",
+    "technology": "General",
+    "level": "Advanced",
+    "question": "Explain how you built the real-time voice assistant in the hospital kiosk.",
+    "answer": "The goal was: a patient walks up to a kiosk, speaks naturally, and the system captures their info — symptoms, prescription details, etc. — without any typing.\nThe browser captured audio using the Web Audio API. That audio was streamed over a WebSocket connection to a Node.js backend. The backend forwarded it to OpenAI's GPT-4o-mini-realtime API, which processed speech and returned both a transcript and a response in real time.\nOn the React side, I maintained a live transcript state — as the AI responded, the text streamed in word by word. I also extracted structured data from the conversation — patient name, DOB, symptoms — and auto-filled the form fields.\nThe Twilio part handled WhatsApp messages — when a patient needed to submit documents, the system sent them a WhatsApp link to upload files from their phone.\nWebSocket is a persistent two-way connection between browser and server. Unlike normal HTTP where you request and get a response, WebSocket stays open so data flows both ways in real time — great for chat, live updates, and voice streaming.",
+    "explanation": "The goal was: a patient walks up to a kiosk, speaks naturally, and the system captures their info — symptoms, prescription details, etc. — without any typing.\nThe browser captured audio using the Web Audio API. That audio was streamed over a WebSocket connection to a Node.js backend. The backend forwarded it to OpenAI's GPT-4o-mini-realtime API, which processed speech and returned both a transcript and a response in real time.\nOn the React side, I maintained a live transcript state — as the AI responded, the text streamed in word by word. I also extracted structured data from the conversation — patient name, DOB, symptoms — and auto-filled the form fields.\nThe Twilio part handled WhatsApp messages — when a patient needed to submit documents, the system sent them a WhatsApp link to upload files from their phone.\nWebSocket is a persistent two-way connection between browser and server. Unlike normal HTTP where you request and get a response, WebSocket stays open so data flows both ways in real time — great for chat, live updates, and voice streaming.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-121",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "What is prompt engineering and how did you use it in GoodHomes?",
+    "answer": "Prompt engineering is writing instructions to an AI model in a way that gets you the exact output you want. The quality of your prompt directly determines the quality of the output.\nIn GoodHomes, users uploaded a 2D floor plan image. The first step was sending that image to Gemini Vision with a very specific prompt — something like: \"Analyze this floor plan. Identify each room, its approximate size, number of windows, door positions, and furniture density. Return this as structured JSON.\"\nThen I took that JSON and built a second prompt for the image generation model — describing the room in detailed visual terms. The challenge was when the user picked specific materials (say, marble flooring) but the AI was suggesting wood. I wrote logic that prioritized user choices over AI suggestions — that's what I call the hierarchical prompt builder.",
+    "explanation": "Prompt engineering is writing instructions to an AI model in a way that gets you the exact output you want. The quality of your prompt directly determines the quality of the output.\nIn GoodHomes, users uploaded a 2D floor plan image. The first step was sending that image to Gemini Vision with a very specific prompt — something like: \"Analyze this floor plan. Identify each room, its approximate size, number of windows, door positions, and furniture density. Return this as structured JSON.\"\nThen I took that JSON and built a second prompt for the image generation model — describing the room in detailed visual terms. The challenge was when the user picked specific materials (say, marble flooring) but the AI was suggesting wood. I wrote logic that prioritized user choices over AI suggestions — that's what I call the hierarchical prompt builder.",
+    "example": "",
+    "section": "ai-realtime-systems"
+  },
+  {
+    "id": "iq-122",
+    "technology": "React",
+    "level": "Advanced",
+    "question": "How do you structure a large React application?",
+    "answer": "I follow a feature-based folder structure. Instead of putting all components in one folder, I group everything by feature — so the patient onboarding feature has its own folder with its components, hooks, API calls, and tests all together.\nsrc/\n  features/\n    patientOnboarding/\n      components/\n      hooks/\n      api.ts\n  shared/\n    Button/\n    Modal/\n  store/\n  services/\n\nCustom hooks are important for organization — if I have logic used in multiple places, I extract it into a custom hook like usePatientData() rather than repeating that code. For the ZEOS platform, this structure saved us because different teams worked on different features without stepping on each other's code.",
+    "explanation": "I follow a feature-based folder structure. Instead of putting all components in one folder, I group everything by feature — so the patient onboarding feature has its own folder with its components, hooks, API calls, and tests all together.\nsrc/\n  features/\n    patientOnboarding/\n      components/\n      hooks/\n      api.ts\n  shared/\n    Button/\n    Modal/\n  store/\n  services/\n\nCustom hooks are important for organization — if I have logic used in multiple places, I extract it into a custom hook like usePatientData() rather than repeating that code. For the ZEOS platform, this structure saved us because different teams worked on different features without stepping on each other's code.",
+    "example": "",
+    "section": "system-design"
+  },
+  {
+    "id": "iq-123",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "How do you handle API calls in React? What is TanStack Query?",
+    "answer": "For simple cases, I use useEffect with fetch or axios. But on larger apps, I use TanStack Query because it handles so much more automatically — fetching, caching, refetching, error handling — all with minimal code.\nInstead of writing useEffect + useState + loading state + error state yourself, you just call:\nconst { data, isLoading, error } = useQuery({\n  queryKey: ['patients'],\n  queryFn: () => fetch('/api/patients').then(r => r.json()),\n  staleTime: 30000 // refetch after 30 seconds\n});\nIt also does background refetching — if you navigate away and come back, it automatically re-fetches stale data. On ZEOS dashboards, this was really useful for keeping data fresh.",
+    "explanation": "For simple cases, I use useEffect with fetch or axios. But on larger apps, I use TanStack Query because it handles so much more automatically — fetching, caching, refetching, error handling — all with minimal code.\nInstead of writing useEffect + useState + loading state + error state yourself, you just call:\nconst { data, isLoading, error } = useQuery({\n  queryKey: ['patients'],\n  queryFn: () => fetch('/api/patients').then(r => r.json()),\n  staleTime: 30000 // refetch after 30 seconds\n});\nIt also does background refetching — if you navigate away and come back, it automatically re-fetches stale data. On ZEOS dashboards, this was really useful for keeping data fresh.",
+    "example": "",
+    "section": "state-management"
+  },
+  {
+    "id": "iq-124",
+    "technology": "React",
+    "level": "Intermediate",
+    "question": "How do you approach writing reusable components?",
+    "answer": "The key rule I follow is: a component should do one thing well and know nothing about where it's being used.\nInstead of a hardcoded PatientCard, I'd build a generic DataCard that accepts title, subtitle, status, and actions as props. Then PatientCard is just DataCard with patient-specific props.\nI also define the component's API carefully with TypeScript interfaces — what props does it need, which have defaults, what's customizable. This way, anyone who uses the component knows exactly what it expects.\nAt Vizru, the component libraries I built for ZEOS were used across 10+ enterprise applications. That discipline of making components truly reusable saved weeks of work across the team.",
+    "explanation": "The key rule I follow is: a component should do one thing well and know nothing about where it's being used.\nInstead of a hardcoded PatientCard, I'd build a generic DataCard that accepts title, subtitle, status, and actions as props. Then PatientCard is just DataCard with patient-specific props.\nI also define the component's API carefully with TypeScript interfaces — what props does it need, which have defaults, what's customizable. This way, anyone who uses the component knows exactly what it expects.\nAt Vizru, the component libraries I built for ZEOS were used across 10+ enterprise applications. That discipline of making components truly reusable saved weeks of work across the team.",
+    "example": "",
+    "section": "system-design"
+  },
+  {
+    "id": "iq-125",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "How do you handle disagreements with teammates or managers?",
+    "answer": "I try to separate the idea from the person. If a colleague proposes an approach I think is wrong, I ask questions first — \"Can you walk me through why you chose this?\" — because often they know something I don't.\nIf I still disagree after understanding their reasoning, I explain my concerns clearly with specific examples. And if we genuinely can't agree, I'm comfortable escalating to the tech lead — not as a conflict, but as \"we need a third perspective here.\"\nAt Vizru, a backend engineer wanted to structure an API response in a way that would have made the frontend very complicated. I wrote a short technical doc showing the frontend implications, and we agreed on a different structure together. No drama.",
+    "explanation": "I try to separate the idea from the person. If a colleague proposes an approach I think is wrong, I ask questions first — \"Can you walk me through why you chose this?\" — because often they know something I don't.\nIf I still disagree after understanding their reasoning, I explain my concerns clearly with specific examples. And if we genuinely can't agree, I'm comfortable escalating to the tech lead — not as a conflict, but as \"we need a third perspective here.\"\nAt Vizru, a backend engineer wanted to structure an API response in a way that would have made the frontend very complicated. I wrote a short technical doc showing the frontend implications, and we agreed on a different structure together. No drama.",
+    "example": "",
+    "section": "behavioural-leadership"
+  },
+  {
+    "id": "iq-126",
+    "technology": "General",
+    "level": "Intermediate",
+    "question": "Where do you see yourself in 3–5 years?",
+    "answer": "In 3 years, I want to be leading frontend architecture decisions for a major product — not just writing components, but designing the overall frontend system, mentoring juniors, and working closely with product and design.\nIn 5 years, I'd like to have enough depth in AI-integrated frontend systems that I'm one of the people companies call when they want to build something genuinely innovative — like the voice kiosk or generative AI tools I've already worked on.\nUST's scale and client diversity gives me the variety of problems I need to grow in that direction.",
+    "explanation": "In 3 years, I want to be leading frontend architecture decisions for a major product — not just writing components, but designing the overall frontend system, mentoring juniors, and working closely with product and design.\nIn 5 years, I'd like to have enough depth in AI-integrated frontend systems that I'm one of the people companies call when they want to build something genuinely innovative — like the voice kiosk or generative AI tools I've already worked on.\nUST's scale and client diversity gives me the variety of problems I need to grow in that direction.",
     "example": "",
     "section": "behavioural-leadership"
   }
