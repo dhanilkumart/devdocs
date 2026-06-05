@@ -132,89 +132,134 @@ export function CategoryDocsClient({ title, slug, docs }: CategoryDocsClientProp
       </div>
 
       {/* Docs List */}
-      <div className="space-y-16">
+      <div>
         {filteredDocs.length > 0 ? (
-          filteredDocs.map((doc) => {
-            const isTarget = activeHash === `#${doc.id}`;
-            return (
-              <article
-                key={doc.id}
-                id={doc.id}
-                className={`scroll-mt-24 rounded-2xl border p-6 transition-all duration-300 ${
-                  isTarget
-                    ? "border-sky-500 bg-sky-50/10 shadow-sm ring-1 ring-sky-500/20 dark:border-sky-500/50 dark:bg-sky-950/5"
-                    : "border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/20"
-                }`}
-              >
-                {/* Doc Header */}
-                <div className="mb-6 flex flex-wrap items-start justify-between gap-4 border-b border-zinc-100 pb-6 dark:border-zinc-800/80">
-                  <div>
-                    <span className="text-xs font-semibold uppercase tracking-wider text-sky-600 dark:text-sky-400">
-                      {doc.category}
-                    </span>
-                    <h2 className="mt-1 text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-                      {doc.title}
-                    </h2>
-                    <p className="mt-2 text-zinc-600 dark:text-zinc-400">{doc.summary}</p>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {doc.tags.map((t) => (
-                        <span
-                          key={t}
-                          className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
+          query.trim() ? (
+            /* Search Results Mode (like main search) */
+            <ul className="space-y-4">
+              {filteredDocs.map((doc) => (
+                <li
+                  key={doc.id}
+                  className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900/40"
+                >
+                  <button
+                    onClick={() => {
+                      setQuery("");
+                      // Small timeout to allow full list to mount before scrolling
+                      setTimeout(() => {
+                        window.history.pushState(null, "", `#${doc.id}`);
+                        setActiveHash(`#${doc.id}`);
+                      }, 50);
+                    }}
+                    className="text-left font-semibold text-zinc-900 hover:text-sky-600 dark:text-zinc-50 dark:hover:text-sky-400"
+                  >
+                    {doc.title}
+                  </button>
+                  <p className="mt-1 text-xs font-medium text-sky-600 dark:text-sky-400">
+                    Topic - {doc.category}
+                  </p>
+                  <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                    {doc.summary}
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {doc.tags.map((t) => (
+                      <span
+                        key={t}
+                        className="rounded-full bg-zinc-100 px-2 py-0.5 text-[11px] text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+                      >
+                        {t}
+                      </span>
+                    ))}
                   </div>
-                  <BookmarkButton id={doc.id} title={doc.title} />
-                </div>
-
-                {/* Markdown Content */}
-                <div className="prose prose-zinc dark:prose-invert max-w-none">
-                  <DocMarkdown content={doc.content} />
-                </div>
-
-                {/* Code Examples */}
-                {doc.code_examples.length > 0 && (
-                  <section className="mt-8">
-                    <h3 className="mb-3 text-base font-semibold text-zinc-900 dark:text-zinc-50">
-                      Code examples
-                    </h3>
-                    <div className="space-y-4">
-                      {doc.code_examples.map((ex, i) => (
-                        <CodeBlock key={i} code={ex.code} language={ex.language} title={ex.title} />
-                      ))}
-                    </div>
-                  </section>
-                )}
-
-                {/* Related Questions */}
-                {doc.related_questions.length > 0 && (
-                  <section className="mt-8 rounded-xl border border-zinc-200 bg-zinc-50/50 p-5 dark:border-zinc-800/80 dark:bg-zinc-900/30">
-                    <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
-                      Related interview questions
-                    </h3>
-                    <ul className="mt-2.5 space-y-1.5 text-sm">
-                      {doc.related_questions.map((rq) => {
-                        const iq = getInterviewById(rq.id);
-                        return (
-                          <li key={rq.id}>
-                            <Link
-                              href={`/question/${interviewSlug(iq ?? { id: rq.id })}`}
-                              className="text-sky-600 hover:underline dark:text-sky-400"
+                </li>
+              ))}
+            </ul>
+          ) : (
+            /* Full Document View Mode (one by one) */
+            <div className="space-y-16">
+              {filteredDocs.map((doc) => {
+                const isTarget = activeHash === `#${doc.id}`;
+                return (
+                  <article
+                    key={doc.id}
+                    id={doc.id}
+                    className={`scroll-mt-24 rounded-2xl border p-6 transition-all duration-300 ${
+                      isTarget
+                        ? "border-sky-500 bg-sky-50/10 shadow-sm ring-1 ring-sky-500/20 dark:border-sky-500/50 dark:bg-sky-950/5"
+                        : "border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/20"
+                    }`}
+                  >
+                    {/* Doc Header */}
+                    <div className="mb-6 flex flex-wrap items-start justify-between gap-4 border-b border-zinc-100 pb-6 dark:border-zinc-800/80">
+                      <div>
+                        <span className="text-xs font-semibold uppercase tracking-wider text-sky-600 dark:text-sky-400">
+                          {doc.category}
+                        </span>
+                        <h2 className="mt-1 text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+                          {doc.title}
+                        </h2>
+                        <p className="mt-2 text-zinc-600 dark:text-zinc-400">{doc.summary}</p>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          {doc.tags.map((t) => (
+                            <span
+                              key={t}
+                              className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300"
                             >
-                              {iq?.question ?? rq.preview}
-                            </Link>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </section>
-                )}
-              </article>
-            );
-          })
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      <BookmarkButton id={doc.id} title={doc.title} />
+                    </div>
+
+                    {/* Markdown Content */}
+                    <div className="prose prose-zinc dark:prose-invert max-w-none">
+                      <DocMarkdown content={doc.content} />
+                    </div>
+
+                    {/* Code Examples */}
+                    {doc.code_examples.length > 0 && (
+                      <section className="mt-8">
+                        <h3 className="mb-3 text-base font-semibold text-zinc-900 dark:text-zinc-50">
+                          Code examples
+                        </h3>
+                        <div className="space-y-4">
+                          {doc.code_examples.map((ex, i) => (
+                            <CodeBlock key={i} code={ex.code} language={ex.language} title={ex.title} />
+                          ))}
+                        </div>
+                      </section>
+                    )}
+
+                    {/* Related Questions */}
+                    {doc.related_questions.length > 0 && (
+                      <section className="mt-8 rounded-xl border border-zinc-200 bg-zinc-50/50 p-5 dark:border-zinc-800/80 dark:bg-zinc-900/30">
+                        <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-50">
+                          Related interview questions
+                        </h3>
+                        <ul className="mt-2.5 space-y-1.5 text-sm">
+                          {doc.related_questions.map((rq) => {
+                            const iq = getInterviewById(rq.id);
+                            return (
+                              <li key={rq.id}>
+                                <Link
+                                  href={`/question/${interviewSlug(iq ?? { id: rq.id })}`}
+                                  className="text-sky-600 hover:underline dark:text-sky-400"
+                                >
+                                  {iq?.question ?? rq.preview}
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </section>
+                    )}
+                  </article>
+                );
+              })}
+            </div>
+          )
         ) : (
           /* Empty Search State */
           <div className="rounded-xl border border-dashed border-zinc-300 py-12 text-center dark:border-zinc-700">
