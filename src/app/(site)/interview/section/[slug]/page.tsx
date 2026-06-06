@@ -30,7 +30,7 @@ export default async function InterviewSectionPage({ params }: Props) {
   const questions = interviewsBySection(slug);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 relative pb-24 min-h-full">
       <nav className="text-sm text-zinc-500 dark:text-zinc-400">
         <Link href="/" className="hover:text-sky-600 dark:hover:text-sky-400">
           Home
@@ -56,10 +56,6 @@ export default async function InterviewSectionPage({ params }: Props) {
         </p>
       </header>
 
-      <StickySearchShell hint="Type a keyword above to fuzzy-match questions, answers, and code in this section only.">
-        <InterviewSectionSearch items={questions} sectionTitle={section.title} />
-      </StickySearchShell>
-
       {questions.length === 0 ? (
         <p className="rounded-xl border border-zinc-200 bg-white p-6 text-zinc-600 dark:border-zinc-800 dark:bg-zinc-900/40 dark:text-zinc-400">
           No questions in this section yet.
@@ -77,6 +73,10 @@ export default async function InterviewSectionPage({ params }: Props) {
           ← Back to all sections
         </Link>
       </p>
+
+      <StickySearchShell hint="Type a keyword above to fuzzy-match questions, answers, and code in this section only.">
+        <InterviewSectionSearch items={questions} sectionTitle={section.title} />
+      </StickySearchShell>
     </div>
   );
 }

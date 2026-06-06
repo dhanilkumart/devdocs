@@ -96,7 +96,7 @@ export function InterviewSectionSearch({ items, sectionTitle }: Props) {
 
       {open && (
         <div
-          className="absolute left-0 right-0 top-[calc(100%+6px)] z-40 max-h-[min(70vh,420px)] overflow-auto rounded-xl border border-zinc-200 bg-white shadow-xl dark:border-zinc-700 dark:bg-zinc-900"
+          className="absolute left-0 right-0 bottom-[calc(100%+6px)] lg:top-[calc(100%+6px)] lg:bottom-auto z-40 max-h-[min(70vh,420px)] overflow-auto rounded-xl border border-zinc-200 bg-white shadow-xl dark:border-zinc-700 dark:bg-zinc-900"
           role="listbox"
         >
           {!debounced.trim() && (

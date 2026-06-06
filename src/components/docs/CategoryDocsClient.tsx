@@ -82,57 +82,17 @@ export function CategoryDocsClient({ title, slug, docs }: CategoryDocsClientProp
   }, []);
 
   return (
-    <div className="space-y-8">
+    <div className="flex flex-col relative pb-24 lg:pb-0 min-h-full">
       {/* Category Header */}
-      <div>
+      <div className="mb-8 order-1">
         <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">{title} Documentation</h1>
         <p className="mt-2 text-lg text-zinc-600 dark:text-zinc-400">
           Showing all topics for {title}. Use the search bar below to filter within this page.
         </p>
       </div>
 
-      {/* Full-width container search bar */}
-      <div className="relative w-full">
-        <label htmlFor="category-search" className="sr-only">
-          Search {title} documentation
-        </label>
-        <div className="relative">
-          <svg
-            className="absolute left-4 top-3.5 h-5 w-5 text-zinc-400 dark:text-zinc-500"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              fillRule="evenodd"
-              d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-              clipRule="evenodd"
-            />
-          </svg>
-          <input
-            id="category-search"
-            type="search"
-            placeholder={`Search within ${title} documentation...`}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="h-12 w-full rounded-xl border border-zinc-200 bg-white pl-12 pr-4 text-sm text-zinc-900 shadow-sm placeholder:text-zinc-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:border-sky-400 dark:focus:ring-sky-400"
-          />
-          {query && (
-            <button
-              onClick={() => setQuery("")}
-              className="absolute right-4 top-3.5 text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300"
-              aria-label="Clear search"
-            >
-              <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-              </svg>
-            </button>
-          )}
-        </div>
-      </div>
-
       {/* Docs List */}
-      <div>
+      <div className="mb-8 order-2 lg:order-3">
         {filteredDocs.length > 0 ? (
           query.trim() ? (
             /* Search Results Mode (like main search) */
@@ -292,6 +252,48 @@ export function CategoryDocsClient({ title, slug, docs }: CategoryDocsClientProp
             </div>
           </div>
         )}
+      </div>
+
+      {/* Responsive Sticky Search Bar */}
+      <div className="sticky bottom-0 lg:top-0 lg:bottom-auto z-30 -mx-4 border-t lg:border-t-0 lg:border-b border-zinc-200/80 bg-zinc-50/90 px-4 py-3 backdrop-blur-md sm:-mx-6 sm:px-6 lg:-mx-6 lg:px-6 dark:border-zinc-800 dark:bg-zinc-950/90 order-3 lg:order-2">
+        <div className="relative w-full">
+          <label htmlFor="category-search" className="sr-only">
+            Search {title} documentation
+          </label>
+          <div className="relative">
+            <svg
+              className="absolute left-4 top-3.5 h-5 w-5 text-zinc-400 dark:text-zinc-500"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fillRule="evenodd"
+                d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <input
+              id="category-search"
+              type="search"
+              placeholder={`Search within ${title} documentation...`}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="h-12 w-full rounded-xl border border-zinc-200 bg-white pl-12 pr-4 text-sm text-zinc-900 shadow-sm placeholder:text-zinc-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:border-sky-400 dark:focus:ring-sky-400"
+            />
+            {query && (
+              <button
+                onClick={() => setQuery("")}
+                className="absolute right-4 top-3.5 text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300"
+                aria-label="Clear search"
+              >
+                <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                </svg>
+              </button>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

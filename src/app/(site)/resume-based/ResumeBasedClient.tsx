@@ -24,11 +24,7 @@ export function ResumeBasedClient({ items }: Props) {
   const filtered = useMemo(() => searchHits ?? items, [items, searchHits]);
 
   return (
-    <div className="space-y-6">
-      <StickySearchShell hint="Searches questions and full answers — Enter jumps to the first hit.">
-        <ResumeSearch items={items} onResults={handleResults} />
-      </StickySearchShell>
-
+    <div className="space-y-6 relative pb-24 min-h-full">
       <p className="text-sm text-zinc-500 dark:text-zinc-400">
         Showing <span className="font-semibold text-zinc-700 dark:text-zinc-200">{filtered.length}</span> of{" "}
         {items.length} questions
@@ -45,6 +41,10 @@ export function ResumeBasedClient({ items }: Props) {
           ))}
         </div>
       )}
+
+      <StickySearchShell hint="Searches questions and full answers — Enter jumps to the first hit.">
+        <ResumeSearch items={items} onResults={handleResults} />
+      </StickySearchShell>
     </div>
   );
 }
