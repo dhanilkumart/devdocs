@@ -36,7 +36,33 @@ function getFiles(dir, base = '') {
   return results;
 }
 
-const docs = getFiles('public/docs');
+const rawFiles = getFiles('public/docs');
+
+// Detect duplicate filenames
+const filenameCounts = {};
+rawFiles.forEach((f) => {
+  filenameCounts[f.filename] = (filenameCounts[f.filename] || 0) + 1;
+});
+
+const docs = rawFiles.map((doc) => {
+  // If filename is shared across folders, routeSlug incorporates folder prefix
+  const isDuplicateFilename = filenameCounts[doc.filename] > 1;
+  const folderSlug = doc.folder !== '.' ? doc.folder.replace(/\//g, '-') : '';
+  
+  const routeSlug = isDuplicateFilename
+    ? `${folderSlug}-${doc.filename}`
+    : doc.filename;
+    
+  const routeSlugWithoutExt = routeSlug.endsWith('.md')
+    ? routeSlug.slice(0, -3)
+    : routeSlug;
+
+  return {
+    ...doc,
+    routeSlug,
+    routeSlugWithoutExt,
+  };
+});
 
 const code = `// Auto-generated Salesdock Documentation Content
 // Do not edit manually - content embedded from Salesdock markdown source files
@@ -49,6 +75,8 @@ export interface SalesdockDoc {
   folder: string;
   slug: string;
   slugWithoutExt: string;
+  routeSlug: string;
+  routeSlugWithoutExt: string;
   content: string;
 }
 
@@ -60,10 +88,17 @@ export function getSalesdockDocs(): SalesdockDoc[] {
 
 export function getSalesdockDocBySlug(rawSlug: string): SalesdockDoc | undefined {
   if (!rawSlug) return undefined;
-  const decoded = decodeURIComponent(rawSlug).trim();
+  let decoded = rawSlug;
+  try {
+    decoded = decodeURIComponent(rawSlug).trim();
+  } catch (e) {
+    decoded = rawSlug.trim();
+  }
   const lower = decoded.toLowerCase();
 
   return SALESDOCK_DOCS.find((doc) => {
+    if (doc.routeSlug.toLowerCase() === lower) return true;
+    if (doc.routeSlugWithoutExt.toLowerCase() === lower) return true;
     if (doc.filename.toLowerCase() === lower) return true;
     if (doc.slugWithoutExt.toLowerCase() === lower) return true;
     if (doc.path.toLowerCase() === lower) return true;

@@ -10,17 +10,16 @@ interface PageProps {
 
 export async function generateStaticParams() {
   const docs = getSalesdockDocs();
-  const paramsList: { slug: string }[] = [];
+  const paramsMap = new Map<string, { slug: string }>();
 
   docs.forEach((doc) => {
-    paramsList.push({ slug: doc.filename });
-    paramsList.push({ slug: doc.slugWithoutExt });
-    if (doc.path !== doc.filename) {
-      paramsList.push({ slug: encodeURIComponent(doc.path) });
-    }
+    paramsMap.set(doc.routeSlug.toLowerCase(), { slug: doc.routeSlug });
+    paramsMap.set(doc.routeSlugWithoutExt.toLowerCase(), { slug: doc.routeSlugWithoutExt });
+    paramsMap.set(doc.filename.toLowerCase(), { slug: doc.filename });
+    paramsMap.set(doc.slugWithoutExt.toLowerCase(), { slug: doc.slugWithoutExt });
   });
 
-  return paramsList;
+  return Array.from(paramsMap.values());
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -119,7 +118,7 @@ export default async function SalesdockDocDetailPage({ params }: PageProps) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-zinc-200/80 dark:border-zinc-800 pt-6">
         {prevDoc ? (
           <Link
-            href={`/salesdock-assignment/${encodeURIComponent(prevDoc.filename)}`}
+            href={`/salesdock-assignment/${encodeURIComponent(prevDoc.routeSlug)}`}
             className="group flex flex-col rounded-xl border border-zinc-200/80 bg-white p-4 transition hover:border-sky-500/50 dark:border-zinc-800 dark:bg-zinc-900/60 dark:hover:border-sky-500/50"
           >
             <span className="text-[11px] font-medium text-zinc-400">Previous File</span>
@@ -133,7 +132,7 @@ export default async function SalesdockDocDetailPage({ params }: PageProps) {
 
         {nextDoc ? (
           <Link
-            href={`/salesdock-assignment/${encodeURIComponent(nextDoc.filename)}`}
+            href={`/salesdock-assignment/${encodeURIComponent(nextDoc.routeSlug)}`}
             className="group flex flex-col items-end text-right rounded-xl border border-zinc-200/80 bg-white p-4 transition hover:border-sky-500/50 dark:border-zinc-800 dark:bg-zinc-900/60 dark:hover:border-sky-500/50"
           >
             <span className="text-[11px] font-medium text-zinc-400">Next File</span>

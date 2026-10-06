@@ -138,7 +138,7 @@ export function SalesdockSidebar() {
       return (
         <div key={doc.id} className="my-0.5">
           <Link
-            href={`/salesdock-assignment/${encodeURIComponent(doc.filename)}`}
+            href={`/salesdock-assignment/${encodeURIComponent(doc.routeSlug)}`}
             className={`group flex items-center justify-between rounded-md px-2 py-1 text-xs transition border-l-2 -ml-px ${
               active
                 ? "border-sky-500 bg-sky-50 font-semibold text-sky-700 dark:bg-sky-950/60 dark:text-sky-300 dark:border-sky-400"
