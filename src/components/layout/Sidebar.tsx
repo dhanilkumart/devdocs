@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useMemo, useState, useEffect } from "react";
 import { docsByCategory } from "@/lib/data";
 import type { TechCategory } from "@/types";
+import { SalesdockSidebar } from "@/components/salesdock/SalesdockSidebar";
 
 export const SIDEBAR_CATEGORIES = [
   {
@@ -60,6 +61,14 @@ export const SIDEBAR_CATEGORIES = [
 export function Sidebar() {
   const pathname = usePathname();
   const [activeHash, setActiveHash] = useState("");
+
+  const isInnerSalesdockPage =
+    pathname.startsWith("/salesdock-assignment/") &&
+    pathname !== "/salesdock-assignment";
+
+  if (isInnerSalesdockPage) {
+    return <SalesdockSidebar />;
+  }
 
   const sidebarData = useMemo(() => {
     return SIDEBAR_CATEGORIES.map((item) => {
