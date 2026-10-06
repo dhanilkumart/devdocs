@@ -71,9 +71,7 @@ export function getCategorySlug(category: string): string {
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
-  const categoryParams = Object.keys(CATEGORY_MAP).map((slug) => ({ slug }));
-  const docParams = allDocs.map((d) => ({ slug: d.id }));
-  return [...categoryParams, ...docParams];
+  return Object.keys(CATEGORY_MAP).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

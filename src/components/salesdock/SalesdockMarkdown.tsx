@@ -148,6 +148,7 @@ export function SalesdockMarkdown({ content }: SalesdockMarkdownProps) {
     let i = 0;
 
     while (i < lines.length) {
+      const prevI = i;
       const line = lines[i];
 
       // Fenced code block (```lang)
@@ -346,6 +347,17 @@ export function SalesdockMarkdown({ content }: SalesdockMarkdownProps) {
             {renderInlineText(pLines.join(" "))}
           </p>
         );
+      }
+
+      if (i === prevI) {
+        if (lines[i] && lines[i].trim()) {
+          blocks.push(
+            <p key={`p-${i}`} className="my-3 text-[15px] leading-relaxed text-zinc-700 dark:text-zinc-300">
+              {renderInlineText(lines[i].trim())}
+            </p>
+          );
+        }
+        i++;
       }
     }
 

@@ -14,9 +14,6 @@ export async function generateStaticParams() {
 
   docs.forEach((doc) => {
     paramsMap.set(doc.routeSlug.toLowerCase(), { slug: doc.routeSlug });
-    paramsMap.set(doc.routeSlugWithoutExt.toLowerCase(), { slug: doc.routeSlugWithoutExt });
-    paramsMap.set(doc.filename.toLowerCase(), { slug: doc.filename });
-    paramsMap.set(doc.slugWithoutExt.toLowerCase(), { slug: doc.slugWithoutExt });
   });
 
   return Array.from(paramsMap.values());
