@@ -174,7 +174,7 @@ export function SalesdockQAClient() {
       </div>
 
       {/* Mobile Fixed Bottom Search Input (Hidden on Desktop) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-30 border-t border-zinc-200/90 bg-white/95 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/95 shadow-lg">
+      <div className="lg:hidden fixed bottom-10 left-0 right-0 z-30 border-t border-zinc-200/90 bg-white/95 px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/95 shadow-lg">
         <div className="relative w-full">
           <label htmlFor="mobile-qa-search" className="sr-only">
             Search Salesdock Interview Questions
