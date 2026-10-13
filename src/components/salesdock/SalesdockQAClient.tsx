@@ -85,7 +85,7 @@ export function SalesdockQAClient() {
               placeholder="Search Salesdock interview questions..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-12 w-full rounded-xl border border-zinc-200 bg-white pl-12 pr-10 text-sm text-zinc-900 shadow-sm placeholder:text-zinc-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 dark:border-zinc-800 dark:bg-zinc-900/60 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:border-sky-400 dark:focus:ring-sky-400"
+              className="h-12 w-full rounded-xl border border-zinc-200 bg-white pl-12 pr-10 text-sm text-zinc-900 shadow-sm placeholder:text-zinc-400 focus:border-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-500/20 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-sky-400 dark:focus:bg-zinc-900 dark:focus:ring-sky-400/20"
             />
             {searchQuery && (
               <button
@@ -198,7 +198,7 @@ export function SalesdockQAClient() {
               placeholder="Search Salesdock Q&A..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="h-10 w-full rounded-xl border border-zinc-200 bg-zinc-50 pl-10 pr-9 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-50 dark:placeholder:text-zinc-500 dark:focus:border-sky-400 dark:focus:ring-sky-400"
+              className="h-10 w-full rounded-xl border border-zinc-200 bg-zinc-50 pl-10 pr-9 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-100 dark:placeholder:text-zinc-500 dark:focus:border-sky-400 dark:focus:bg-zinc-900 dark:focus:ring-sky-400"
             />
             {searchQuery && (
               <button
