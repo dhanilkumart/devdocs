@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 
+import { resolveSalesdockSourcePath } from "@/lib/salesdock-resolver";
+
 interface SalesdockMarkdownProps {
   content: string;
 }
@@ -12,6 +14,10 @@ function resolveDocHref(href: string): string {
   if (href.startsWith("http://") || href.startsWith("https://") || href.startsWith("#")) {
     return href;
   }
+
+  // Attempt resolving via unambiguous source path resolver first
+  const resolved = resolveSalesdockSourcePath(href);
+  if (resolved) return resolved;
 
   // Extract filename from path (e.g., SideCart.md)
   const filename = href.split("/").pop() || href;
@@ -44,12 +50,38 @@ function renderInlineText(text: string): React.ReactNode {
     }
 
     if (part.startsWith("`") && part.endsWith("`")) {
+      const codeText = part.slice(1, -1);
+      const docLink = resolveSalesdockSourcePath(codeText);
+
+      if (docLink) {
+        return (
+          <Link
+            key={index}
+            href={docLink}
+            title={`View Salesdock documentation for ${codeText}`}
+            className="group/code inline-flex items-center gap-1 rounded-md border border-sky-300/60 bg-sky-50/80 px-1.5 py-0.5 font-mono text-xs font-semibold text-sky-700 shadow-xs transition hover:border-sky-500 hover:bg-sky-100/90 hover:text-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-500/40 dark:border-sky-800/80 dark:bg-sky-950/60 dark:text-sky-300 dark:hover:border-sky-400 dark:hover:bg-sky-900/60 dark:hover:text-sky-200"
+          >
+            <span>{codeText}</span>
+            <svg
+              className="h-3 w-3 shrink-0 opacity-70 transition-transform group-hover/code:translate-x-0.5 group-hover/code:opacity-100"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        );
+      }
+
       return (
         <code
           key={index}
           className="rounded-md bg-zinc-100 px-1.5 py-0.5 font-mono text-xs font-medium text-sky-700 dark:bg-zinc-800/80 dark:text-sky-300"
         >
-          {part.slice(1, -1)}
+          {codeText}
         </code>
       );
     }

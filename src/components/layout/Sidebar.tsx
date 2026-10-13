@@ -62,14 +62,6 @@ export function Sidebar() {
   const pathname = usePathname();
   const [activeHash, setActiveHash] = useState("");
 
-  const isInnerSalesdockPage =
-    pathname.startsWith("/salesdock-assignment/") &&
-    pathname !== "/salesdock-assignment";
-
-  if (isInnerSalesdockPage) {
-    return <SalesdockSidebar />;
-  }
-
   const sidebarData = useMemo(() => {
     return SIDEBAR_CATEGORIES.map((item) => {
       const docs = item.sourceCategories.flatMap((cat) => docsByCategory(cat));
@@ -97,6 +89,14 @@ export function Sidebar() {
     if (activeCat) return new Set([activeCat.slug]);
     return new Set(SIDEBAR_CATEGORIES.map((c) => c.slug));
   });
+
+  const isInnerSalesdockPage =
+    pathname.startsWith("/salesdock-assignment/") &&
+    pathname !== "/salesdock-assignment";
+
+  if (isInnerSalesdockPage) {
+    return <SalesdockSidebar />;
+  }
 
   function toggleCategory(slug: string) {
     setOpenCategories((prev) => {

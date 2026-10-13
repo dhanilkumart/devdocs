@@ -181,11 +181,46 @@ export function SalesdockSidebar() {
           </span>
           <span className="text-xs tracking-tight">Salesdock Files</span>
         </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/salesdock-assignment/interview-qa"
+            className={`text-[10px] font-semibold transition ${
+              pathname === "/salesdock-assignment/interview-qa"
+                ? "text-sky-600 font-bold dark:text-sky-400"
+                : "text-zinc-500 hover:text-sky-600 dark:text-zinc-400 dark:hover:text-sky-400"
+            }`}
+          >
+            Q&amp;A
+          </Link>
+          <span className="text-zinc-300 dark:text-zinc-700">|</span>
+          <Link
+            href="/salesdock-assignment"
+            className="text-[10px] font-semibold text-zinc-500 hover:underline dark:text-zinc-400"
+          >
+            Landing
+          </Link>
+        </div>
+      </div>
+
+      {/* Dedicated Interview Q&A Button */}
+      <div className="mb-2">
         <Link
-          href="/salesdock-assignment"
-          className="text-[10px] font-semibold text-sky-600 hover:underline dark:text-sky-400"
+          href="/salesdock-assignment/interview-qa"
+          className={`flex items-center justify-between rounded-lg px-2.5 py-1.5 transition text-xs font-semibold ${
+            pathname === "/salesdock-assignment/interview-qa"
+              ? "bg-sky-500/10 text-sky-700 dark:bg-sky-950/60 dark:text-sky-300 border border-sky-500/30"
+              : "border border-zinc-200/80 bg-zinc-50/60 text-zinc-700 hover:border-sky-500/40 hover:bg-sky-50/40 hover:text-sky-700 dark:border-zinc-800 dark:bg-zinc-900/40 dark:text-zinc-300 dark:hover:border-sky-500/40 dark:hover:text-sky-300"
+          }`}
         >
-          Landing
+          <div className="flex items-center gap-2">
+            <svg className="h-4 w-4 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Interview Q&amp;A</span>
+          </div>
+          <span className="rounded bg-sky-100 px-1.5 py-0.2 text-[9px] font-bold text-sky-700 dark:bg-sky-950 dark:text-sky-300">
+            Prep
+          </span>
         </Link>
       </div>
 
