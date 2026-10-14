@@ -1,13 +1,10 @@
-import { SALESDOCK_DOCS } from "@/data/salesdock-docs";
+import { SALESDOCK_DOCS, SalesdockDoc } from "@/data/salesdock-docs";
 
 /**
- * Normalizes a source code file path (e.g. "src/types/discount.ts" or "types/discount.ts")
- * and attempts to find its corresponding Salesdock documentation page route.
- *
- * Returns the resolved Next.js route path (e.g. "/salesdock-assignment/discount.md"),
- * or null if no corresponding doc exists.
+ * Finds the SalesdockDoc matching a source code file path (e.g. "src/types/discount.ts").
+ * Returns the matching SalesdockDoc or null if none is found.
  */
-export function resolveSalesdockSourcePath(rawPath: string): string | null {
+export function findSalesdockDoc(rawPath: string): SalesdockDoc | null {
   const clean = rawPath.trim().replace(/^`|`$/g, "");
   // Strip optional leading "src/" or "./src/" or "./"
   const withoutSrc = clean.replace(/^(\.\/)?src\//, "").replace(/^\.\//, "");
@@ -31,7 +28,18 @@ export function resolveSalesdockSourcePath(rawPath: string): string | null {
     return false;
   });
 
-  if (!found) return null;
+  return found || null;
+}
 
-  return `/salesdock-assignment/${encodeURIComponent(found.routeSlug)}`;
+/**
+ * Normalizes a source code file path (e.g. "src/types/discount.ts" or "types/discount.ts")
+ * and attempts to find its corresponding Salesdock documentation page route.
+ *
+ * Returns the resolved Next.js route path (e.g. "/salesdock-assignment/discount.md"),
+ * or null if no corresponding doc exists.
+ */
+export function resolveSalesdockSourcePath(rawPath: string): string | null {
+  const doc = findSalesdockDoc(rawPath);
+  if (!doc) return null;
+  return `/salesdock-assignment/${encodeURIComponent(doc.routeSlug)}`;
 }

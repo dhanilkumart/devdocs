@@ -3,10 +3,12 @@
 import React, { useState } from "react";
 import Link from "next/link";
 
-import { resolveSalesdockSourcePath } from "@/lib/salesdock-resolver";
+import { resolveSalesdockSourcePath, findSalesdockDoc } from "@/lib/salesdock-resolver";
+import { SalesdockDoc } from "@/data/salesdock-docs";
 
 interface SalesdockMarkdownProps {
   content: string;
+  onSourceClick?: (doc: SalesdockDoc) => void;
 }
 
 // Convert relative markdown links (e.g. '../components/discounts/SideCart.md') to /salesdock-assignment/[slug]
@@ -25,7 +27,7 @@ function resolveDocHref(href: string): string {
 }
 
 // Inline Markdown formatter for text inside headers, list items, paragraphs, table cells
-function renderInlineText(text: string): React.ReactNode {
+function renderInlineText(text: string, onSourceClick?: (doc: SalesdockDoc) => void): React.ReactNode {
   // Regex to match **bold**, *italic*, `code`, [link](url), ~~strikethrough~~
   const tokenRegex = /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`|\[[^\]]+\]\([^)]+\)|~~[^~]+~~)/g;
   const parts = text.split(tokenRegex);
@@ -51,9 +53,38 @@ function renderInlineText(text: string): React.ReactNode {
 
     if (part.startsWith("`") && part.endsWith("`")) {
       const codeText = part.slice(1, -1);
-      const docLink = resolveSalesdockSourcePath(codeText);
+      const matchedDoc = findSalesdockDoc(codeText);
 
-      if (docLink) {
+      if (matchedDoc) {
+        if (onSourceClick) {
+          return (
+            <button
+              key={index}
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onSourceClick(matchedDoc);
+              }}
+              title={`Preview documentation for ${codeText}`}
+              className="group/code inline-flex items-center gap-1 rounded-md border border-sky-300/60 bg-sky-50/80 px-1.5 py-0.5 font-mono text-xs font-semibold text-sky-700 shadow-xs transition hover:border-sky-500 hover:bg-sky-100/90 hover:text-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-500/40 dark:border-sky-800/80 dark:bg-sky-950/60 dark:text-sky-300 dark:hover:border-sky-400 dark:hover:bg-sky-900/60 dark:hover:text-sky-200 cursor-pointer"
+            >
+              <span>{codeText}</span>
+              <svg
+                className="h-3 w-3 shrink-0 opacity-70 transition-transform group-hover/code:translate-x-0.5 group-hover/code:opacity-100"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden="true"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          );
+        }
+
+        const docLink = `/salesdock-assignment/${encodeURIComponent(matchedDoc.routeSlug)}`;
         return (
           <Link
             key={index}
@@ -172,7 +203,7 @@ function CodeBlock({ code, language }: { code: string; language: string }) {
   );
 }
 
-export function SalesdockMarkdown({ content }: SalesdockMarkdownProps) {
+export function SalesdockMarkdown({ content, onSourceClick }: SalesdockMarkdownProps) {
   // Parse content into blocks
   const parseBlocks = (markdown: string) => {
     const lines = markdown.split("\n");
@@ -228,7 +259,7 @@ export function SalesdockMarkdown({ content }: SalesdockMarkdownProps) {
                   <tr>
                     {headerCells.map((cell, cellIdx) => (
                       <th key={cellIdx} className="px-4 py-3 border-r last:border-r-0 border-zinc-200 dark:border-zinc-800">
-                        {renderInlineText(cell)}
+                        {renderInlineText(cell, onSourceClick)}
                       </th>
                     ))}
                   </tr>
@@ -238,7 +269,7 @@ export function SalesdockMarkdown({ content }: SalesdockMarkdownProps) {
                     <tr key={rowIdx} className="hover:bg-zinc-50/80 dark:hover:bg-zinc-900/40 transition">
                       {row.map((cell, cellIdx) => (
                         <td key={cellIdx} className="px-4 py-3 border-r last:border-r-0 border-zinc-200 dark:border-zinc-800">
-                          {renderInlineText(cell)}
+                          {renderInlineText(cell, onSourceClick)}
                         </td>
                       ))}
                     </tr>
@@ -262,7 +293,7 @@ export function SalesdockMarkdown({ content }: SalesdockMarkdownProps) {
       if (line.startsWith("# ")) {
         blocks.push(
           <h1 key={`h1-${i}`} className="mt-8 mb-4 text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-3xl border-b border-zinc-200 dark:border-zinc-800 pb-3">
-            {renderInlineText(line.slice(2))}
+            {renderInlineText(line.slice(2), onSourceClick)}
           </h1>
         );
         i++;
@@ -272,7 +303,7 @@ export function SalesdockMarkdown({ content }: SalesdockMarkdownProps) {
       if (line.startsWith("## ")) {
         blocks.push(
           <h2 key={`h2-${i}`} className="mt-8 mb-3 text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-2xl">
-            {renderInlineText(line.slice(3))}
+            {renderInlineText(line.slice(3), onSourceClick)}
           </h2>
         );
         i++;
@@ -282,7 +313,7 @@ export function SalesdockMarkdown({ content }: SalesdockMarkdownProps) {
       if (line.startsWith("### ")) {
         blocks.push(
           <h3 key={`h3-${i}`} className="mt-6 mb-2 text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-200">
-            {renderInlineText(line.slice(4))}
+            {renderInlineText(line.slice(4), onSourceClick)}
           </h3>
         );
         i++;
@@ -292,7 +323,7 @@ export function SalesdockMarkdown({ content }: SalesdockMarkdownProps) {
       if (line.startsWith("#### ")) {
         blocks.push(
           <h4 key={`h4-${i}`} className="mt-4 mb-2 text-base font-semibold text-zinc-900 dark:text-zinc-300">
-            {renderInlineText(line.slice(5))}
+            {renderInlineText(line.slice(5), onSourceClick)}
           </h4>
         );
         i++;
@@ -309,7 +340,7 @@ export function SalesdockMarkdown({ content }: SalesdockMarkdownProps) {
         blocks.push(
           <blockquote key={`quote-${i}`} className="my-4 border-l-4 border-sky-500 bg-sky-50/50 dark:bg-sky-950/20 px-4 py-3 rounded-r-lg text-zinc-700 dark:text-zinc-300 font-sans italic text-sm">
             {quoteLines.map((qLine, qIdx) => (
-              <p key={qIdx} className="my-1">{renderInlineText(qLine)}</p>
+              <p key={qIdx} className="my-1">{renderInlineText(qLine, onSourceClick)}</p>
             ))}
           </blockquote>
         );
@@ -326,7 +357,7 @@ export function SalesdockMarkdown({ content }: SalesdockMarkdownProps) {
         blocks.push(
           <ul key={`ul-${i}`} className="my-4 list-disc space-y-2 pl-6 text-zinc-700 dark:text-zinc-300 text-[15px] leading-relaxed">
             {listItems.map((item, itemIdx) => (
-              <li key={itemIdx}>{renderInlineText(item)}</li>
+              <li key={itemIdx}>{renderInlineText(item, onSourceClick)}</li>
             ))}
           </ul>
         );
@@ -343,7 +374,7 @@ export function SalesdockMarkdown({ content }: SalesdockMarkdownProps) {
         blocks.push(
           <ol key={`ol-${i}`} className="my-4 list-decimal space-y-2 pl-6 text-zinc-700 dark:text-zinc-300 text-[15px] leading-relaxed">
             {listItems.map((item, itemIdx) => (
-              <li key={itemIdx}>{renderInlineText(item)}</li>
+              <li key={itemIdx}>{renderInlineText(item, onSourceClick)}</li>
             ))}
           </ol>
         );
@@ -376,7 +407,7 @@ export function SalesdockMarkdown({ content }: SalesdockMarkdownProps) {
       if (pLines.length > 0) {
         blocks.push(
           <p key={`p-${i}`} className="my-3 text-[15px] leading-relaxed text-zinc-700 dark:text-zinc-300">
-            {renderInlineText(pLines.join(" "))}
+            {renderInlineText(pLines.join(" "), onSourceClick)}
           </p>
         );
       }
@@ -385,7 +416,7 @@ export function SalesdockMarkdown({ content }: SalesdockMarkdownProps) {
         if (lines[i] && lines[i].trim()) {
           blocks.push(
             <p key={`p-${i}`} className="my-3 text-[15px] leading-relaxed text-zinc-700 dark:text-zinc-300">
-              {renderInlineText(lines[i].trim())}
+              {renderInlineText(lines[i].trim(), onSourceClick)}
             </p>
           );
         }

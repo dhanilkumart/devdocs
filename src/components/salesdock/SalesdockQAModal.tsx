@@ -3,8 +3,10 @@
 import React, { useEffect, useRef } from "react";
 import Link from "next/link";
 import { SalesdockQAItem } from "@/data/salesdock-qa";
+import { SalesdockDoc } from "@/data/salesdock-docs";
 import { SalesdockMarkdown } from "@/components/salesdock/SalesdockMarkdown";
-import { resolveSalesdockSourcePath } from "@/lib/salesdock-resolver";
+import { resolveSalesdockSourcePath, findSalesdockDoc } from "@/lib/salesdock-resolver";
+import { SalesdockFileModal } from "@/components/salesdock/SalesdockFileModal";
 
 interface SalesdockQAModalProps {
   item: SalesdockQAItem | null;
@@ -13,6 +15,13 @@ interface SalesdockQAModalProps {
 
 export function SalesdockQAModal({ item, onClose }: SalesdockQAModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
+  const [activePreviewDoc, setActivePreviewDoc] = React.useState<SalesdockDoc | null>(null);
+  const [language, setLanguage] = React.useState<"ENG" | "MAL">("ENG");
+
+  // Reset to English when active question changes
+  useEffect(() => {
+    setLanguage("ENG");
+  }, [item?.id]);
 
   useEffect(() => {
     if (!item) return;
@@ -23,7 +32,14 @@ export function SalesdockQAModal({ item, onClose }: SalesdockQAModalProps) {
     requestAnimationFrame(() => dialogRef.current?.focus());
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      // If a nested preview modal is open, let that modal handle its own Escape first
+      if (e.key === "Escape") {
+        if (activePreviewDoc) {
+          // File preview will close via its own capture listener
+          return;
+        }
+        onClose();
+      }
     };
     window.addEventListener("keydown", onKeyDown);
 
@@ -32,20 +48,29 @@ export function SalesdockQAModal({ item, onClose }: SalesdockQAModalProps) {
       window.removeEventListener("keydown", onKeyDown);
       previouslyFocused?.focus?.();
     };
-  }, [item, onClose]);
+  }, [item, onClose, activePreviewDoc]);
 
   if (!item) return null;
 
+  const handleOpenSourceDoc = (doc: SalesdockDoc) => {
+    setActivePreviewDoc(doc);
+  };
+
+  const handleCloseSourceDoc = () => {
+    setActivePreviewDoc(null);
+  };
+
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="qa-modal-title"
-      className="fixed inset-0 z-50 flex items-end justify-center bg-zinc-950/70 px-2 py-4 backdrop-blur-sm sm:items-center sm:px-4 sm:py-8"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
+    <>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="qa-modal-title"
+        className="fixed inset-0 z-50 flex items-end justify-center bg-zinc-950/70 px-2 py-4 backdrop-blur-sm sm:items-center sm:px-4 sm:py-8"
+        onClick={(e) => {
+          if (e.target === e.currentTarget && !activePreviewDoc) onClose();
+        }}
+      >
       <div
         ref={dialogRef}
         tabIndex={-1}
@@ -93,11 +118,53 @@ export function SalesdockQAModal({ item, onClose }: SalesdockQAModalProps) {
           </div>
 
           <div className="space-y-2">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
-              Detailed Answer & Code Architecture
-            </h3>
+            <div className="flex items-center justify-between gap-4">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                Detailed Answer &amp; Code Architecture
+              </h3>
+
+              {/* Language Switcher: Vertical Stacked Compact Buttons (MAL / ENG) */}
+              <div
+                className="flex flex-col overflow-hidden rounded-md border border-zinc-200 bg-zinc-100 p-0.5 shadow-xs dark:border-zinc-800 dark:bg-zinc-900"
+                role="group"
+                aria-label="Answer language switcher"
+              >
+                <button
+                  type="button"
+                  onClick={() => setLanguage("MAL")}
+                  aria-pressed={language === "MAL"}
+                  aria-label="Show answer in Malayalam"
+                  title="Show answer in Malayalam"
+                  className={`px-2 py-0.5 text-[10px] font-bold tracking-wider transition rounded-xs ${
+                    language === "MAL"
+                      ? "bg-sky-600 text-white shadow-xs dark:bg-sky-500"
+                      : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                  }`}
+                >
+                  MAL
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setLanguage("ENG")}
+                  aria-pressed={language === "ENG"}
+                  aria-label="Show answer in English"
+                  title="Show answer in English"
+                  className={`px-2 py-0.5 text-[10px] font-bold tracking-wider transition rounded-xs ${
+                    language === "ENG"
+                      ? "bg-sky-600 text-white shadow-xs dark:bg-sky-500"
+                      : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                  }`}
+                >
+                  ENG
+                </button>
+              </div>
+            </div>
+
             <div className="rounded-xl border border-zinc-200/80 bg-white p-5 dark:border-zinc-800/80 dark:bg-zinc-900/40">
-              <SalesdockMarkdown content={item.answer} />
+              <SalesdockMarkdown
+                content={(language === "MAL" && item.answerMl ? item.answerMl : item.answer) || item.answer}
+                onSourceClick={handleOpenSourceDoc}
+              />
             </div>
           </div>
 
@@ -108,6 +175,27 @@ export function SalesdockQAModal({ item, onClose }: SalesdockQAModalProps) {
               </h3>
               <div className="flex flex-wrap gap-2">
                 {item.relatedFiles.map((file) => {
+                  const matchedDoc = findSalesdockDoc(file);
+                  if (matchedDoc) {
+                    return (
+                      <button
+                        key={file}
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleOpenSourceDoc(matchedDoc);
+                        }}
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-sky-200 bg-sky-50/70 px-2.5 py-1 text-xs font-mono font-medium text-sky-700 hover:bg-sky-100 dark:border-sky-800/60 dark:bg-sky-950/40 dark:text-sky-300 dark:hover:bg-sky-900/40 transition cursor-pointer"
+                      >
+                        <svg className="h-3.5 w-3.5 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        {file}
+                      </button>
+                    );
+                  }
+
                   const resolvedHref = resolveSalesdockSourcePath(file) || `/salesdock-assignment/${encodeURIComponent(file.split("/").pop() || file)}`;
                   return (
                     <Link
@@ -143,5 +231,13 @@ export function SalesdockQAModal({ item, onClose }: SalesdockQAModalProps) {
         </footer>
       </div>
     </div>
-  );
+
+    {/* Layer 2: File Preview Modal (stacked on top with z-[60]) */}
+    <SalesdockFileModal
+      doc={activePreviewDoc}
+      onClose={handleCloseSourceDoc}
+      onOpenAnotherDoc={handleOpenSourceDoc}
+    />
+  </>
+);
 }

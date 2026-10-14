@@ -4,6 +4,7 @@ export interface SalesdockQAItem {
   question: string;
   preview: string;
   answer: string;
+  answerMl?: string;
   relatedFiles?: string[];
 }
 
@@ -41,6 +42,33 @@ Finally, I added tests and checked the production build.
 I created tests for the discount calculations, discount data management, API behavior, and important UI interactions. The goal was to keep the implementation modular, easier to maintain, and easier to verify.
 
 Overall, I separated the data model, business logic, data management, and UI components so that each part has a clear responsibility.`,
+    answerMl: `ഈ assignment തുടങ്ങിയപ്പോൾ, എല്ലാ കാര്യങ്ങളും ഒരൊറ്റ component-ൽ ചെയ്യുന്നതിന് പകരം, ആദ്യം requirements വ്യക്തമായി മനസ്സിലാക്കുകയും പിന്നീട് ആപ്ലിക്കേഷനെ ചെറിയ, manageable ഭാഗങ്ങളായി വിഭജിക്കുകയുമായിരുന്നു എന്റെ approach.
+
+ആദ്യം, ഞാൻ data structure നിർവ്വചിച്ചു.
+
+Discount types-ഉം interfaces-ഉം define ചെയ്യാൻ ഞാൻ \`src/types/discount.ts\` ഉണ്ടാക്കി. ഇത് ആപ്ലിക്കേഷനിലുടനീളം discounts, product prices, discount results എന്നിവയ്ക്ക് വ്യക്തവും കൃത്യവുമായ structure നൽകി.
+
+രണ്ടാമതായി, business logic-നെ UI-ൽ നിന്ന് വേർതിരിച്ചു.
+
+Percentage discounts, fixed discounts, monthly discount totals എന്നിവ കണക്കാക്കാൻ \`src/utils/discountCalculator.ts\` ഉണ്ടാക്കി. ഇത് pricing calculations-നെ React components-ൽ നിന്ന് സ്വതന്ത്രമായി നിർത്തുകയും അവ ടെസ്റ്റ് ചെയ്യുന്നത് എളുപ്പമാക്കുകയും ചെയ്യുന്നു.
+
+മൂന്നാമതായി, predefined discount data-യും അതിന്റെ management layer-ഉം തയ്യാറാക്കി.
+
+പ്രാരംഭ discount data-ക്കായി \`src/api/mockData.ts\` ഉപയോഗിച്ചു, local storage-ൽ നിന്ന് discounts എടുക്കാനും അപ്‌ഡേറ്റ് ചെയ്യാനും സൂക്ഷിക്കാനും \`src/api/discountsApi.ts\` ഉപയോഗിച്ചു. മാറ്റങ്ങൾ ആപ്ലിക്കേഷന്റെ മറ്റ് ഭാഗങ്ങളിൽ തത്സമയം പ്രതിഫലിക്കാൻ ഞാൻ ഒരു subscription mechanism-ഉം ചേർത്തു.
+
+നാലാമതായി, പ്രധാന ആപ്ലിക്കേഷൻ flow ബന്ധിപ്പിച്ചു.
+
+\`src/App.tsx\`-ൽ apply ചെയ്ത discount ID-കൾ കൈകാര്യം ചെയ്യുകയും discount list-നെ side cart-മായി കണക്ട് ചെയ്യുകയും ചെയ്തു. URL path \`/admin\` ആകുമ്പോൾ admin page render ചെയ്യാനും ഇത് സഹായിക്കുന്നു.
+
+അഞ്ചാമതായി, UI-നെ reusable components ആയി വേർതിരിച്ചു.
+
+Discount list-നായി \`src/components/discounts/DiscountList.tsx\`, ഓരോ discount row-വിനായി \`src/components/discounts/DiscountRow.tsx\`, price overview-വിനായി \`src/components/discounts/SideCart.tsx\` എന്നിവ ഉപയോഗിച്ചു. Admin functionality \`src/components/admin/AdminPage.tsx\`-ൽ വെച്ചു.
+
+അവസാനമായി, ടെസ്റ്റുകൾ ചേർക്കുകയും production build പരിശോധിക്കുകയും ചെയ്തു.
+
+Discount calculations, data management, API behavior, പ്രധാന UI interactions എന്നിവയ്ക്കായി ഞാൻ tests തയ്യാറാക്കി. കോഡ് modular ആയും, maintain ചെയ്യാനും verify ചെയ്യാനും എളുപ്പമാക്കുക എന്നതായിരുന്നു ഇതിന്റെ ലക്ഷ്യം.
+
+മൊത്തത്തിൽ, data model, business logic, data management, UI components എന്നിവ വേർതിരിച്ചതിലൂടെ ഓരോ ഭാഗത്തിനും വ്യക്തമായ ഉത്തരവാദിത്തം നൽകാൻ സാധിച്ചു.`,
     relatedFiles: [
       "src/types/discount.ts",
       "src/utils/discountCalculator.ts",
@@ -80,6 +108,27 @@ For predefined discount data, I used a mock API layer with \`localStorage\` pers
 Finally, I used **Vitest** to run automated tests for the discount calculations, data management, and important application behavior. I also used ESLint to help maintain code quality.
 
 Overall, I chose a stack that was appropriate for the assignment's scope: React for the UI, TypeScript for type safety, Vite for development and builds, and Vitest for automated testing.`,
+    answerMl: `ലളിതമായ development പ്രക്രിയ നിലനിർത്തിക്കൊണ്ടുതന്നെ വ്യക്തമായ ഒരു structure-ൽ ഈ assignment നിർമ്മിക്കാൻ സഹായിക്കും എന്നതിനാലാണ് ഞാൻ React, TypeScript, Vite എന്നിവ തിരഞ്ഞെടുത്തത്.
+
+UI-നെ reusable components ആയി തിരിക്കാനാണ് ഞാൻ **React** ഉപയോഗിച്ചത്. ഉദാഹരണത്തിന് discount list, individual discount rows, side cart, admin page എന്നിവയ്ക്ക് അവരുടേതായ വ്യക്തമായ responsibilities ഉണ്ട്. ഇത് കോഡ് പരിപാലിക്കാനും അപ്‌ഡേറ്റ് ചെയ്യാനും എളുപ്പമാക്കുന്നു.
+
+Discount models-ഉം interfaces-ഉം define ചെയ്യാൻ ഞാൻ **TypeScript** ഉപയോഗിച്ചു. ഈ ആപ്ലിക്കേഷനിൽ പലതരത്തിലുള്ള discount types, targets, sources എന്നിവ കൈകാര്യം ചെയ്യുന്നതിനാൽ, explicit types ഉപയോഗിക്കുന്നത് കൃത്യമായ data structure നിലനിർത്താനും development സമയത്ത് തെറ്റുകൾ കണ്ടെത്താനും സഹായിക്കുന്നു.
+
+Development server ആയും build tool ആയും ഞാൻ **Vite** ഉപയോഗിച്ചു. ഒരു build tool അടിസ്ഥാനപരമായി നമ്മുടെ ആപ്ലിക്കേഷനെ development സമയത്ത് കാര്യക്ഷമമായി പ്രവർത്തിപ്പിക്കാനും production-ലേക്ക് deploy ചെയ്യാനും തയ്യാറാക്കുന്നു.
+
+Development സമയത്ത്, ബ്രൗസറിൽ റൺ ചെയ്യാൻ Vite ഒരു local server ആരംഭിക്കുന്നു. ഒരു component-ൽ എന്തെങ്കിലും മാറ്റം വരുത്തുമ്പോൾ, പലപ്പോഴും full reload ആവശ്യമില്ലാതെ തന്നെ അത് പേജ് വളരെ വേഗത്തിൽ അപ്‌ഡേറ്റ് ചെയ്യുന്നു. ഇത് development വേഗത്തിലാക്കുന്നു.
+
+Deployment-ന് തയ്യാറാകുമ്പോൾ, ആവശ്യമായ JavaScript, CSS, മറ്റ് assets എന്നിവ bundle ചെയ്യുകയും ഒപ്റ്റിമൈസ് ചെയ്യുകയും \`vite build\` കമാൻഡ് വഴി production files നിർമ്മിക്കുകയും ചെയ്യുന്നു. ഈ ഫയലുകൾ പിന്നീട് വെബ് സെർവറിൽ deploy ചെയ്യാൻ കഴിയും.
+
+അതുകൊണ്ട്, വേഗതയേറിയ development അനുഭവവും production-നായി React ആപ്ലിക്കേഷൻ തയ്യാറാക്കാനുള്ള ലളിതമായ വഴിയും Vite നൽകുന്നു.
+
+Discount calculations ഞാൻ React components-മായി കൂട്ടിക്കലർത്താതെ പ്രത്യേക utility functions-ൽ സൂക്ഷിച്ചു. ഇത് business logic-നെ UI-ൽ നിന്ന് വേർതിരിക്കാനും എളുപ്പത്തിൽ ടെസ്റ്റ് ചെയ്യാനും സഹായിക്കുന്നു.
+
+Predefined discount data-ക്കായി, \`localStorage\` persistence ഉള്ള ഒരു mock API layer ആണ് ഉപയോഗിച്ചത്. ഒരു പ്രത്യേക backend service ആവശ്യമില്ലാതെ തന്നെ discount data കൈകാര്യം ചെയ്യാൻ സാധിച്ചതിനാൽ ഈ assignment-ന് ഇത് അനുയോജ്യമായിരുന്നു.
+
+അവസാനമായി, discount calculations, data management, പ്രധാന application behavior എന്നിവ automated ആയി ടെസ്റ്റ് ചെയ്യാൻ **Vitest** ഉപയോഗിച്ചു. കോഡിന്റെ നിലവാരം നിലനിർത്താൻ ESLint-ഉം ഉപയോഗിച്ചു.
+
+മൊത്തത്തിൽ, assignment-ന്റെ ആവശ്യങ്ങൾക്ക് തികച്ചും അനുയോജ്യമായ stack ആണ് ഞാൻ തിരഞ്ഞെടുത്തത്: UI-ക്കായി React, type safety-ക്കായി TypeScript, development-നും builds-നുമായി Vite, automated testing-നായി Vitest.`,
     relatedFiles: [
       "vite.config.ts",
       "src/types/discount.ts",
@@ -112,6 +161,23 @@ The admin flow works a little differently. The admin can manage predefined disco
 So, the complete flow is: the application loads the data, the user selects discounts, the state is updated, the calculation functions calculate the new prices, and the side cart displays the result. The admin page provides another way to manage the predefined discount data.
 
 The main thing I focused on was keeping the data, calculations, and UI separate, so each part has a clear responsibility.`,
+    answerMl: `അടിസ്ഥാനപരമായി ഈ ആപ്ലിക്കേഷൻ ഒരു discount management-ഉം price calculation-ഉം നടത്തുന്ന സംവിധാനമാണ്. ഉപയോക്താവിന് ഒരു ഉൽപ്പന്നത്തിനായി discounts തിരഞ്ഞെടുക്കാനും, അത് വിലയെ എങ്ങനെ ബാധിക്കുന്നുവെന്ന് തത്സമയം കാണാനും കഴിയും. കൂടാതെ predefined discounts കൈകാര്യം ചെയ്യാനുള്ള ഒരു admin വിഭാഗവുമുണ്ട്.
+
+ആപ്ലിക്കേഷൻ ആരംഭിക്കുമ്പോൾ പ്രധാന entry point \`src/App.tsx\` ആണ്. നിലവിലെ URL അടിസ്ഥാനമാക്കി ഏത് ഭാഗമാണ് കാണിക്കേണ്ടതെന്ന് ഇത് തീരുമാനിക്കുന്നു. Path \`/admin\` ആണെങ്കിൽ admin page കാണിക്കുന്നു; അല്ലെങ്കിൽ സാധാരണ customer checkout interface കാണിക്കുന്നു.
+
+Checkout ഭാഗത്ത്, API layer വഴി ആപ്ലിക്കേഷൻ predefined discount data ലോഡ് ചെയ്യുന്നു. പ്രാരംഭ ഡാറ്റ \`src/api/mockData.ts\`-ൽ നിർവ്വചിച്ചിരിക്കുന്നു, localStorage ഉപയോഗിച്ച് ആ ഡാറ്റ എടുക്കാനും അപ്‌ഡേറ്റ് ചെയ്യാനും \`src/api/discountsApi.ts\` കൈകാര്യം ചെയ്യുന്നു.
+
+Discount list കാണിക്കുന്നത് \`src/components/discounts/DiscountList.tsx\` ഉപയോഗിച്ചാണ്, ഓരോ discount-ഉം render ചെയ്യുന്നത് \`src/components/discounts/DiscountRow.tsx\` ആണ്. ഉപയോക്താവ് ഒരു discount select ചെയ്യുകയോ deselect ചെയ്യുകയോ ചെയ്യുമ്പോൾ, ആപ്ലിക്കേഷൻ selected discount state അപ്‌ഡേറ്റ് ചെയ്യുന്നു.
+
+തിരഞ്ഞെടുത്ത discounts പിന്നീട് \`src/utils/discountCalculator.ts\`-ലെ pricing calculation functions ഉപയോഗിച്ച് കണക്കാക്കുന്നു. ഞാൻ ഈ calculations UI-ൽ നിന്ന് മാറ്റി നിർത്തിയതിനാൽ components-ൽ pricing formulas എഴുതേണ്ടി വരുന്നില്ല.
+
+\`src/components/discounts/SideCart.tsx\` component വിലയുടെ പൂർണ്ണമായ breakdown കാണിക്കുന്നു. ഇത് ആകെ തുക, ആകെ ലഭിച്ച savings, one-time ഒപ്പം monthly discounts ഉണ്ടാക്കുന്ന മാറ്റങ്ങൾ എന്നിവ വ്യക്തമാക്കുന്നു. തിരഞ്ഞെടുത്ത discounts മാറുമ്പോൾ calculations വീണ്ടും നടക്കുകയും പുതിയ തുകകൾ പ്രദർശിപ്പിക്കുകയും ചെയ്യുന്നു.
+
+Admin flow അല്പം വ്യത്യസ്തമായാണ് പ്രവർത്തിക്കുന്നത്. Admin-ന് predefined discounts നിയന്ത്രിക്കാൻ കഴിയും, മാറ്റങ്ങൾ ഇതേ data-management layer വഴി സേവ് ചെയ്യുന്നു. Subscription mechanism വഴി ഈ മാറ്റങ്ങൾ checkout interface ഉൾപ്പെടെയുള്ള ആപ്ലിക്കേഷന്റെ മറ്റ് ഭാഗങ്ങളിലേക്ക് ഉടൻ എത്തിക്കുന്നു.
+
+അതിനാൽ പൂർണ്ണമായ flow ഇതാണ്: ആപ്ലിക്കേഷൻ ഡാറ്റ ലോഡ് ചെയ്യുന്നു, ഉപയോക്താവ് discounts തിരഞ്ഞെടുക്കുന്നു, state അപ്‌ഡേറ്റ് ആകുന്നു, calculation functions പുതിയ വില കണക്കാക്കുന്നു, side cart ഫലം കാണിക്കുന്നു. Predefined discount data നിയന്ത്രിക്കാൻ admin page മറ്റൊരു വഴി നൽകുന്നു.
+
+ഡാറ്റ, കണക്കുകൂട്ടലുകൾ, UI എന്നിവ വേർതിരിച്ചു നിർത്തുക എന്നതിലായിരുന്നു എന്റെ പ്രധാന ശ്രദ്ധ, അതിനാൽ ഓരോ ഭാഗത്തിനും വ്യക്തമായ ഉത്തരവാദിത്തമുണ്ട്.`,
     relatedFiles: [
       "src/App.tsx",
       "src/api/mockData.ts",
@@ -142,6 +208,19 @@ The side cart uses the selected discounts and product pricing information to dis
 There is also a different kind of state for predefined discount data. That data is managed through the API layer and localStorage, with a subscription mechanism to notify interested parts of the application when it changes.
 
 So, I use React state for the current UI and selection flow, and the API layer for the predefined discount data that needs to persist. I didn't introduce Redux or another global state library because the application was small enough to manage with the existing React architecture.`,
+    answerMl: `Discount list-നെ side cart-മായി ബന്ധിപ്പിക്കുന്ന component ആയതിനാൽ, ഞാൻ പ്രധാനമായും \`src/App.tsx\` എന്ന top level component-ലാണ് application state കൈകാര്യം ചെയ്തത്.
+
+ഉദാഹരണത്തിന്, ഒരു ഉപയോക്താവ് ഒരു discount തിരഞ്ഞെടുക്കുമ്പോൾ ഏതൊക്കെ discounts ആണ് തിരഞ്ഞെടുത്തതെന്ന് ഓർമ്മിക്കേണ്ടതുണ്ട്. ഓരോ discount row-വിനെയും സ്വതന്ത്രമായ source of truth ആയി കാണുന്നതിന് പകരം, തിരഞ്ഞെടുത്ത discount ID-കൾ മാത്രമാണ് ഞാൻ ട്രാക്ക് ചെയ്യുന്നത്. അതുവഴി നിലവിൽ ഏതൊക്കെ discounts apply ചെയ്തിട്ടുണ്ടെന്ന് കണ്ടെത്താൻ ആപ്ലിക്കേഷനിൽ ഒരൊറ്റ കേന്ദ്രീകൃത ഇടം ഉണ്ടാകുന്നു.
+
+React components പരസ്പരം communicate ചെയ്യുന്നത് props വഴിയും callback functions വഴിയുമാണ്. Parent component ആവശ്യമായ ഡാറ്റ child components-ലേക്ക് താഴേക്ക് അയക്കുന്നു, ഒരു child-ന് എന്തെങ്കിലും മാറ്റം parent-നെ അറിയിക്കണമെങ്കിൽ props വഴി ലഭിച്ച callback വിളിക്കുന്നു.
+
+ഉദാഹരണത്തിന്, discount list ലഭ്യമായ discounts കാണിക്കുന്നു, individual discount row ഓരോ discount-ന്റെയും interaction കൈകാര്യം ചെയ്യുന്നു. ഉപയോക്താവ് ഒരു discount തിരഞ്ഞെടുക്കുമ്പോൾ ആ വിവരം parent-ലേക്ക് തിരികെ നൽകുന്നു. Parent ആ state അപ്‌ഡേറ്റ് ചെയ്യുകയും, മാറിയ മൂല്യങ്ങൾക്കനുസരിച്ച് React വീണ്ടും components render ചെയ്യുകയും ചെയ്യുന്നു.
+
+Side cart തിരഞ്ഞെടുത്ത discounts-ഉം product pricing വിവരങ്ങളും ഉപയോഗിച്ച് അപ്‌ഡേറ്റ് ചെയ്ത തുക കാണിക്കുന്നു. Discount list-ഉം side cart-ഉം പരസ്പരം തെറ്റാനിടയുള്ള രണ്ട് വ്യത്യസ്ത വിവരങ്ങൾ സൂക്ഷിക്കുന്നത് ഒഴിവാക്കാൻ ഇത് വളരെ അത്യാവശ്യമാണ്.
+
+Predefined discount data-ക്കായി മറ്റൊരു തരത്തിലുള്ള state കൂടിയുണ്ട്. ആ ഡാറ്റ API layer വഴിയും localStorage വഴിയുമാണ് കൈകാര്യം ചെയ്യുന്നത്, അതിൽ മാറ്റം വരുമ്പോൾ ആപ്ലിക്കേഷനെ അറിയിക്കാൻ subscription mechanism സഹായിക്കുന്നു.
+
+അതുകൊണ്ട്, നിലവിലെ UI-ക്കും selection flow-വിനുമായി ഞാൻ React state ഉപയോഗിച്ചു, നിലനിൽക്കേണ്ട predefined discount data-ക്കായി API layer ഉപയോഗിച്ചു. നിലവിലെ React architecture കൊണ്ടുതന്നെ ആപ്ലിക്കേഷൻ ഭംഗിയായി നിയന്ത്രിക്കാൻ കഴിഞ്ഞതിനാൽ Redux പോലെയുള്ള മറ്റൊരു global state library ചേർക്കേണ്ടി വന്നില്ല.`,
     relatedFiles: [
       "src/App.tsx",
       "src/components/discounts/DiscountList.tsx",
@@ -169,6 +248,19 @@ The advantage is that I can change one part without unnecessarily changing the o
 It also makes testing easier. I can test the calculation functions independently of React, and I can test the UI separately to check whether it displays the expected information.
 
 So, the main reason was separation of responsibilities. It makes the application easier to understand, maintain, and extend.`,
+    answerMl: `ഈ ഭാഗങ്ങളെല്ലാം വ്യത്യസ്ത പ്രശ്നങ്ങൾ പരിഹരിക്കുന്നതിനാലും, ഒരൊറ്റ component എല്ലാ കാര്യങ്ങളും കൈകാര്യം ചെയ്യുന്നത് ഒഴിവാക്കാനുമാണ് ഞാൻ ഇവയെ വേർതിരിച്ചത്.
+
+Business logic സ്ഥിതി ചെയ്യുന്നത് \`src/utils/discountCalculator.ts\`-ലാണ്. വിലകളും discount totals-ഉം കൃത്യമായി കണക്കാക്കുക എന്നതാണ് ഇതിന്റെ ഉത്തരവാദിത്തം. ഫലം ഒരു table-ലാണോ, modal-ലാണോ അതോ side cart-ലാണോ കാണിക്കുന്നത് എന്ന് ഈ calculation logic അറിയേണ്ട ആവശ്യമില്ല.
+
+API layer സ്ഥിതി ചെയ്യുന്നത് \`src/api/discountsApi.ts\`-ലാണ്. Predefined discount data എടുക്കുക, അപ്‌ഡേറ്റ് ചെയ്യുക, സൂക്ഷിക്കുക എന്നിവയാണ് ഇതിന്റെ ഉത്തരവാദിത്തം. ഈ assignment-ൽ ഒരു real backend-ന് പകരം ഇത് localStorage ആണ് ഉപയോഗിക്കുന്നത്.
+
+UI components വിവരങ്ങൾ പ്രദർശിപ്പിക്കുന്നതിനും user interactions കൈകാര്യം ചെയ്യുന്നതിനും ഉത്തരവാദികളാണ്. ഉദാഹരണത്തിന് \`src/components/discounts/DiscountRow.tsx\` ഓരോ discount row കൈകാര്യം ചെയ്യുമ്പോൾ, \`src/components/discounts/SideCart.tsx\` വില വിവരങ്ങളുടെ സംഗ്രഹം കാണിക്കുന്നു.
+
+ഒരു ഭാഗത്ത് മാറ്റം വരുത്തുമ്പോൾ അത് ആവശ്യമില്ലാതെ മറ്റ് ഭാഗങ്ങളെ ബാധിക്കില്ല എന്നതാണ് ഇതിന്റെ ഏറ്റവും വലിയ നേട്ടം. Discount കണക്കുകൂട്ടലുകളിൽ മാറ്റം വരുത്തണമെങ്കിൽ utility functions-ൽ മാത്രം ജോലി ചെയ്താൽ മതി. പിന്നീട് localStorage-ന് പകരം ഒരു REST API കൊണ്ടുവരുമ്പോൾ data-management layer-ൽ മാത്രം ശ്രദ്ധിക്കാം. ഇനി side cart-ന്റെ ഡിസൈൻ മാറ്റിയാൽ calculation formulas വീണ്ടും എഴുതേണ്ടതില്ല.
+
+ഇത് ടെസ്റ്റിംഗ് വളരെ എളുപ്പമാക്കുന്നു. React-ൽ നിന്ന് സ്വതന്ത്രമായി calculation functions ടെസ്റ്റ് ചെയ്യാം, കൂടാതെ UI പ്രതീക്ഷിച്ച രീതിയിൽ വിവരങ്ങൾ കാണിക്കുന്നുണ്ടോ എന്ന് പ്രത്യേകമായി ടെസ്റ്റ് ചെയ്യാം.
+
+അതുകൊണ്ട്, separation of responsibilities (ഉത്തരവാദിത്തങ്ങളുടെ വേർതിരിവ്) ആയിരുന്നു പ്രധാന കാരണം. ഇത് ആപ്ലിക്കേഷനെ മനസ്സിലാക്കാനും, പരിപാലിക്കാനും, ഭാവിയിൽ വികസിപ്പിക്കാനും വളരെ എളുപ്പമാക്കുന്നു.`,
     relatedFiles: [
       "src/utils/discountCalculator.ts",
       "src/api/discountsApi.ts",
@@ -197,6 +289,21 @@ For monthly recurring discounts, I use \`calculateMonthlyTotals\`. That function
 One important point is that I kept these functions independent of React. They receive the relevant data and return calculation results, so they can be reused wherever the application needs pricing information.
 
 That also makes them easier to test. I can pass in a price and a discount, then verify whether the function returns the expected result without rendering the entire application.`,
+    answerMl: `Pricing എന്നത് ഈ ആപ്ലിക്കേഷന്റെ പ്രധാനപ്പെട്ട ഒരു business rule ആയതിനാൽ, discount calculation logic ഞാൻ \`src/utils/discountCalculator.ts\`-ലാണ് സൂക്ഷിച്ചിരിക്കുന്നത്.
+
+യഥാർത്ഥ വില എടുക്കുക, discount type പരിശോധിക്കുക, discount തുക കണ്ടെത്തുക, തുടർന്ന് ആ തുക യഥാർത്ഥ വിലയിൽ നിന്ന് കുറയ്ക്കുക എന്നതാണ് ഇതിന്റെ അടിസ്ഥാന ആശയം.
+
+Percentage discount-ൽ, discount amount കണക്കാക്കുന്നത് വിലയെ percentage കൊണ്ട് ഗുണിച്ച് 100 കൊണ്ട് ഹരിച്ചാണ്. ഉദാഹരണത്തിന്, ഉൽപ്പന്ന വില €1,000-ഉം discount 10%-ഉം ആണെങ്കിൽ, discount തുക €100 ആയിരിക്കും, അതിനാൽ പുതിയ വില €900 ആകും.
+
+Fixed discount-ൽ, discount value എന്നത് percentage-ന് പകരം നേരിട്ടുള്ള ഒരു തുകയായിരിക്കും. ഉദാഹരണത്തിന്, വില €1,000-ഉം fixed discount €100-ഉം ആണെങ്കിൽ ഫലം €900 ആയിരിക്കും.
+
+ഒന്നിലധികം discounts ഒരുമിച്ച് apply ചെയ്യാൻ സഹായിക്കുന്ന \`calculatePriceWithDiscounts\` എന്നൊരു function-ഉം ഞാൻ നിർമ്മിച്ചിട്ടുണ്ട്. ഇത് ഓരോ discount മാത്രമായി കൈകാര്യം ചെയ്യുന്നതിന് പകരം പല discounts ചേരുമ്പോഴുണ്ടാകുന്ന ആകെ ഫലം കണക്കാക്കാൻ സഹായിക്കുന്നു.
+
+Monthly recurring discounts-നായി ഞാൻ \`calculateMonthlyTotals\` ഉപയോഗിക്കുന്നു. ഈ function discount-ന്റെ duration കണക്കിലെടുത്ത് promotional കാലയളവിലെ തുകയും വർഷത്തിലെ ബാക്കി മാസങ്ങളിലെ തുകയും കണക്കാക്കുന്നു.
+
+ഏറ്റവും പ്രധാനപ്പെട്ട കാര്യം, ഈ functions-നെ ഞാൻ React-ൽ നിന്ന് സ്വതന്ത്രമായി നിർത്തി എന്നതാണ്. അവ ആവശ്യമായ ഡാറ്റ സ്വീകരിച്ച് കണക്കുകൂട്ടൽ ഫലങ്ങൾ തിരികെ നൽകുന്നു, അതിനാൽ ആപ്ലിക്കേഷനിൽ വില വിവരങ്ങൾ ആവശ്യമുള്ള എവിടെയും ഇവ പുനരുപയോഗിക്കാം.
+
+ഇത് ടെസ്റ്റിംഗ് വളരെ എളുപ്പമാക്കുന്നു. മുഴുവൻ ആപ്ലിക്കേഷനും render ചെയ്യാതെ തന്നെ ഒരു വിലയും discount-ഉം നൽകി function പ്രതീക്ഷിച്ച ഫലം തരുന്നുണ്ടോ എന്ന് വേഗത്തിൽ പരിശോധിക്കാൻ സാധിക്കും.`,
     relatedFiles: [
       "src/utils/discountCalculator.ts",
       "src/utils/discountCalculator.test.ts",
@@ -222,6 +329,19 @@ The sequential approach is implemented in the discount calculation utility. It l
 The order matters because each percentage discount is applied to the price left by the previous calculation. In this implementation, the calculation follows the order in which the discounts are provided to the function.
 
 So, when I explain this in an interview, I would emphasize that the application doesn't simply add the percentages together. It applies the discounts successively to calculate the final price.`,
+    answerMl: `എന്റെ implementation-ൽ ഒന്നിലധികം discounts അടുത്തടുത്തായി sequential ആയാണ് apply ചെയ്യുന്നത്. അതായത്, എല്ലാ percentages-ഉം ആദ്യത്തെ വിലയിൽ നിന്ന് നേരിട്ട് കണക്കാക്കുന്നതിന് പകരം, തൊട്ടുമുമ്പുള്ള discount കുറച്ചതിന് ശേഷം ബാക്കി വരുന്ന തുകയിലാണ് അടുത്ത discount കണക്കാക്കുന്നത്.
+
+ഉദാഹരണത്തിന്, യഥാർത്ഥ വില €1,000 ആണെന്ന് കരുതുക, ഉപയോക്താവ് ആദ്യം 10% discount പ്രയോഗിക്കുന്നു. അപ്പോൾ വില €900 ആയി മാറുന്നു.
+
+ഇനി ഉപയോക്താവ് അടുത്തതായി 5% discount പ്രയോഗിക്കുകയാണെങ്കിൽ, ആ 5% കണക്കാക്കുന്നത് ഈ €900-ലാണ്. അതിനാൽ രണ്ടാമത്തെ discount €45 ആയിരിക്കും, അന്തിമ വില €855 ആയി മാറുന്നു.
+
+ഇത് 10%-ഉം 5%-ഉം ഒരുമിച്ച് കൂട്ടി 15% ആക്കി യഥാർത്ഥ വിലയിൽ നിന്ന് കുറയ്ക്കുന്നതിൽ നിന്ന് വ്യത്യസ്തമാണ്. കാരണം €1,000-ൽ 15% discount വന്നാൽ വില €850 ആയിരിക്കും, €855 ആകില്ല.
+
+ഈ sequential രീതി discount calculation utility-ൽ നടപ്പിലാക്കിയിട്ടുണ്ട്. ഇത് തിരഞ്ഞെടുത്ത discounts ഓരോന്നായി പരിശോധിച്ച് നിലവിലെ തുകയെ നിരന്തരം അപ്‌ഡേറ്റ് ചെയ്യാൻ ആപ്ലിക്കേഷനെ സഹായിക്കുന്നു.
+
+ഓരോ percentage discount-ഉം തൊട്ടുമുമ്പത്തെ തുകയിലാണ് ബാധകമാക്കുന്നത് എന്നതിനാൽ discounts നൽകുന്ന ക്രമം (order) പ്രധാനമാണ്. ഈ implementation-ൽ function-ലേക്ക് discounts നൽകുന്ന അതേ ക്രമത്തിലാണ് കണക്കുകൂട്ടലുകൾ നടക്കുന്നത്.
+
+അതുകൊണ്ട്, ഒരു interview-ൽ ഇത് പറയുമ്പോൾ ആപ്ലിക്കേഷൻ വെറുതെ percentages കൂട്ടിച്ചേർക്കുകയല്ല ചെയ്യുന്നത്, മറിച്ച് ഒന്നിനുപുറകെ ഒന്നായി ക്രമമായി കുറച്ചാണ് അന്തിമ വില കണ്ടെത്തുന്നതെന്ന് ഞാൻ വ്യക്തമാക്കും.`,
     relatedFiles: [
       "src/utils/discountCalculator.ts",
       "src/utils/discountCalculator.test.ts",
@@ -249,6 +369,21 @@ If the customer also applies the €30 one-time discount in our example, the com
 The application keeps these calculations separate because upfront savings and recurring savings represent different parts of the total cost.
 
 In the code, \`calculateMonthlyTotals\` uses the discount duration to calculate the promotional months and the remaining months in the year. This allows the side cart to show the cost breakdown instead of just displaying one discounted number.`,
+    answerMl: `One-time discount ഉൽപ്പന്നത്തിന്റെ ആദ്യ upfront വിലയെ ബാധിക്കുമ്പോൾ, monthly discount ഒരു നിശ്ചിത കാലാവധിയിലേക്ക് ആവർത്തിച്ചുള്ള പ്രതിമാസ ചെലവിനെയാണ് ബാധിക്കുന്നത് എന്നതാണ് പ്രധാന വ്യത്യാസം.
+
+ഒരു one-time discount-ൽ, ആപ്ലിക്കേഷൻ നേരിട്ടുള്ള ആദ്യ വിലയിലാണ് discount കണക്കാക്കുന്നത്. ഉദാഹരണത്തിന്, യഥാർത്ഥ വില €1,000 ആണെന്നും ഉപയോക്താവ് 3% one-time discount നൽകുന്നുവെന്നും കരുതുക. അപ്പോൾ discount €30 ആയിരിക്കും, upfront വില €970 ആയി മാറുന്നു.
+
+പ്രതിമാസ discount പ്രവർത്തിക്കുന്നത് monthly price-ലാണ്. ഇതിന് ഒരു പ്രത്യേക കാലാവധി (duration) ഉണ്ടായിരിക്കാം, അതിനാൽ ആ promotional discount നിശ്ചിത മാസങ്ങളിലേക്ക് മാത്രമേ ബാധകമാകൂ.
+
+ഉദാഹരണത്തിന്, പ്രതിമാസ നിരക്ക് €10 ആണെന്നും 25% discount 3 മാസത്തേക്ക് ലഭ്യമാണെന്നും കരുതുക. അപ്പോൾ കുറഞ്ഞ പ്രതിമാസ തുക €7.50 ആയിരിക്കും. ആ മൂന്ന് മാസത്തേക്ക് ആകെ തുക €22.50 ആണ്.
+
+Promotional കാലാവധിക്ക് ശേഷം, പ്രതിമാസ വില സാധാരണ €10-ലേക്ക് മടങ്ങിയെത്തുന്നു. മുഴുവൻ 12 മാസത്തെ കാലാവധി കണക്കാക്കിയാൽ, ശേഷിക്കുന്ന ഒമ്പത് മാസത്തേക്ക് €90 വരും. ഇത് ആദ്യ വർഷത്തെ recurring ആകെ തുകയെ €112.50 ആക്കുന്നു.
+
+ഈ ഉദാഹരണത്തിൽ ഉപയോക്താവ് €30-ന്റെ one-time discount കൂടി പ്രയോഗിക്കുകയാണെങ്കിൽ, ആദ്യ വർഷത്തെ ആകെ തുക €970-ഉം €112.50-ഉം ചേർന്ന് €1,082.50 ആയിരിക്കും.
+
+ആദ്യമുണ്ടാകുന്ന ലാഭവും പ്രതിമാസ ലാഭവും മൊത്തം ചെലവിന്റെ വ്യത്യസ്ത ഘടകങ്ങളായതിനാലാണ് ആപ്ലിക്കേഷൻ ഈ കണക്കുകൂട്ടലുകൾ വെവ്വേറെ സൂക്ഷിക്കുന്നത്.
+
+കോഡിൽ, \`calculateMonthlyTotals\` promotional മാസങ്ങളും വർഷത്തിലെ ബാക്കി മാസങ്ങളും കൃത്യമായി കണക്കാക്കാൻ discount duration ഉപയോഗിക്കുന്നു. ഒരൊറ്റ സംഖ്യ മാത്രം കാണിക്കുന്നതിന് പകരം വ്യക്തമായ ഒരു breakdown side cart-ൽ പ്രദർശിപ്പിക്കാൻ ഇത് സഹായിക്കുന്നു.`,
     relatedFiles: [
       "src/utils/discountCalculator.ts",
       "src/components/discounts/SideCart.tsx",
@@ -274,6 +409,19 @@ If I were hardening this for production, I would validate discount values before
 I would also add tests for those boundary cases, because testing only normal values isn't enough for pricing logic.
 
 So, my approach is to identify the business rules, enforce them at the right layer, and cover both normal scenarios and boundary conditions with automated tests.`,
+    answerMl: `Edge cases-നെ കുറിച്ച് ചിന്തിക്കുമ്പോൾ, സാധാരണ പ്രതീക്ഷിക്കുന്നതിൽ നിന്ന് വ്യത്യസ്തമായ input values വരുമ്പോൾ എന്ത് സംഭവിക്കുന്നു എന്നാണ് ഞാൻ പരിശോധിക്കുന്നത്.
+
+ഉദാഹരണത്തിന്, ഒരു percentage discount പൂജ്യം (0) ആകാം, ഒരു fixed discount ഉൽപ്പന്നത്തിന്റെ വിലയേക്കാൾ വലുതാകാം, അല്ലെങ്കിൽ ഒരു monthly discount-ൽ അർത്ഥശൂന്യമായ duration വരാം. കൂടാതെ ഒന്നിലധികം discounts ഒന്നിനുപുറകെ ഒന്നായി apply ചെയ്യുമ്പോൾ എന്ത് സംഭവിക്കുന്നുവെന്നും ചിന്തിക്കേണ്ടതുണ്ട്.
+
+നിലവിലെ implementation-ൽ, സപ്പോർട്ട് ചെയ്യുന്ന discount types വെവ്വേറെ കൈകാര്യം ചെയ്യുന്നു, കൂടാതെ promotional കാലാവധിയും ബാക്കി മാസങ്ങളും കണ്ടെത്താൻ monthly calculation discount duration ഉപയോഗിക്കുന്നു.
+
+എങ്കിലും എല്ലാ edge cases-ഉം ഇതിനകം പൂർണ്ണമായി പരിഹരിച്ചിട്ടുണ്ടെന്ന് ഞാൻ അവകാശപ്പെടില്ല. ഉദാഹരണത്തിന്, നിലവിലെ \`calculateDiscountedPrice\` ഫലത്തെ പൂജ്യത്തിൽ (zero) ക്ലാംപ് ചെയ്യാതെ നേരിട്ട് തുക കുറയ്ക്കുകയാണ് ചെയ്യുന്നത്. അതിനാൽ വിലയേക്കാൾ വലിയ ഒരു fixed discount നൽകിയാൽ തുക negative ആകാൻ സാധ്യതയുണ്ട്.
+
+Production-നായി ഇത് കൂടുതൽ സുരക്ഷിതമാക്കുമ്പോൾ (hardening), discounts പ്രയോഗിക്കുന്നതിന് മുമ്പ് അവ validate ചെയ്യുകയും, duration-നും percentage-നും പരിധികൾ നിശ്ചയിക്കുകയും, അന്തിമ വില ഒരിക്കലും പൂജ്യത്തിന് താഴെ (negative) പോകുന്നില്ലെന്ന് ഉറപ്പാക്കുകയും ചെയ്യും.
+
+സാധാരണ മൂല്യങ്ങൾ മാത്രം ടെസ്റ്റ് ചെയ്യുന്നത് pricing logic-ൽ മതിയാകാത്തതിനാൽ ഇത്തരം boundary cases-നായി കൂടുതൽ tests ചേർക്കും.
+
+അതുകൊണ്ട്, business rules കണ്ടെത്തുക, അവ കൃത്യമായ layer-ൽ നടപ്പിലാക്കുക, സാധാരണ സാഹചര്യങ്ങളും ഇത്തരം boundary conditions-ഉം automated tests വഴി പരിശോധിക്കുക എന്നിവയാണ് എന്റെ രീതി.`,
     relatedFiles: [
       "src/utils/discountCalculator.ts",
       "src/utils/discountCalculator.test.ts",
@@ -299,6 +447,19 @@ For example, the predefined discount flow supports administrative management, wh
 I also use TypeScript interfaces to keep the discount data consistent. The predefined discount type extends the common discount structure with additional information, such as whether the discount is enabled.
 
 So, the main difference is the lifecycle: predefined discounts are managed as part of the application's available discount data, while manually created discounts come from the user's checkout interaction.`,
+    answerMl: `ഈ ആപ്ലിക്കേഷനിൽ discounts കൈകാര്യം ചെയ്യാൻ രണ്ട് വഴികളുണ്ട്: predefined discounts-ഉം manually created discounts-ഉം.
+
+Predefined discounts എന്നത് ആപ്ലിക്കേഷനിൽ ഇതിനകം മുൻകൂട്ടി ലഭ്യമാക്കിയിട്ടുള്ള discounts ആണ്. ഇതിന്റെ പ്രാരംഭ ഡാറ്റ \`src/api/mockData.ts\`-ൽ നിന്നാണ് വരുന്നത്, ആപ്ലിക്കേഷൻ ഇവയെ API layer വഴിയാണ് കൈകാര്യം ചെയ്യുന്നത്. Admin page-ൽ നിന്നും ഇവയെ നിയന്ത്രിക്കാനാകും.
+
+Manual discounts ഉപയോക്താവ് checkout interface വഴി നേരിട്ട് ഉണ്ടാക്കുന്നവയാണ്. നിലവിലുള്ള ഒരു predefined discount തിരഞ്ഞെടുക്കുന്നതിന് പകരം, manual discount creation flow വഴി ഉപയോക്താവിന് ഇഷ്ടമുള്ള വിവരങ്ങൾ നൽകാം.
+
+Discount source വിവരങ്ങൾ ഉപയോഗിച്ച് ഡാറ്റാ മോഡലിൽ ഞാൻ ഈ വേർതിരിവ് സൂക്ഷിച്ചിട്ടുണ്ട്. ഒരു discount എവിടെ നിന്നാണ് വന്നതെന്നും UI-ൽ അത് എങ്ങനെ കൈകാര്യം ചെയ്യണമെന്നും തിരിച്ചറിയാൻ ഇത് സഹായിക്കുന്നു.
+
+ഉദാഹരണത്തിന്, predefined discounts ഭരണപരമായ (admin) നിയന്ത്രണങ്ങളെ പിന്തുണയ്ക്കുമ്പോൾ, manual discounts നിലവിലെ checkout ആവശ്യത്തിന് മാത്രമായി ഉപയോക്താവിന് ഉണ്ടാക്കാൻ അനുവാദം നൽകുന്നു.
+
+ഡാറ്റ കൃത്യമായി നിലനിർത്താൻ ഞാൻ TypeScript interfaces ഉപയോഗിക്കുന്നു. Predefined discount structure പൊതുവായ discount interface-നെ extend ചെയ്യുകയും ആ discount active/enabled ആണോ എന്നതുപോലുള്ള അധിക വിവരങ്ങൾ ഉൾക്കൊള്ളുകയും ചെയ്യുന്നു.
+
+അതുകൊണ്ട്, ഇവയുടെ lifecycle തന്നെയാണ് പ്രധാന വ്യത്യാസം: predefined discounts ആപ്ലിക്കേഷനിൽ എപ്പോഴും ലഭ്യമായ ഡാറ്റയായി നിലനിൽക്കുമ്പോൾ, manual discounts ഉപയോക്താവിന്റെ checkout ഇടപെടലിലൂടെ അന്നേരം മാത്രം ഉണ്ടാകുന്നു.`,
     relatedFiles: [
       "src/types/discount.ts",
       "src/api/mockData.ts",
@@ -325,6 +486,19 @@ For example, if an admin disables a predefined discount, the checkout interface 
 The important thing is that the admin page doesn't directly manipulate the internal state of the checkout components. Both parts communicate through the shared data-management layer.
 
 That makes the implementation easier to maintain because the admin and checkout have separate UI responsibilities while sharing the same predefined discount data source.`,
+    answerMl: `Predefined discounts കൈകാര്യം ചെയ്യുന്നതിന് admin page ആണ് ഉത്തരവാദി. Checkout components-ൽ administrative controls കൂട്ടിക്കലർത്താതെ, ഞാൻ ആ പ്രവർത്തനങ്ങൾ \`src/components/admin/AdminPage.tsx\`-ൽ സൂക്ഷിച്ചു.
+
+Admin എന്തെങ്കിലും മാറ്റം വരുത്തുമ്പോൾ, \`src/api/discountsApi.ts\`-ലെ data-management functions-നെ വിളിക്കുന്നു. ആ layer predefined discount data അപ്‌ഡേറ്റ് ചെയ്യുകയും localStorage-ൽ സ്ഥിരമായി സൂക്ഷിക്കുകയും ചെയ്യുന്നു.
+
+മാറ്റങ്ങൾ അറിയിക്കാൻ ഞാൻ ഒരു subscription mechanism-ഉം നടപ്പിലാക്കിയിട്ടുണ്ട്. ഒരു discount മാറുമ്പോഴെല്ലാം മുഴുവൻ ആപ്ലിക്കേഷനും reload ചെയ്യാതെ തന്നെ, ആ വിവരങ്ങൾ ആവശ്യമുള്ള components-ലേക്ക് മാറ്റങ്ങൾ എത്തിക്കുക എന്നതാണ് ഇതിന്റെ ആശയം.
+
+ഒരു മാറ്റം publish ചെയ്യുമ്പോൾ, subscribe ചെയ്തിരിക്കുന്ന components അവയുടെ ഡാറ്റ refresh ചെയ്യുകയും React state അപ്‌ഡേറ്റ് ചെയ്യുകയും ചെയ്യുന്നു. തുടർന്ന് React ഏറ്റവും പുതിയ വിവരങ്ങൾ വച്ച് UI render ചെയ്യുന്നു.
+
+ഉദാഹരണത്തിന്, ഒരു admin ഒരു predefined discount disable ചെയ്താൽ, checkout interface ആ മാറ്റം ഉടൻ സ്വീകരിക്കുകയും disable ആയ അവസ്ഥ കാണിക്കുകയും ചെയ്യുന്നു.
+
+ഏറ്റവും ശ്രദ്ധേയമായ കാര്യം, admin page ഒരിക്കലും checkout components-ന്റെ internal state-ൽ നേരിട്ട് ഇടപെടുന്നില്ല എന്നതാണ്. രണ്ട് ഭാഗങ്ങളും shared data-management layer വഴിയാണ് ആശയവിനിമയം നടത്തുന്നത്.
+
+ഇത് കോഡ് പരിപാലിക്കുന്നത് വളരെ എളുപ്പമാക്കുന്നു, കാരണം admin-നും checkout-നും വെവ്വേറെ UI ഉത്തരവാദിത്തങ്ങൾ ഉള്ളപ്പോഴും അവ ഒരേ ഡാറ്റാ സ്രോതസ്സ് പങ്കിടുന്നു.`,
     relatedFiles: [
       "src/components/admin/AdminPage.tsx",
       "src/api/discountsApi.ts",
@@ -349,6 +523,17 @@ When the update is saved, the application updates the existing discount record r
 The update then goes through the predefined discount data-management layer, which persists the change and notifies subscribers.
 
 So, the main things I considered were restricting the allowed edit, showing the user the pricing impact, and preserving the identity of the existing discount.`,
+    answerMl: `നിലവിലുള്ള ഒരു predefined discount-നെ പുതിയൊരു discount ആയി കണക്കാക്കാതെ തന്നെ modify ചെയ്യാൻ കഴിയുന്ന വിധത്തിലാണ് ഞാൻ edit flow നടപ്പിലാക്കിയത്.
+
+ആ discount-മായി ബന്ധപ്പെട്ട edit action വഴി ഉപയോക്താവിന് edit interface തുറക്കാനാകും. ഈ പ്രത്യേക flow-വിൽ, മാറ്റങ്ങൾ വരുത്തുന്നത് പരമാവധി 5% വരെയുള്ള percentage value-വിൽ മാത്രമായി ഞാൻ പരിമിതപ്പെടുത്തി. എല്ലാ fields-ഉം മാറ്റാൻ അനുവദിക്കാതെ കൃത്യമായ requirement-ൽ നിൽക്കാൻ ഇത് സഹായിക്കുന്നു.
+
+കൂടാതെ സ്റ്റാറ്റിക് ആയ €1,000 ഉദാഹരണം ഉപയോഗിച്ച് ഒരു price preview കൂടി ഞാൻ ഉൾപ്പെടുത്തിയിട്ടുണ്ട്. സേവ് ചെയ്യുന്നതിന് മുമ്പ് തന്നെ percentage മാറ്റുമ്പോൾ വില എങ്ങനെ മാറുന്നുവെന്ന് ഉപയോക്താവിന് കാണാൻ ഇത് സഹായിക്കുന്നു.
+
+അപ്‌ഡേറ്റ് സേവ് ചെയ്യുമ്പോൾ, മറ്റൊരു ID ഉള്ള പുതിയ discount ഉണ്ടാക്കുന്നതിന് പകരം നിലവിലുള്ള റെക്കോർഡ് തന്നെയാണ് അപ്‌ഡേറ്റ് ചെയ്യുന്നത്. ആപ്ലിക്കേഷന്റെ മറ്റ് ഭാഗങ്ങൾക്ക് ആ discount-നെ തിരിച്ചറിയാൻ ഇതേ ID തന്നെ നിലനിർത്തേണ്ടത് പ്രധാനമാണ്.
+
+ഈ മാറ്റം പിന്നീട് predefined discount data-management layer വഴി കടന്നുപോകുകയും, ഡാറ്റ സേവ് ചെയ്ത് subscribers-നെ വിവരമറിയിക്കുകയും ചെയ്യുന്നു.
+
+അതുകൊണ്ട്, എഡിറ്റിംഗ് പരിമിതപ്പെടുത്തുക, വിലയിലുണ്ടാകുന്ന മാറ്റം ഉപയോക്താവിന് കാണിച്ച് കൊടുക്കുക, നിലവിലുള്ള ID നിലനിർത്തുക എന്നിവയായിരുന്നു ഞാൻ പ്രധാനമായും പരിഗണിച്ച കാര്യങ്ങൾ.`,
     relatedFiles: [
       "src/components/discounts/DiscountRow.tsx",
       "src/components/discounts/DiscountModal.tsx",
@@ -375,6 +560,19 @@ But localStorage has limitations. The data is stored in the user's browser, it i
 For a real application where discounts affect actual transactions, I would move authoritative discount management and pricing validation to a backend with a database.
 
 So, I chose localStorage as a practical solution for the scope of the assignment, not as a replacement for a production backend.`,
+    answerMl: `Predefined discount data കൈകാര്യം ചെയ്യാൻ ഒരു വഴി ആവശ്യമായിരുന്നുവെങ്കിലും ഈ assignment-ന്റെ ഉദ്ദേശ്യം കാണിക്കാൻ ഒരു പ്രത്യേക backend service ആവശ്യമില്ലാത്തതിനാലാണ് ഞാൻ localStorage ഉപയോഗിച്ചത്.
+
+പ്രാരംഭ discount data \`src/api/mockData.ts\`-ൽ നൽകിയിട്ടുണ്ട്. \`src/api/discountsApi.ts\`-ലെ API layer ഡാറ്റ എടുക്കാനും അപ്‌ഡേറ്റ് ചെയ്യാനുമുള്ള functions നൽകുമ്പോൾ, പേജ് റീലോഡ് ചെയ്താലും മാറ്റങ്ങൾ നിലനിൽക്കാൻ localStorage സഹായിക്കുന്നു.
+
+ഇത് മനഃപൂർവ്വം ഒരു API-പോലെയുള്ള layer-ന് പിന്നിലാണ് വെച്ചിരിക്കുന്നത്. ഡാറ്റ എങ്ങനെ സൂക്ഷിക്കുന്നു എന്നതിന്റെ സങ്കീർണ്ണമായ കാര്യങ്ങൾ UI components അറിയേണ്ടതില്ല. അവയ്ക്ക് data-management functions-നെ നേരിട്ട് വിളിക്കാം.
+
+ഭാവിയിൽ എളുപ്പത്തിൽ മാറാനുള്ള ഒരു സൗകര്യവും (migration path) ഇത് നൽകുന്നു. പിന്നീട് localStorage മാറ്റി ഒരു യഥാർത്ഥ REST API-യും database-ഉം കൊണ്ടുവരികയാണെങ്കിൽ, UI-ലും calculation logic-ലും മാറ്റം വരുത്താതെ തന്നെ data-management layer മാത്രം മാറ്റിയാൽ മതിയാകും.
+
+എങ്കിലും localStorage-ന് ചില പരിമിതികളുണ്ട്. ഡാറ്റ ഉപയോക്താവിന്റെ ബ്രൗസറിലാണ് സൂക്ഷിക്കുന്നത്, ഇത് ഒരു കേന്ദ്രീകൃത source of truth അല്ല, കൂടാതെ server-side validation അല്ലെങ്കിൽ access control നൽകുന്നില്ല. സുരക്ഷിതമായി വിവരങ്ങൾ സൂക്ഷിക്കാനുള്ള ഇടമായും ഇതിനെ കാണാനാവില്ല.
+
+യഥാർത്ഥ പണമിടപാടുകളെ ബാധിക്കുന്ന ഒരു real application-ൽ, discount management-ഉം pricing validation-ഉം ഒരു database ഉള്ള backend-ലേക്ക് മാറ്റുന്നതാണ് ശരിയായ രീതി.
+
+അതുകൊണ്ട്, ഒരു production backend-ന് പകരമായല്ല, മറിച്ച് ഈ assignment-ന്റെ scope-ൽ ഏറ്റവും അനുയോജ്യമായ പ്രായോഗിക പരിഹാരം എന്ന നിലയ്ക്കാണ് ഞാൻ localStorage തിരഞ്ഞെടുത്തത്.`,
     relatedFiles: [
       "src/api/mockData.ts",
       "src/api/discountsApi.ts",
@@ -400,6 +598,19 @@ One important browser detail is that the \`storage\` event is fired in other doc
 This approach helps keep the displayed predefined discount data synchronized without requiring a backend or continuously polling for changes.
 
 However, this is browser-level synchronization. In a production application with multiple users and devices, I would use a backend as the authoritative source and fetch or subscribe to server-side updates.`,
+    answerMl: `Predefined discounts-ലെ മാറ്റങ്ങൾ കൈകാര്യം ചെയ്യാൻ പരസ്പരബന്ധിതമായ രണ്ട് വഴികളാണ് ഞാൻ ഉപയോഗിച്ചത്: ആപ്ലിക്കേഷനകത്തെ ഒരു subscription mechanism-ഉം, മറ്റൊരു ടാബിൽ നിന്നുള്ള മാറ്റങ്ങൾ അറിയാൻ ബ്രൗസറിന്റെ storage event-ഉം.
+
+ഒരേ ആപ്ലിക്കേഷനിലെ വിവിധ ഭാഗങ്ങൾക്ക് മാറ്റങ്ങൾ ശ്രവിക്കാൻ subscription mechanism സഹായിക്കുന്നു. API layer വഴി predefined discount data അപ്‌ഡേറ്റ് ചെയ്യപ്പെടുമ്പോൾ subscribers-ന് ആ വിവരം ലഭിക്കുകയും state refresh ചെയ്യുകയും ചെയ്യാം.
+
+മറ്റൊരു browser tab-ൽ വരുത്തുന്ന മാറ്റങ്ങൾക്കായി ബ്രൗസർ നൽകുന്ന \`storage\` event ഉപയോഗിക്കുന്നു. ഒരേ origin-ൽ ഒരു ടാബ് localStorage മാറ്റുമ്പോൾ മറ്റ് ടാബുകൾക്ക് ആ event ലഭിക്കുകയും പുതിയ മാറ്റങ്ങളോട് പ്രതികരിക്കുകയും ചെയ്യുന്നു.
+
+ഉദാഹരണത്തിന്, ഒരു ടാബിൽ checkout-ഉം മറ്റൊരു ടാബിൽ admin page-ഉം തുറന്നിട്ട്, admin tab-ൽ നിന്ന് ഒരു predefined discount അപ്‌ഡേറ്റ് ചെയ്താൽ, checkout tab ആ storage മാറ്റം കണ്ടെത്തുകയും ഡാറ്റ സ്വയം പുതുക്കുകയും ചെയ്യുന്നു.
+
+ബ്രൗസറിന്റെ ഒരു പ്രധാന പ്രത്യേകത എന്തെന്നാൽ, മാറ്റം വരുത്തിയ അതേ വിൻഡോയിലല്ല, മറിച്ച് ആ storage പങ്കിടുന്ന മറ്റ് വിൻഡോകളിലാണ് \`storage\` event ട്രിഗർ ചെയ്യുന്നത്. അതുകൊണ്ടാണ് ഒരേ ടാബിലെ subscription mechanism-ഉം വ്യത്യസ്ത ടാബുകളിലെ storage event-ഉം ഒന്നിച്ച് പ്രവർത്തിക്കേണ്ടി വരുന്നത്.
+
+ഒരു backend ഇല്ലാതെയും, അടിക്കടി polling നടത്താതെയും തന്നെ predefined discount ഡാറ്റ എപ്പോഴും ഒരേപോലെ (synchronized) നിലനിർത്താൻ ഈ രീതി സഹായിക്കുന്നു.
+
+എങ്കിലും ഇത് ഒരു ബ്രൗസർ തലത്തിലുള്ള synchronization മാത്രമാണ്. പല ഉപയോക്താക്കളും ഡിവൈസുകളുമുള്ള ഒരു production ആപ്ലിക്കേഷനിൽ ഒരു backend തന്നെയായിരിക്കും കേന്ദ്രീകൃത സ്രോതസ്സ്, അവിടെ server-side updates വഴിയാണ് ഇത് സാധ്യമാക്കുന്നത്.`,
     relatedFiles: [
       "src/api/discountsApi.ts",
       "src/api/discountsApi.test.ts",
@@ -429,6 +640,23 @@ I see testing as particularly important for a pricing application because a smal
 If I extended the project further, I would also add more explicit boundary tests for invalid discount values, discounts exceeding the price, and different monthly durations. I would include more end-to-end tests to verify the complete journey from selecting a discount to seeing the final total.
 
 So, I used Vitest to make the important business rules and application behavior repeatably testable instead of relying only on manual verification.`,
+    answerMl: `ഈ assignment-ൽ Vite ഉപയോഗിക്കുന്നതിനാലും, അത്തരമൊരു setup-ലേക്ക് Vitest വളരെ സ്വാഭാവികമായി ഇണങ്ങുന്നതിനാലുമാണ് ഞാൻ Vitest തിരഞ്ഞെടുത്തത്. TypeScript, modern JavaScript പ്രോജക്റ്റുകളിൽ വളരെ മികച്ച രീതിയിൽ പ്രവർത്തിക്കുന്ന ഒരു test runner ആണ് ഇത്.
+
+വെറുതെ മാനുവലായി UI പരിശോധിക്കുന്നതിന് പകരം ആപ്ലിക്കേഷന്റെ പ്രധാനപ്പെട്ട എല്ലാ ഭാഗങ്ങളും കൃത്യമായി ടെസ്റ്റ് ചെയ്യുന്നതിലാണ് ഞാൻ ശ്രദ്ധ കേന്ദ്രീകരിച്ചത്.
+
+ആദ്യം, ഞാൻ discount calculation logic ടെസ്റ്റ് ചെയ്തു. ഉദാഹരണത്തിന്, percentage, fixed discounts വിലയെ എങ്ങനെ ബാധിക്കുന്നുവെന്നും, ഒന്നിലധികം discounts-ഉം monthly totals-ഉം എങ്ങനെ കണക്കാക്കുന്നുവെന്നും പരിശോധിച്ചു.
+
+Predefined discount അപ്‌ഡേറ്റുകളും localStorage persistence-ഉം കൈകാര്യം ചെയ്യുന്നതിനാൽ data-management layer-ഉം ഞാൻ ടെസ്റ്റ് ചെയ്തു. Discounts എടുക്കുമ്പോഴും മാറ്റുമ്പോഴും ആ ഭാഗം കൃത്യമായി പ്രവർത്തിക്കേണ്ടതുണ്ട്.
+
+വില കാണിക്കുന്നതും interactions-ഉം പോലുള്ള പ്രധാന UI പെരുമാറ്റങ്ങൾക്കായി ഞാൻ tests ചേർത്തു. ഒരു function ശരിയായ ഉത്തരം നൽകുന്നുണ്ടോ എന്ന് മാത്രമല്ല, ആപ്ലിക്കേഷൻ ഉപയോക്താവിന് അത് ശരിയായി കാണിക്കുന്നുണ്ടോ എന്നും ഉറപ്പാക്കുകയായിരുന്നു ഇതിന്റെ ഉദ്ദേശ്യം.
+
+\`package.json\`-ൽ \`vitest run\` പ്രവർത്തിപ്പിക്കുന്നതിനായി ഒരു \`test\` script നൽകിയിട്ടുണ്ട്, അതിനാൽ development server സ്റ്റാർട്ട് ചെയ്യാതെ തന്നെ command line-ൽ നിന്ന് ടെസ്റ്റുകൾ റൺ ചെയ്യാവുന്നതാണ്.
+
+ഒരു pricing ആപ്ലിക്കേഷനിൽ ടെസ്റ്റിംഗ് വളരെ പ്രധാനപ്പെട്ട ഒന്നായി ഞാൻ കാണുന്നു, കാരണം ഒരു ചെറിയ കണക്കുകൂട്ടൽ തെറ്റ് പോലും ഉപയോക്താവ് കാണുന്ന അന്തിമ തുകയെ ബാധിക്കും.
+
+ഭാവിയിൽ ഇത് കൂടുതൽ വികസിപ്പിക്കുകയാണെങ്കിൽ തെറ്റായ discount values, വിലയേക്കാൾ വലിയ discounts, വ്യത്യസ്തമായ monthly durations എന്നിവയ്ക്കായി കൂടുതൽ boundary tests ചേർക്കും. ഒരു discount തിരഞ്ഞെടുക്കുന്നത് മുതൽ അന്തിമ വില കാണുന്നത് വരെയുള്ള സമ്പൂർണ്ണ യാത്ര ഉറപ്പാക്കാൻ end-to-end tests-ഉം ഉൾപ്പെടുത്തും.
+
+അതുകൊണ്ട്, മാനുവൽ പരിശോധനയെ മാത്രം ആശ്രയിക്കാതെ പ്രധാനപ്പെട്ട business rules-ഉം application behavior-ഉം വീണ്ടും വീണ്ടും വിശ്വസനീയമായി ടെസ്റ്റ് ചെയ്യാൻ ഞാൻ Vitest ഉപയോഗിച്ചു.`,
     relatedFiles: [
       "src/utils/discountCalculator.test.ts",
       "src/api/discountsApi.test.ts",
